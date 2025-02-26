@@ -102,7 +102,7 @@ export default function AuthPage() {
                             {t('auth.username')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-gray-200" {...field} />
+                            <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -117,7 +117,7 @@ export default function AuthPage() {
                             {t('auth.password')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white/80 border-gray-200" {...field} />
+                            <Input type="password" className="bg-white/80 border-gray-200 text-gray-900" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -151,7 +151,7 @@ export default function AuthPage() {
                             {t('auth.username')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-gray-200" {...field} />
+                            <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -166,7 +166,7 @@ export default function AuthPage() {
                             {t('auth.password')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white/80 border-gray-200" {...field} />
+                            <Input type="password" className="bg-white/80 border-gray-200 text-gray-900" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -210,7 +210,7 @@ export default function AuthPage() {
                               {t('auth.companyName')} <span className="text-red-500">*</span>
                             </FormLabel>
                             <FormControl>
-                              <Input className="bg-white/80 border-gray-200" {...field} />
+                              <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
