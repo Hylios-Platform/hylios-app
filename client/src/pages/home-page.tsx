@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Bitcoin, Building2, UserCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { Tutorial, TutorialButton } from "@/components/onboarding/tutorial";
 
 export default function HomePage() {
   const { user } = useAuth();
   const { t } = useTranslation();
 
-  if (user.userType === "company") {
+  if (user?.userType === "company") {
     return (
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto text-center">
@@ -28,14 +29,18 @@ export default function HomePage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
+      <Tutorial />
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-4xl font-bold mb-4">{t('home.welcome')}</h1>
-        <p className="text-lg text-muted-foreground mb-8">
-          {t('home.subtitle')}
-        </p>
+        <div className="welcome-section mb-8">
+          <h1 className="text-4xl font-bold mb-4">{t('home.welcome')}</h1>
+          <p className="text-lg text-muted-foreground mb-4">
+            {t('home.subtitle')}
+          </p>
+          <TutorialButton />
+        </div>
 
         <div className="grid gap-6">
-          <div className="flex items-start gap-4 p-4 border rounded-lg">
+          <div className="kyc-section flex items-start gap-4 p-4 border rounded-lg">
             <UserCheck className="h-6 w-6 text-green-500 mt-1" />
             <div>
               <h2 className="text-lg font-semibold mb-2">Completar KYC</h2>
@@ -46,7 +51,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-4 p-4 border rounded-lg">
+          <div className="jobs-section flex items-start gap-4 p-4 border rounded-lg">
             <Building2 className="h-6 w-6 text-blue-500 mt-1" />
             <div>
               <h2 className="text-lg font-semibold mb-2">{t('navigation.jobs')}</h2>
@@ -59,7 +64,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="flex items-start gap-4 p-4 border rounded-lg">
+          <div className="payment-section flex items-start gap-4 p-4 border rounded-lg">
             <Bitcoin className="h-6 w-6 text-yellow-500 mt-1" />
             <div>
               <h2 className="text-lg font-semibold mb-2">Receba em Bitcoin</h2>

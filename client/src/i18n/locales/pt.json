@@ -29,5 +29,33 @@
     "completed": "Concluídos",
     "noJobs": "Nenhum trabalho encontrado com os critérios selecionados",
     "completeKyc": "Complete a verificação KYC para se candidatar aos trabalhos"
+  },
+  "tutorial": {
+    "start": "Iniciar Tour",
+    "skip": "Pular",
+    "next": "Próximo",
+    "finish": "Concluir",
+    "steps": {
+      "welcome": {
+        "title": "Bem-vindo ao Hylios",
+        "description": "Vamos te mostrar como usar nossa plataforma para encontrar trabalhos e receber em Bitcoin"
+      },
+      "kyc": {
+        "title": "Verificação KYC",
+        "description": "Primeiro, complete sua verificação KYC para começar a se candidatar a trabalhos"
+      },
+      "jobs": {
+        "title": "Encontre Trabalhos",
+        "description": "Explore os trabalhos disponíveis e use os filtros para encontrar as melhores oportunidades"
+      },
+      "apply": {
+        "title": "Candidate-se",
+        "description": "Após a verificação KYC, você pode se candidatar a trabalhos com apenas um clique"
+      },
+      "payment": {
+        "title": "Receba em Bitcoin",
+        "description": "Complete o trabalho e receba seu pagamento instantaneamente em Bitcoin"
+      }
+    }
   }
 }

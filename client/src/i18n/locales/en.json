@@ -29,5 +29,33 @@
     "completed": "Completed",
     "noJobs": "No jobs found matching your criteria",
     "completeKyc": "Complete KYC verification to apply for jobs"
+  },
+  "tutorial": {
+    "start": "Start Tour",
+    "skip": "Skip",
+    "next": "Next",
+    "finish": "Finish",
+    "steps": {
+      "welcome": {
+        "title": "Welcome to Hylios",
+        "description": "Let's show you how to use our platform to find jobs and get paid in Bitcoin"
+      },
+      "kyc": {
+        "title": "KYC Verification",
+        "description": "First, complete your KYC verification to start applying for jobs"
+      },
+      "jobs": {
+        "title": "Find Jobs",
+        "description": "Browse available jobs and use filters to find the best opportunities"
+      },
+      "apply": {
+        "title": "Apply",
+        "description": "After KYC verification, you can apply to jobs with just one click"
+      },
+      "payment": {
+        "title": "Get Paid in Bitcoin",
+        "description": "Complete the work and receive your payment instantly in Bitcoin"
+      }
+    }
   }
 }
