@@ -1,0 +1,33 @@
+{
+  "auth": {
+    "login": "Entrar",
+    "register": "Cadastrar",
+    "username": "Nome de Usuário",
+    "password": "Senha",
+    "iAm": "Eu sou",
+    "professional": "Profissional",
+    "company": "Empresa",
+    "companyName": "Nome da Empresa"
+  },
+  "navigation": {
+    "jobs": "Trabalhos",
+    "postJob": "Publicar Trabalho"
+  },
+  "home": {
+    "welcome": "Bem-vindo ao Hylios",
+    "subtitle": "Conecte-se com empresas e receba em Bitcoin",
+    "findWork": "Encontre Trabalho. Receba em Bitcoin.",
+    "description": "Conecte-se com empresas que procuram profissionais talentosos. Complete tarefas e receba pagamentos instantâneos em Bitcoin através de nossa plataforma segura."
+  },
+  "jobs": {
+    "title": "Trabalhos Disponíveis",
+    "searchPlaceholder": "Buscar trabalhos...",
+    "filterByStatus": "Filtrar por status",
+    "allJobs": "Todos os Trabalhos",
+    "open": "Abertos",
+    "assigned": "Atribuídos",
+    "completed": "Concluídos",
+    "noJobs": "Nenhum trabalho encontrado com os critérios selecionados",
+    "completeKyc": "Complete a verificação KYC para se candidatar aos trabalhos"
+  }
+}

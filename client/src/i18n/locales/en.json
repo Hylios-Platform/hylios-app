@@ -1,0 +1,33 @@
+{
+  "auth": {
+    "login": "Login",
+    "register": "Register",
+    "username": "Username",
+    "password": "Password",
+    "iAm": "I am a",
+    "professional": "Professional",
+    "company": "Company",
+    "companyName": "Company Name"
+  },
+  "navigation": {
+    "jobs": "Jobs",
+    "postJob": "Post Job"
+  },
+  "home": {
+    "welcome": "Welcome to Hylios",
+    "subtitle": "Connect with companies and get paid in Bitcoin",
+    "findWork": "Find Work. Get Paid in Bitcoin.",
+    "description": "Connect with companies looking for talented professionals. Complete tasks and receive instant Bitcoin payments through our secure platform."
+  },
+  "jobs": {
+    "title": "Available Jobs",
+    "searchPlaceholder": "Search jobs...",
+    "filterByStatus": "Filter by status",
+    "allJobs": "All Jobs",
+    "open": "Open",
+    "assigned": "Assigned",
+    "completed": "Completed",
+    "noJobs": "No jobs found matching your criteria",
+    "completeKyc": "Complete KYC verification to apply for jobs"
+  }
+}

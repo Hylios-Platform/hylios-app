@@ -2,9 +2,12 @@ import { Link } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import { LanguageSelector } from "./language-selector";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
+  const { t } = useTranslation();
 
   if (!user) return null;
 
@@ -19,17 +22,22 @@ export default function Header() {
           </Link>
           <nav className="flex gap-4">
             <Link href="/jobs">
-              <a className="text-foreground/80 hover:text-foreground">Trabalhos</a>
+              <a className="text-foreground/80 hover:text-foreground">
+                {t('navigation.jobs')}
+              </a>
             </Link>
             {user.userType === "company" && (
               <Link href="/post-job">
-                <a className="text-foreground/80 hover:text-foreground">Publicar Trabalho</a>
+                <a className="text-foreground/80 hover:text-foreground">
+                  {t('navigation.postJob')}
+                </a>
               </Link>
             )}
           </nav>
         </div>
 
         <div className="flex items-center gap-4">
+          <LanguageSelector />
           <span className="text-sm text-foreground/80">
             {user.userType === "company" ? user.companyName : user.username}
           </span>
