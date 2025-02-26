@@ -216,15 +216,15 @@ export default function AuthPage() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-white/80 border-gray-200">
+                              <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
                                 <SelectValue />
                               </SelectTrigger>
                             </FormControl>
-                            <SelectContent>
-                              <SelectItem value="professional">
+                            <SelectContent className="bg-white text-gray-900">
+                              <SelectItem value="professional" className="text-gray-900">
                                 {t('auth.professional')}
                               </SelectItem>
-                              <SelectItem value="company">
+                              <SelectItem value="company" className="text-gray-900">
                                 {t('auth.company')}
                               </SelectItem>
                             </SelectContent>

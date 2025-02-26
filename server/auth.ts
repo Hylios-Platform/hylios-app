@@ -23,8 +23,8 @@ async function hashPassword(password: string) {
 
 async function comparePasswords(supplied: string, stored: string) {
   try {
-    const [hashed, salt] = stored.split(".");
-    const hashedBuf = Buffer.from(hashed, "hex");
+    const [hashedPassword, salt] = stored.split(".");
+    const hashedBuf = Buffer.from(hashedPassword, "hex");
     const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
     return timingSafeEqual(hashedBuf, suppliedBuf);
   } catch (error) {
@@ -54,20 +54,15 @@ export function setupAuth(app: Express) {
     new LocalStrategy(async (username, password, done) => {
       try {
         console.log("Tentativa de login para usuário:", username);
-
         const user = await storage.getUserByUsername(username);
-        console.log("Usuário encontrado:", user ? "sim" : "não");
 
         if (!user) {
           console.log("Usuário não encontrado");
           return done(null, false, { message: "Usuário não encontrado" });
         }
 
-        // Log da senha armazenada para debug
-        console.log("Senha armazenada:", user.password);
-
         const isValid = await comparePasswords(password, user.password);
-        console.log("Senha válida:", isValid ? "sim" : "não");
+        console.log("Senha válida:", isValid);
 
         if (!isValid) {
           console.log("Senha incorreta");
@@ -103,11 +98,11 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/register", async (req, res, next) => {
+  app.post("/api/register", async (req, res) => {
     try {
       console.log("Tentativa de registro para usuário:", req.body.username);
-
       const existingUser = await storage.getUserByUsername(req.body.username);
+
       if (existingUser) {
         console.log("Usuário já existe");
         return res.status(400).json({ message: "Usuário já existe" });
@@ -122,14 +117,7 @@ export function setupAuth(app: Express) {
       });
 
       console.log("Usuário criado com sucesso:", user.id);
-
-      req.login(user, (err) => {
-        if (err) {
-          console.error("Erro no login após registro:", err);
-          return next(err);
-        }
-        res.status(201).json(user);
-      });
+      res.status(201).json(user);
     } catch (error) {
       console.error("Erro no registro:", error);
       res.status(500).json({ message: "Erro interno do servidor" });
@@ -142,18 +130,18 @@ export function setupAuth(app: Express) {
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         console.error("Erro na autenticação:", err);
-        return next(err);
+        return res.status(500).json({ message: "Erro interno do servidor" });
       }
 
       if (!user) {
         console.log("Login falhou:", info?.message);
-        return res.status(401).json(info);
+        return res.status(401).json({ message: info?.message || "Falha na autenticação" });
       }
 
       req.login(user, (err) => {
         if (err) {
           console.error("Erro no login:", err);
-          return next(err);
+          return res.status(500).json({ message: "Erro ao criar sessão" });
         }
 
         console.log("Login bem-sucedido para:", user.username);
@@ -162,18 +150,20 @@ export function setupAuth(app: Express) {
     })(req, res, next);
   });
 
-  app.post("/api/logout", (req, res, next) => {
-    const username = req.user?.username;
-    console.log("Logout para usuário:", username);
-
-    req.logout((err) => {
-      if (err) {
-        console.error("Erro no logout:", err);
-        return next(err);
-      }
-      console.log("Logout bem-sucedido");
+  app.post("/api/logout", (req, res) => {
+    if (req.user) {
+      console.log("Logout para usuário:", req.user.username);
+      req.logout((err) => {
+        if (err) {
+          console.error("Erro no logout:", err);
+          return res.status(500).json({ message: "Erro ao fazer logout" });
+        }
+        console.log("Logout bem-sucedido");
+        res.sendStatus(200);
+      });
+    } else {
       res.sendStatus(200);
-    });
+    }
   });
 
   app.get("/api/user", (req, res) => {
@@ -181,7 +171,7 @@ export function setupAuth(app: Express) {
       console.log("Usuário não autenticado na rota /api/user");
       return res.sendStatus(401);
     }
-    console.log("Usuário autenticado:", req.user?.username);
+    console.log("Usuário autenticado:", req.user.username);
     res.json(req.user);
   });
 }
