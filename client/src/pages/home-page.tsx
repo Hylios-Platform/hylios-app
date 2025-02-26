@@ -3,10 +3,9 @@ import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
 import { Bitcoin, Building2, UserCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { Tutorial, TutorialButton } from "@/components/onboarding/tutorial";
+import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
-import { useTutorial } from "@/hooks/use-tutorial"; // Added import for useTutorial hook
-
+import { useTutorial } from "@/hooks/use-tutorial";
 
 const container = {
   hidden: { opacity: 0 },
@@ -26,6 +25,7 @@ const item = {
 export default function HomePage() {
   const { user } = useAuth();
   const { t } = useTranslation();
+  const tutorial = useTutorial();
 
   if (user?.userType === "company") {
     return (
@@ -72,7 +72,7 @@ export default function HomePage() {
             <Button 
               variant="secondary" 
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
-              onClick={() => useTutorial().startTutorial()}
+              onClick={() => tutorial.startTutorial()}
             >
               {t('tutorial.start')}
             </Button>
@@ -93,12 +93,12 @@ export default function HomePage() {
                   <UserCheck className="h-6 w-6 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-700">Completar KYC</h2>
+                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('jobs.startVerification')}</h2>
                   <p className="text-blue-400 mb-4">
                     {t('jobs.completeKyc')}
                   </p>
                   <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
-                    Iniciar Verificação
+                    {t('jobs.startVerification')}
                   </Button>
                 </div>
               </div>
@@ -115,11 +115,11 @@ export default function HomePage() {
                 <div>
                   <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('navigation.jobs')}</h2>
                   <p className="text-blue-400 mb-4">
-                    Encontre oportunidades que correspondam às suas habilidades
+                    {t('jobs.findOpportunities')}
                   </p>
                   <Link href="/jobs">
                     <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
-                      Ver Trabalhos
+                      {t('jobs.viewJobs')}
                     </Button>
                   </Link>
                 </div>
@@ -135,9 +135,9 @@ export default function HomePage() {
                   <Bitcoin className="h-6 w-6 text-amber-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-700">Receba em Bitcoin</h2>
+                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('jobs.receivePayments')}</h2>
                   <p className="text-blue-400">
-                    Complete tarefas e receba pagamentos instantâneos
+                    {t('jobs.receivePayments')}
                   </p>
                 </div>
               </div>

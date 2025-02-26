@@ -30,10 +30,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
+  const { t } = useTranslation();
 
   const loginForm = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
@@ -73,14 +75,14 @@ export default function AuthPage() {
               </span>
             </CardTitle>
             <CardDescription className="text-blue-400">
-              Conecte-se com empresas e receba em Bitcoin
+              {t('home.subtitle')}
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">Entrar</TabsTrigger>
-                <TabsTrigger value="register">Cadastrar</TabsTrigger>
+                <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
+                <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
@@ -96,7 +98,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-600">Nome de Usuário</FormLabel>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.username')} <span className="text-red-500">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Input className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
@@ -109,7 +113,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-600">Senha</FormLabel>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.password')} <span className="text-red-500">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Input type="password" className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
@@ -119,10 +125,10 @@ export default function AuthPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-400 to-violet-400 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
-                      Entrar
+                      {t('auth.login')}
                     </Button>
                   </form>
                 </Form>
@@ -141,7 +147,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-600">Nome de Usuário</FormLabel>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.username')} <span className="text-red-500">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Input className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
@@ -154,7 +162,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-600">Senha</FormLabel>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.password')} <span className="text-red-500">*</span>
+                          </FormLabel>
                           <FormControl>
                             <Input type="password" className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
@@ -167,7 +177,7 @@ export default function AuthPage() {
                       name="userType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-gray-600">Eu sou</FormLabel>
+                          <FormLabel className="text-gray-600">{t('auth.iAm')}</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -179,9 +189,11 @@ export default function AuthPage() {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="professional">
-                                Profissional
+                                {t('auth.professional')}
                               </SelectItem>
-                              <SelectItem value="company">Empresa</SelectItem>
+                              <SelectItem value="company">
+                                {t('auth.company')}
+                              </SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -194,7 +206,9 @@ export default function AuthPage() {
                         name="companyName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel className="text-gray-600">Nome da Empresa</FormLabel>
+                            <FormLabel className="text-gray-600">
+                              {t('auth.companyName')} <span className="text-red-500">*</span>
+                            </FormLabel>
                             <FormControl>
                               <Input className="bg-white/80 border-gray-200" {...field} />
                             </FormControl>
@@ -205,10 +219,10 @@ export default function AuthPage() {
                     )}
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-400 to-violet-400 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg"
+                      className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={registerMutation.isPending}
                     >
-                      Cadastrar
+                      {t('auth.register')}
                     </Button>
                   </form>
                 </Form>
@@ -225,12 +239,10 @@ export default function AuthPage() {
       >
         <div className="max-w-md">
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-            Encontre Trabalho. Receba em Bitcoin.
+            {t('home.findWork')}
           </h1>
           <p className="text-xl text-blue-400">
-            Conecte-se com empresas que procuram profissionais talentosos. Complete
-            tarefas e receba pagamentos instantâneos em Bitcoin através de nossa
-            plataforma segura.
+            {t('home.description')}
           </p>
         </div>
       </motion.div>
