@@ -58,21 +58,21 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-white via-slate-50 to-blue-50">
+    <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-white via-blue-50/30 to-violet-50/30">
       <motion.div 
         className="flex items-center justify-center p-8"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
       >
-        <Card className="w-full max-w-md border-slate-200 bg-white/70 backdrop-blur-sm shadow-xl">
+        <Card className="w-full max-w-md border-gray-100 bg-white/60 backdrop-blur-sm shadow-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <Bitcoin className="h-6 w-6 text-amber-500" />
-              <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+              <Bitcoin className="h-6 w-6 text-amber-400" />
+              <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
                 Hylios
               </span>
             </CardTitle>
-            <CardDescription className="text-slate-600">
+            <CardDescription className="text-gray-500">
               Conecte-se com empresas e receba em Bitcoin
             </CardDescription>
           </CardHeader>
@@ -96,9 +96,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nome de Usuário</FormLabel>
+                          <FormLabel className="text-gray-600">Nome de Usuário</FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-slate-200" {...field} />
+                            <Input className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -109,9 +109,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Senha</FormLabel>
+                          <FormLabel className="text-gray-600">Senha</FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white/80 border-slate-200" {...field} />
+                            <Input type="password" className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -119,7 +119,7 @@ export default function AuthPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-lg"
+                      className="w-full bg-gradient-to-r from-blue-400 to-violet-400 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
                       Entrar
@@ -141,9 +141,9 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Nome de Usuário</FormLabel>
+                          <FormLabel className="text-gray-600">Nome de Usuário</FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-slate-200" {...field} />
+                            <Input className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -154,9 +154,9 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Senha</FormLabel>
+                          <FormLabel className="text-gray-600">Senha</FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white/80 border-slate-200" {...field} />
+                            <Input type="password" className="bg-white/80 border-gray-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -167,13 +167,13 @@ export default function AuthPage() {
                       name="userType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Eu sou</FormLabel>
+                          <FormLabel className="text-gray-600">Eu sou</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-white/80 border-slate-200">
+                              <SelectTrigger className="bg-white/80 border-gray-200">
                                 <SelectValue />
                               </SelectTrigger>
                             </FormControl>
@@ -194,9 +194,9 @@ export default function AuthPage() {
                         name="companyName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Nome da Empresa</FormLabel>
+                            <FormLabel className="text-gray-600">Nome da Empresa</FormLabel>
                             <FormControl>
-                              <Input className="bg-white/80 border-slate-200" {...field} />
+                              <Input className="bg-white/80 border-gray-200" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -205,7 +205,7 @@ export default function AuthPage() {
                     )}
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-lg"
+                      className="w-full bg-gradient-to-r from-blue-400 to-violet-400 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg"
                       disabled={registerMutation.isPending}
                     >
                       Cadastrar
@@ -224,10 +224,10 @@ export default function AuthPage() {
         animate={{ opacity: 1, x: 0 }}
       >
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
             Encontre Trabalho. Receba em Bitcoin.
           </h1>
-          <p className="text-xl text-slate-600">
+          <p className="text-xl text-gray-500">
             Conecte-se com empresas que procuram profissionais talentosos. Complete
             tarefas e receba pagamentos instantâneos em Bitcoin através de nossa
             plataforma segura.
