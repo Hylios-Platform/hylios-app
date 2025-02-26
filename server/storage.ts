@@ -1,8 +1,11 @@
-import { User, Job, InsertUser, InsertJob, KycData } from "@shared/schema";
+import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData } from "@shared/schema";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
 import session from "express-session";
-import createMemoryStore from "memorystore";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -17,83 +20,79 @@ export interface IStorage {
   sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private jobs: Map<number, Job>;
-  private currentUserId: number;
-  private currentJobId: number;
+export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map();
-    this.jobs = new Map();
-    this.currentUserId = 1;
-    this.currentJobId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentUserId++;
-    const user: User = { 
-      ...insertUser, 
-      id,
-      kycStatus: "pending",
-      kycData: null,
-      profileData: null
-    };
-    this.users.set(id, user);
+    const [user] = await db
+      .insert(users)
+      .values({
+        ...insertUser,
+        kycStatus: "pending",
+        kycData: null,
+        profileData: null,
+      })
+      .returning();
     return user;
   }
 
   async updateUser(id: number, data: Partial<User>): Promise<User> {
-    const user = await this.getUser(id);
+    const [user] = await db
+      .update(users)
+      .set(data)
+      .where(eq(users.id, id))
+      .returning();
     if (!user) throw new Error("User not found");
-    
-    const updatedUser = { ...user, ...data };
-    this.users.set(id, updatedUser);
-    return updatedUser;
+    return user;
   }
 
   async createJob(job: InsertJob & { companyId: number }): Promise<Job> {
-    const id = this.currentJobId++;
-    const newJob: Job = {
-      ...job,
-      id,
-      status: "open",
-      assignedTo: null,
-      createdAt: new Date()
-    };
-    this.jobs.set(id, newJob);
+    const [newJob] = await db
+      .insert(jobs)
+      .values({
+        ...job,
+        status: "open",
+        assignedTo: null,
+        createdAt: new Date(),
+      })
+      .returning();
     return newJob;
   }
 
   async getJobs(): Promise<Job[]> {
-    return Array.from(this.jobs.values());
+    return db.select().from(jobs);
   }
 
   async getJob(id: number): Promise<Job | undefined> {
-    return this.jobs.get(id);
+    const [job] = await db.select().from(jobs).where(eq(jobs.id, id));
+    return job;
   }
 
   async updateJob(id: number, data: Partial<Job>): Promise<Job> {
-    const job = await this.getJob(id);
+    const [job] = await db
+      .update(jobs)
+      .set(data)
+      .where(eq(jobs.id, id))
+      .returning();
     if (!job) throw new Error("Job not found");
-    
-    const updatedJob = { ...job, ...data };
-    this.jobs.set(id, updatedJob);
-    return updatedJob;
+    return job;
   }
 
   async submitKyc(userId: number, kycData: KycData): Promise<User> {
@@ -104,4 +103,4 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
