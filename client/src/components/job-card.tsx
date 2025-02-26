@@ -20,13 +20,13 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
   return (
     <Card className="border-blue-100 bg-white shadow-md hover:shadow-lg transition-shadow">
       <CardContent className="pt-6">
-        <div className="flex items-start justify-between gap-4">
+        <div className="flex flex-col md:flex-row items-start justify-between gap-4">
           <div className="flex-1">
             <h3 className="text-xl font-semibold mb-2 text-gray-700">{job.title}</h3>
             <p className="text-blue-400 whitespace-pre-wrap mb-4">
               {job.description}
             </p>
-            <div className="flex items-center gap-4 text-sm">
+            <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
                 <Bitcoin className="h-4 w-4 text-amber-400" />
                 <span className="text-blue-400">{job.bitcoinAmount} BTC</span>
@@ -55,7 +55,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
           <Button 
             onClick={onApply} 
             disabled={isPending}
-            className="bg-blue-400 hover:bg-blue-500 text-white"
+            className="bg-blue-400 hover:bg-blue-500 text-white w-full md:w-auto"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Apply Now
