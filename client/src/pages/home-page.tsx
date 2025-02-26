@@ -29,11 +29,27 @@ export default function HomePage() {
 
   const MatchAnimation = () => (
     <div className="relative h-32 overflow-hidden my-8">
+      {/* Linha de conexão animada */}
+      <motion.div
+        className="absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400"
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{
+          scaleX: [0, 1, 1, 0],
+          opacity: [0, 1, 1, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      {/* Empresa */}
       <motion.div
         animate={{
-          x: ["0%", "100%", "0%"],
-          scale: [1, 1.2, 1],
-          rotate: [0, 5, -5, 0]
+          x: ["0%", "20%", "0%"],
+          scale: [1, 1.1, 1],
+          rotate: [0, 3, -3, 0]
         }}
         transition={{
           duration: 8,
@@ -43,33 +59,51 @@ export default function HomePage() {
         className="absolute left-0 top-1/2 -translate-y-1/2"
       >
         <div className="flex items-center gap-4">
-          <div className="bg-blue-100 p-3 rounded-full">
+          <div className="bg-blue-100 p-3 rounded-full shadow-md">
             <Building2 className="h-6 w-6 text-blue-600" />
           </div>
           <span className="text-blue-600 font-medium">Empresa A</span>
         </div>
       </motion.div>
 
+      {/* Efeito de Match Central */}
       <motion.div
+        initial={{ scale: 0, opacity: 0 }}
         animate={{
-          scale: [1, 1.2, 1],
+          scale: [0, 1.2, 1],
           opacity: [0, 1, 0]
         }}
         transition={{
-          duration: 4,
+          duration: 2,
           repeat: Infinity,
-          ease: "easeInOut"
+          ease: "easeInOut",
+          repeatDelay: 2
         }}
         className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
       >
-        <Sparkles className="h-8 w-8 text-amber-400" />
+        <div className="relative">
+          <Sparkles className="h-8 w-8 text-amber-400" />
+          <motion.div
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.2, 0, 0.2],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute inset-0 bg-amber-200 rounded-full blur-xl"
+          />
+        </div>
       </motion.div>
 
+      {/* Profissional */}
       <motion.div
         animate={{
-          x: ["100%", "0%", "100%"],
-          scale: [1, 1.2, 1],
-          rotate: [0, -5, 5, 0]
+          x: ["100%", "80%", "100%"],
+          scale: [1, 1.1, 1],
+          rotate: [0, -3, 3, 0]
         }}
         transition={{
           duration: 8,
@@ -80,11 +114,34 @@ export default function HomePage() {
       >
         <div className="flex items-center gap-4">
           <span className="text-violet-600 font-medium">Profissional B</span>
-          <div className="bg-violet-100 p-3 rounded-full">
+          <div className="bg-violet-100 p-3 rounded-full shadow-md">
             <UserCheck className="h-6 w-6 text-violet-600" />
           </div>
         </div>
       </motion.div>
+
+      {/* Partículas flutuantes */}
+      {[...Array(3)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-blue-400 to-violet-400"
+          initial={{ 
+            y: "100%",
+            x: `${30 + i * 20}%`,
+            opacity: 0 
+          }}
+          animate={{
+            y: [100, -100],
+            opacity: [0, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            delay: i * 1,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
     </div>
   );
 
