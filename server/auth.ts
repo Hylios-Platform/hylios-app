@@ -23,10 +23,17 @@ async function hashPassword(password: string) {
 
 async function comparePasswords(supplied: string, stored: string) {
   try {
+    console.log("Comparando senhas:");
+    console.log("Senha fornecida (hash):", supplied);
+    console.log("Senha armazenada:", stored);
+
     const [hashedPassword, salt] = stored.split(".");
     const hashedBuf = Buffer.from(hashedPassword, "hex");
     const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-    return timingSafeEqual(hashedBuf, suppliedBuf);
+    const result = timingSafeEqual(hashedBuf, suppliedBuf);
+
+    console.log("Resultado da comparação:", result);
+    return result;
   } catch (error) {
     console.error("Erro ao comparar senhas:", error);
     return false;
@@ -109,7 +116,7 @@ export function setupAuth(app: Express) {
       }
 
       const hashedPassword = await hashPassword(req.body.password);
-      console.log("Senha hasheada criada");
+      console.log("Senha hasheada criada:", hashedPassword);
 
       const user = await storage.createUser({
         ...req.body,
