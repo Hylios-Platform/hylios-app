@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocation } from "wouter";
-import { Bitcoin } from "lucide-react";
+import { Bitcoin, Eye, EyeOff } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -31,11 +31,14 @@ import {
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useState } from "react";
 
 export default function AuthPage() {
   const [, setLocation] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
   const { t } = useTranslation();
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showRegisterPassword, setShowRegisterPassword] = useState(false);
 
   const loginForm = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
@@ -116,9 +119,24 @@ export default function AuthPage() {
                           <FormLabel className="text-gray-600">
                             {t('auth.password')} <span className="text-red-500">*</span>
                           </FormLabel>
-                          <FormControl>
-                            <Input type="password" className="bg-white/80 border-gray-200 text-gray-900" {...field} />
-                          </FormControl>
+                          <div className="relative">
+                            <FormControl>
+                              <Input 
+                                type={showLoginPassword ? "text" : "password"} 
+                                className="bg-white/80 border-gray-200 text-gray-900 pr-10" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-gray-600"
+                              onClick={() => setShowLoginPassword(!showLoginPassword)}
+                            >
+                              {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </Button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
@@ -165,9 +183,24 @@ export default function AuthPage() {
                           <FormLabel className="text-gray-600">
                             {t('auth.password')} <span className="text-red-500">*</span>
                           </FormLabel>
-                          <FormControl>
-                            <Input type="password" className="bg-white/80 border-gray-200 text-gray-900" {...field} />
-                          </FormControl>
+                          <div className="relative">
+                            <FormControl>
+                              <Input 
+                                type={showRegisterPassword ? "text" : "password"} 
+                                className="bg-white/80 border-gray-200 text-gray-900 pr-10" 
+                                {...field} 
+                              />
+                            </FormControl>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-gray-600"
+                              onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                            >
+                              {showRegisterPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                            </Button>
+                          </div>
                           <FormMessage />
                         </FormItem>
                       )}
