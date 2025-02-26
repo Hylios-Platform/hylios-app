@@ -58,13 +58,13 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-white via-blue-50/20 to-blue-50/30">
+    <div className="min-h-screen grid md:grid-cols-2 bg-white">
       <motion.div 
         className="flex items-center justify-center p-8"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
       >
-        <Card className="w-full max-w-md border-blue-100 bg-white/60 backdrop-blur-sm shadow-lg">
+        <Card className="w-full max-w-md border-blue-100 bg-white shadow-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
               <Bitcoin className="h-6 w-6 text-amber-400" />
@@ -72,7 +72,7 @@ export default function AuthPage() {
                 Hylios
               </span>
             </CardTitle>
-            <CardDescription className="text-blue-600/70">
+            <CardDescription className="text-blue-400">
               Conecte-se com empresas e receba em Bitcoin
             </CardDescription>
           </CardHeader>
@@ -227,7 +227,7 @@ export default function AuthPage() {
           <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
             Encontre Trabalho. Receba em Bitcoin.
           </h1>
-          <p className="text-xl text-blue-600/70">
+          <p className="text-xl text-blue-400">
             Conecte-se com empresas que procuram profissionais talentosos. Complete
             tarefas e receba pagamentos instantâneos em Bitcoin através de nossa
             plataforma segura.

@@ -5,6 +5,8 @@ import { Bitcoin, Building2, UserCheck } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial, TutorialButton } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
+import { useTutorial } from "@/hooks/use-tutorial"; // Added import for useTutorial hook
+
 
 const container = {
   hidden: { opacity: 0 },
@@ -27,7 +29,7 @@ export default function HomePage() {
 
   if (user?.userType === "company") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-blue-50/30">
+      <div className="min-h-screen bg-white">
         <div className="container mx-auto px-4 py-16">
           <motion.div 
             className="max-w-2xl mx-auto text-center"
@@ -37,11 +39,11 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
-            <p className="text-xl text-blue-600/70 mb-10">
+            <p className="text-xl text-blue-400 mb-10">
               {t('home.subtitle')}
             </p>
             <Link href="/post-job">
-              <Button size="lg" className="w-full md:w-auto bg-gradient-to-r from-blue-400 to-violet-400 hover:from-blue-500 hover:to-violet-500 text-white shadow-lg">
+              <Button size="lg" className="w-full md:w-auto bg-blue-400 hover:bg-blue-500 text-white shadow-lg">
                 {t('navigation.postJob')}
               </Button>
             </Link>
@@ -52,7 +54,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-blue-50/30">
+    <div className="min-h-screen bg-white">
       <Tutorial />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
@@ -64,10 +66,16 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
-            <p className="text-xl text-blue-600/70 mb-6">
+            <p className="text-xl text-blue-400 mb-6">
               {t('home.subtitle')}
             </p>
-            <TutorialButton />
+            <Button 
+              variant="secondary" 
+              className="bg-blue-400 hover:bg-blue-500 text-white"
+              onClick={() => useTutorial().startTutorial()} // Added onClick handler
+            >
+              {t('tutorial.start')}
+            </Button>
           </motion.div>
 
           <motion.div 
@@ -78,18 +86,18 @@ export default function HomePage() {
           >
             <motion.div 
               variants={item}
-              className="kyc-section group relative overflow-hidden rounded-xl border border-gray-100 bg-white/60 backdrop-blur-sm p-6 shadow-lg transition-all hover:shadow-xl hover:bg-white/80"
+              className="kyc-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
             >
               <div className="flex items-start gap-4">
                 <div className="rounded-full bg-emerald-50 p-3">
                   <UserCheck className="h-6 w-6 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-600">Completar KYC</h2>
-                  <p className="text-gray-500 mb-4">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-700">Completar KYC</h2>
+                  <p className="text-blue-400 mb-4">
                     {t('jobs.completeKyc')}
                   </p>
-                  <Button variant="outline" className="bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600">
+                  <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-400 border-blue-200">
                     Iniciar Verificação
                   </Button>
                 </div>
@@ -98,19 +106,19 @@ export default function HomePage() {
 
             <motion.div 
               variants={item}
-              className="jobs-section group relative overflow-hidden rounded-xl border border-gray-100 bg-white/60 backdrop-blur-sm p-6 shadow-lg transition-all hover:shadow-xl hover:bg-white/80"
+              className="jobs-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
             >
               <div className="flex items-start gap-4">
                 <div className="rounded-full bg-blue-50 p-3">
                   <Building2 className="h-6 w-6 text-blue-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-600">{t('navigation.jobs')}</h2>
-                  <p className="text-gray-500 mb-4">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('navigation.jobs')}</h2>
+                  <p className="text-blue-400 mb-4">
                     Encontre oportunidades que correspondam às suas habilidades
                   </p>
                   <Link href="/jobs">
-                    <Button variant="outline" className="bg-white/80 backdrop-blur-sm hover:bg-white text-gray-600">
+                    <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-400 border-blue-200">
                       Ver Trabalhos
                     </Button>
                   </Link>
@@ -120,15 +128,15 @@ export default function HomePage() {
 
             <motion.div 
               variants={item}
-              className="payment-section group relative overflow-hidden rounded-xl border border-gray-100 bg-white/60 backdrop-blur-sm p-6 shadow-lg transition-all hover:shadow-xl hover:bg-white/80"
+              className="payment-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
             >
               <div className="flex items-start gap-4">
                 <div className="rounded-full bg-amber-50 p-3">
                   <Bitcoin className="h-6 w-6 text-amber-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-600">Receba em Bitcoin</h2>
-                  <p className="text-gray-500">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-700">Receba em Bitcoin</h2>
+                  <p className="text-blue-400">
                     Complete tarefas e receba pagamentos instantâneos
                   </p>
                 </div>
