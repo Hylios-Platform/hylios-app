@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Bitcoin, Building2, UserCheck } from "lucide-react";
+import { Bitcoin, Building2, UserCheck, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
@@ -27,6 +27,67 @@ export default function HomePage() {
   const { t } = useTranslation();
   const tutorial = useTutorial();
 
+  const MatchAnimation = () => (
+    <div className="relative h-32 overflow-hidden my-8">
+      <motion.div
+        animate={{
+          x: ["0%", "100%", "0%"],
+          scale: [1, 1.2, 1],
+          rotate: [0, 5, -5, 0]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute left-0 top-1/2 -translate-y-1/2"
+      >
+        <div className="flex items-center gap-4">
+          <div className="bg-blue-100 p-3 rounded-full">
+            <Building2 className="h-6 w-6 text-blue-600" />
+          </div>
+          <span className="text-blue-600 font-medium">Empresa A</span>
+        </div>
+      </motion.div>
+
+      <motion.div
+        animate={{
+          scale: [1, 1.2, 1],
+          opacity: [0, 1, 0]
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut"
+        }}
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      >
+        <Sparkles className="h-8 w-8 text-amber-400" />
+      </motion.div>
+
+      <motion.div
+        animate={{
+          x: ["100%", "0%", "100%"],
+          scale: [1, 1.2, 1],
+          rotate: [0, -5, 5, 0]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute right-0 top-1/2 -translate-y-1/2"
+      >
+        <div className="flex items-center gap-4">
+          <span className="text-violet-600 font-medium">Profissional B</span>
+          <div className="bg-violet-100 p-3 rounded-full">
+            <UserCheck className="h-6 w-6 text-violet-600" />
+          </div>
+        </div>
+      </motion.div>
+    </div>
+  );
+
   if (user?.userType === "company") {
     return (
       <div className="min-h-screen bg-white">
@@ -42,6 +103,7 @@ export default function HomePage() {
             <p className="text-xl text-blue-400 mb-10">
               {t('home.subtitle')}
             </p>
+            <MatchAnimation />
             <Link href="/post-job">
               <Button size="lg" className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg">
                 {t('navigation.postJob')}
@@ -69,6 +131,7 @@ export default function HomePage() {
             <p className="text-xl text-blue-400 mb-6">
               {t('home.subtitle')}
             </p>
+            <MatchAnimation />
             <Button 
               variant="secondary" 
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"

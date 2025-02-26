@@ -24,7 +24,7 @@ async function hashPassword(password: string) {
 async function comparePasswords(supplied: string, stored: string) {
   try {
     console.log("Comparando senhas:");
-    console.log("Senha fornecida (hash):", supplied);
+    console.log("Senha fornecida:", supplied);
     console.log("Senha armazenada:", stored);
 
     const [hashedPassword, salt] = stored.split(".");
@@ -134,7 +134,7 @@ export function setupAuth(app: Express) {
   app.post("/api/login", (req, res, next) => {
     console.log("Requisição de login recebida para:", req.body.username);
 
-    passport.authenticate("local", (err, user, info) => {
+    passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) {
         console.error("Erro na autenticação:", err);
         return res.status(500).json({ message: "Erro interno do servidor" });
