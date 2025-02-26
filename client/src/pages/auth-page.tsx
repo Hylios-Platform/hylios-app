@@ -66,14 +66,14 @@ export default function AuthPage() {
               Hylios
             </CardTitle>
             <CardDescription>
-              Connect with companies and get paid in Bitcoin
+              Conecte-se com empresas e receba em Bitcoin
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+                <TabsTrigger value="login">Entrar</TabsTrigger>
+                <TabsTrigger value="register">Cadastrar</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
@@ -89,7 +89,7 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>Nome de Usuário</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -102,7 +102,7 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>Senha</FormLabel>
                           <FormControl>
                             <Input type="password" {...field} />
                           </FormControl>
@@ -115,7 +115,7 @@ export default function AuthPage() {
                       className="w-full"
                       disabled={loginMutation.isPending}
                     >
-                      Login
+                      Entrar
                     </Button>
                   </form>
                 </Form>
@@ -134,7 +134,7 @@ export default function AuthPage() {
                       name="username"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Username</FormLabel>
+                          <FormLabel>Nome de Usuário</FormLabel>
                           <FormControl>
                             <Input {...field} />
                           </FormControl>
@@ -147,7 +147,7 @@ export default function AuthPage() {
                       name="password"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>Password</FormLabel>
+                          <FormLabel>Senha</FormLabel>
                           <FormControl>
                             <Input type="password" {...field} />
                           </FormControl>
@@ -160,7 +160,7 @@ export default function AuthPage() {
                       name="userType"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel>I am a</FormLabel>
+                          <FormLabel>Eu sou</FormLabel>
                           <Select
                             onValueChange={field.onChange}
                             defaultValue={field.value}
@@ -172,9 +172,9 @@ export default function AuthPage() {
                             </FormControl>
                             <SelectContent>
                               <SelectItem value="professional">
-                                Professional
+                                Profissional
                               </SelectItem>
-                              <SelectItem value="company">Company</SelectItem>
+                              <SelectItem value="company">Empresa</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -187,7 +187,7 @@ export default function AuthPage() {
                         name="companyName"
                         render={({ field }) => (
                           <FormItem>
-                            <FormLabel>Company Name</FormLabel>
+                            <FormLabel>Nome da Empresa</FormLabel>
                             <FormControl>
                               <Input {...field} />
                             </FormControl>
@@ -201,7 +201,7 @@ export default function AuthPage() {
                       className="w-full"
                       disabled={registerMutation.isPending}
                     >
-                      Register
+                      Cadastrar
                     </Button>
                   </form>
                 </Form>
@@ -214,12 +214,12 @@ export default function AuthPage() {
       <div className="hidden md:flex flex-col justify-center p-8 bg-gradient-to-br from-primary/10 to-blue-500/10">
         <div className="max-w-md mx-auto">
           <h1 className="text-4xl font-bold mb-4">
-            Find Work. Get Paid in Bitcoin.
+            Encontre Trabalho. Receba em Bitcoin.
           </h1>
           <p className="text-lg text-muted-foreground">
-            Connect with companies looking for talented professionals. Complete
-            tasks and receive instant Bitcoin payments through our secure
-            platform.
+            Conecte-se com empresas que procuram profissionais talentosos. Complete
+            tarefas e receba pagamentos instantâneos em Bitcoin através de nossa
+            plataforma segura.
           </p>
         </div>
       </div>

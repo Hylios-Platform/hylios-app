@@ -19,16 +19,16 @@ export default function Header() {
           </Link>
           <nav className="flex gap-4">
             <Link href="/jobs">
-              <a className="text-foreground/80 hover:text-foreground">Jobs</a>
+              <a className="text-foreground/80 hover:text-foreground">Trabalhos</a>
             </Link>
             {user.userType === "company" && (
               <Link href="/post-job">
-                <a className="text-foreground/80 hover:text-foreground">Post Job</a>
+                <a className="text-foreground/80 hover:text-foreground">Publicar Trabalho</a>
               </Link>
             )}
           </nav>
         </div>
-        
+
         <div className="flex items-center gap-4">
           <span className="text-sm text-foreground/80">
             {user.userType === "company" ? user.companyName : user.username}
