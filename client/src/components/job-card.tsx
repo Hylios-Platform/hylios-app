@@ -51,11 +51,11 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
       </CardContent>
 
       {canApply && (
-        <CardFooter className="border-t border-blue-100 bg-blue-50/50 flex justify-end p-4">
+        <CardFooter className="border-t border-blue-200 bg-blue-50/50 flex justify-end p-4">
           <Button 
             onClick={onApply} 
             disabled={isPending}
-            className="bg-blue-400 hover:bg-blue-500 text-white w-full md:w-auto"
+            className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto shadow-md"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             Apply Now

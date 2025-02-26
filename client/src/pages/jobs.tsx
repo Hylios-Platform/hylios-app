@@ -77,11 +77,11 @@ export default function Jobs() {
             {user?.userType === "professional" && user?.kycStatus !== "verified" && (
               <Dialog>
                 <DialogTrigger asChild>
-                  <Button className="bg-blue-400 hover:bg-blue-500 text-white">
+                  <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
                     Completar KYC
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-lg bg-white shadow-lg border-blue-100">
+                <DialogContent className="max-w-lg bg-white shadow-lg border-blue-200">
                   <KycForm />
                 </DialogContent>
               </Dialog>

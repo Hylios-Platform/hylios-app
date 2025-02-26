@@ -43,7 +43,7 @@ export default function HomePage() {
               {t('home.subtitle')}
             </p>
             <Link href="/post-job">
-              <Button size="lg" className="w-full md:w-auto bg-blue-400 hover:bg-blue-500 text-white shadow-lg">
+              <Button size="lg" className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg">
                 {t('navigation.postJob')}
               </Button>
             </Link>
@@ -71,8 +71,8 @@ export default function HomePage() {
             </p>
             <Button 
               variant="secondary" 
-              className="bg-blue-400 hover:bg-blue-500 text-white"
-              onClick={() => useTutorial().startTutorial()} // Added onClick handler
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+              onClick={() => useTutorial().startTutorial()}
             >
               {t('tutorial.start')}
             </Button>
@@ -97,7 +97,7 @@ export default function HomePage() {
                   <p className="text-blue-400 mb-4">
                     {t('jobs.completeKyc')}
                   </p>
-                  <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-400 border-blue-200">
+                  <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
                     Iniciar Verificação
                   </Button>
                 </div>
@@ -118,7 +118,7 @@ export default function HomePage() {
                     Encontre oportunidades que correspondam às suas habilidades
                   </p>
                   <Link href="/jobs">
-                    <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-400 border-blue-200">
+                    <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
                       Ver Trabalhos
                     </Button>
                   </Link>
