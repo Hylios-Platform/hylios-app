@@ -24,11 +24,19 @@
     "searchPlaceholder": "Search jobs...",
     "filterByStatus": "Filter by status",
     "allJobs": "All Jobs",
-    "open": "Open",
-    "assigned": "Assigned",
-    "completed": "Completed",
+    "status": {
+      "open": "Open",
+      "assigned": "Assigned",
+      "completed": "Completed"
+    },
+    "postedAgo": "Posted {{time}} ago",
+    "applyNow": "Apply Now",
     "noJobs": "No jobs found matching your criteria",
-    "completeKyc": "Complete KYC verification to apply for jobs"
+    "completeKyc": "Complete KYC verification to apply for jobs",
+    "startVerification": "Start Verification",
+    "findOpportunities": "Find opportunities that match your skills",
+    "viewJobs": "View Jobs",
+    "receivePayments": "Complete tasks and receive instant payments"
   },
   "tutorial": {
     "start": "Start Tour",

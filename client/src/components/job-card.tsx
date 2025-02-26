@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Bitcoin, Calendar, Loader2 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { useTranslation } from "react-i18next";
 
 interface JobCardProps {
   job: Job;
@@ -13,6 +14,8 @@ interface JobCardProps {
 }
 
 export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCardProps) {
+  const { t } = useTranslation();
+
   const canApply = userType === "professional" && 
                    kycStatus === "verified" && 
                    job.status === "open";
@@ -34,7 +37,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4 text-blue-400" />
                 <span className="text-blue-400">
-                  Posted {formatDistanceToNow(new Date(job.createdAt))} ago
+                  {t('jobs.postedAgo', { time: formatDistanceToNow(new Date(job.createdAt)) })}
                 </span>
               </div>
               <div className="capitalize">
@@ -42,7 +45,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
                   ${job.status === 'open' ? 'bg-emerald-50 text-emerald-400' : 
                     job.status === 'assigned' ? 'bg-blue-50 text-blue-400' :
                     'bg-gray-50 text-gray-400'}`}>
-                  {job.status}
+                  {t(`jobs.status.${job.status}`)}
                 </span>
               </div>
             </div>
@@ -58,7 +61,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
             className="bg-blue-600 hover:bg-blue-700 text-white w-full md:w-auto shadow-md"
           >
             {isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            Apply Now
+            {t('jobs.applyNow')}
           </Button>
         </CardFooter>
       )}
@@ -66,7 +69,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
       {userType === "professional" && kycStatus !== "verified" && (
         <CardFooter className="border-t border-blue-100 bg-blue-50/50 p-4">
           <p className="text-sm text-blue-400">
-            Complete KYC verification to apply for jobs
+            {t('jobs.completeKyc')}
           </p>
         </CardFooter>
       )}

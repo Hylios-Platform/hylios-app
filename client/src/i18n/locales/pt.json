@@ -24,11 +24,19 @@
     "searchPlaceholder": "Buscar trabalhos...",
     "filterByStatus": "Filtrar por status",
     "allJobs": "Todos os Trabalhos",
-    "open": "Abertos",
-    "assigned": "Atribuídos",
-    "completed": "Concluídos",
+    "status": {
+      "open": "Aberto",
+      "assigned": "Atribuído",
+      "completed": "Concluído"
+    },
+    "postedAgo": "Publicado há {{time}}",
+    "applyNow": "Candidatar-se",
     "noJobs": "Nenhum trabalho encontrado com os critérios selecionados",
-    "completeKyc": "Complete a verificação KYC para se candidatar aos trabalhos"
+    "completeKyc": "Complete a verificação KYC para se candidatar aos trabalhos",
+    "startVerification": "Iniciar Verificação",
+    "findOpportunities": "Encontre oportunidades que correspondam às suas habilidades",
+    "viewJobs": "Ver Trabalhos",
+    "receivePayments": "Complete tarefas e receba pagamentos instantâneos"
   },
   "tutorial": {
     "start": "Iniciar Tour",
