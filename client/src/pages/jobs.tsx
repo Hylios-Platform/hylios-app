@@ -17,10 +17,12 @@ import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { Loader2, Search } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function Jobs() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
 
@@ -36,13 +38,13 @@ export default function Jobs() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/jobs"] });
       toast({
-        title: "Success",
-        description: "Successfully applied for the job",
+        title: "Sucesso",
+        description: "Candidatura realizada com sucesso",
       });
     },
     onError: (error: Error) => {
       toast({
-        title: "Error",
+        title: "Erro",
         description: error.message,
         variant: "destructive",
       });
@@ -68,11 +70,11 @@ export default function Jobs() {
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
-          <h1 className="text-3xl font-bold">Available Jobs</h1>
+          <h1 className="text-3xl font-bold">{t('jobs.title')}</h1>
           {user.userType === "professional" && user.kycStatus !== "verified" && (
             <Dialog>
               <DialogTrigger asChild>
-                <Button>Complete KYC</Button>
+                <Button>Completar KYC</Button>
               </DialogTrigger>
               <DialogContent className="max-w-lg">
                 <KycForm />
@@ -85,7 +87,7 @@ export default function Jobs() {
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
             <Input
-              placeholder="Search jobs..."
+              placeholder={t('jobs.searchPlaceholder')}
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               className="pl-10"
@@ -93,13 +95,13 @@ export default function Jobs() {
           </div>
           <Select value={status} onValueChange={setStatus}>
             <SelectTrigger className="w-[180px]">
-              <SelectValue placeholder="Filter by status" />
+              <SelectValue placeholder={t('jobs.filterByStatus')} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="all">All Jobs</SelectItem>
-              <SelectItem value="open">Open</SelectItem>
-              <SelectItem value="assigned">Assigned</SelectItem>
-              <SelectItem value="completed">Completed</SelectItem>
+              <SelectItem value="all">{t('jobs.allJobs')}</SelectItem>
+              <SelectItem value="open">{t('jobs.open')}</SelectItem>
+              <SelectItem value="assigned">{t('jobs.assigned')}</SelectItem>
+              <SelectItem value="completed">{t('jobs.completed')}</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -107,7 +109,7 @@ export default function Jobs() {
         <div className="space-y-4">
           {filteredJobs?.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
-              No jobs found matching your criteria
+              {t('jobs.noJobs')}
             </div>
           ) : (
             filteredJobs?.map((job) => (
