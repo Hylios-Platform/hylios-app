@@ -27,7 +27,7 @@ export default function HomePage() {
 
   if (user?.userType === "company") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-violet-50/30">
+      <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-blue-50/30">
         <div className="container mx-auto px-4 py-16">
           <motion.div 
             className="max-w-2xl mx-auto text-center"
@@ -37,7 +37,7 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
-            <p className="text-xl text-gray-500 mb-10">
+            <p className="text-xl text-blue-600/70 mb-10">
               {t('home.subtitle')}
             </p>
             <Link href="/post-job">
@@ -52,7 +52,7 @@ export default function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/30 to-violet-50/30">
+    <div className="min-h-screen bg-gradient-to-br from-white via-blue-50/20 to-blue-50/30">
       <Tutorial />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
@@ -64,7 +64,7 @@ export default function HomePage() {
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
-            <p className="text-xl text-gray-500 mb-6">
+            <p className="text-xl text-blue-600/70 mb-6">
               {t('home.subtitle')}
             </p>
             <TutorialButton />

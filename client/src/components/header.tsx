@@ -12,7 +12,7 @@ export default function Header() {
   if (!user) return null;
 
   return (
-    <header className="border-b">
+    <header className="bg-blue-50/80 backdrop-blur-sm border-b border-blue-100">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
@@ -20,13 +20,13 @@ export default function Header() {
           </h1>
           <nav className="flex gap-4">
             <Link href="/jobs">
-              <span className="text-gray-500 hover:text-gray-700 cursor-pointer">
+              <span className="text-blue-600/70 hover:text-blue-600 cursor-pointer">
                 {t('navigation.jobs')}
               </span>
             </Link>
             {user.userType === "company" && (
               <Link href="/post-job">
-                <span className="text-gray-500 hover:text-gray-700 cursor-pointer">
+                <span className="text-blue-600/70 hover:text-blue-600 cursor-pointer">
                   {t('navigation.postJob')}
                 </span>
               </Link>
@@ -36,7 +36,7 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <LanguageSelector />
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-blue-600/70">
             {user.userType === "company" ? user.companyName : user.username}
           </span>
           <Button
@@ -44,7 +44,7 @@ export default function Header() {
             size="icon"
             onClick={() => logoutMutation.mutate()}
           >
-            <LogOut className="h-4 w-4 text-gray-500" />
+            <LogOut className="h-4 w-4 text-blue-600/70" />
           </Button>
         </div>
       </div>
