@@ -23,13 +23,13 @@ export default function Header() {
           </h1>
           <nav className="flex gap-4">
             <Link href="/jobs">
-              <Button variant="ghost" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
                 {t('navigation.jobs')}
               </Button>
             </Link>
             {user.userType === "company" && (
               <Link href="/post-job">
-                <Button variant="ghost" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
                   {t('navigation.postJob')}
                 </Button>
               </Link>
@@ -45,7 +45,7 @@ export default function Header() {
             variant="ghost"
             size="icon"
             onClick={() => logoutMutation.mutate()}
-            className="text-gray-700 hover:text-gray-900 hover:bg-blue-50 text-blue-600 border-blue-200"
+            className="text-white hover:text-gray-900 hover:bg-blue-50"
           >
             <LogOut className="h-4 w-4" />
           </Button>
