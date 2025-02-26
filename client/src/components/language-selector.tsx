@@ -12,17 +12,19 @@ export function LanguageSelector() {
   const { i18n } = useTranslation();
 
   return (
-    <Select value={i18n.language} onValueChange={i18n.changeLanguage}>
-      <SelectTrigger className="w-[140px] bg-blue-400 text-white hover:bg-blue-500 border-none">
-        <div className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          <SelectValue />
-        </div>
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="en">English</SelectItem>
-        <SelectItem value="pt">Português</SelectItem>
-      </SelectContent>
-    </Select>
+    <div className="fixed bottom-4 left-4 z-50">
+      <Select value={i18n.language} onValueChange={i18n.changeLanguage}>
+        <SelectTrigger className="w-[140px] bg-blue-400 text-white hover:bg-blue-500 border-none shadow-lg">
+          <div className="flex items-center gap-2">
+            <Globe className="h-4 w-4" />
+            <SelectValue />
+          </div>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="en">English</SelectItem>
+          <SelectItem value="pt">Português</SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
   );
 }

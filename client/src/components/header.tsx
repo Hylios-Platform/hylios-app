@@ -3,7 +3,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
-import { LanguageSelector } from "./language-selector";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -36,9 +35,8 @@ export default function Header() {
 
         <div className="flex items-center gap-4">
           <span className="text-sm text-gray-700">
-            {user.userType === "company" ? user.companyName : user.username}
+            {user.username}
           </span>
-          <LanguageSelector />
           <Button
             variant="ghost"
             size="icon"

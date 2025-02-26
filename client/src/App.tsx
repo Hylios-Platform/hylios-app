@@ -10,6 +10,7 @@ import PostJob from "@/pages/post-job";
 import Jobs from "@/pages/jobs";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
+import { LanguageSelector } from "@/components/language-selector";
 
 function Router() {
   return (
@@ -22,6 +23,7 @@ function Router() {
         <ProtectedRoute path="/jobs" component={Jobs} />
         <Route component={NotFound} />
       </Switch>
+      <LanguageSelector />
     </div>
   );
 }
