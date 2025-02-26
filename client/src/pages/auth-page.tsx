@@ -58,21 +58,21 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2">
+    <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-white via-slate-50 to-blue-50">
       <motion.div 
         className="flex items-center justify-center p-8"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
       >
-        <Card className="w-full max-w-md backdrop-blur-sm bg-white/50">
+        <Card className="w-full max-w-md border-slate-200 bg-white/70 backdrop-blur-sm shadow-xl">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
-              <Bitcoin className="h-6 w-6 text-yellow-500" />
-              <span className="bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
+              <Bitcoin className="h-6 w-6 text-amber-500" />
+              <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
                 Hylios
               </span>
             </CardTitle>
-            <CardDescription>
+            <CardDescription className="text-slate-600">
               Conecte-se com empresas e receba em Bitcoin
             </CardDescription>
           </CardHeader>
@@ -98,7 +98,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Nome de Usuário</FormLabel>
                           <FormControl>
-                            <Input className="bg-white" {...field} />
+                            <Input className="bg-white/80 border-slate-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -111,7 +111,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Senha</FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white" {...field} />
+                            <Input type="password" className="bg-white/80 border-slate-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -119,7 +119,7 @@ export default function AuthPage() {
                     />
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90"
+                      className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
                       Entrar
@@ -143,7 +143,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Nome de Usuário</FormLabel>
                           <FormControl>
-                            <Input className="bg-white" {...field} />
+                            <Input className="bg-white/80 border-slate-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -156,7 +156,7 @@ export default function AuthPage() {
                         <FormItem>
                           <FormLabel>Senha</FormLabel>
                           <FormControl>
-                            <Input type="password" className="bg-white" {...field} />
+                            <Input type="password" className="bg-white/80 border-slate-200" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -173,7 +173,7 @@ export default function AuthPage() {
                             defaultValue={field.value}
                           >
                             <FormControl>
-                              <SelectTrigger className="bg-white">
+                              <SelectTrigger className="bg-white/80 border-slate-200">
                                 <SelectValue />
                               </SelectTrigger>
                             </FormControl>
@@ -196,7 +196,7 @@ export default function AuthPage() {
                           <FormItem>
                             <FormLabel>Nome da Empresa</FormLabel>
                             <FormControl>
-                              <Input className="bg-white" {...field} />
+                              <Input className="bg-white/80 border-slate-200" {...field} />
                             </FormControl>
                             <FormMessage />
                           </FormItem>
@@ -205,7 +205,7 @@ export default function AuthPage() {
                     )}
                     <Button
                       type="submit"
-                      className="w-full bg-gradient-to-r from-primary to-blue-500 hover:from-primary/90 hover:to-blue-500/90"
+                      className="w-full bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white shadow-lg"
                       disabled={registerMutation.isPending}
                     >
                       Cadastrar
@@ -219,15 +219,15 @@ export default function AuthPage() {
       </motion.div>
 
       <motion.div 
-        className="hidden md:flex flex-col justify-center p-16 bg-gradient-to-br from-primary/10 via-background to-blue-500/10"
+        className="hidden md:flex flex-col justify-center p-16"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
       >
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
             Encontre Trabalho. Receba em Bitcoin.
           </h1>
-          <p className="text-xl text-muted-foreground">
+          <p className="text-xl text-slate-600">
             Conecte-se com empresas que procuram profissionais talentosos. Complete
             tarefas e receba pagamentos instantâneos em Bitcoin através de nossa
             plataforma segura.
