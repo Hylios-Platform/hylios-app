@@ -13,7 +13,7 @@ export function LanguageSelector() {
 
   return (
     <Select value={i18n.language} onValueChange={i18n.changeLanguage}>
-      <SelectTrigger className="w-[140px]">
+      <SelectTrigger className="w-[140px] bg-blue-400 text-white hover:bg-blue-500 border-none">
         <div className="flex items-center gap-2">
           <Globe className="h-4 w-4" />
           <SelectValue />

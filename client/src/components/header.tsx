@@ -12,21 +12,21 @@ export default function Header() {
   if (!user) return null;
 
   return (
-    <header className="bg-blue-50/80 backdrop-blur-sm border-b border-blue-100">
+    <header className="bg-blue-50 border-b border-blue-100">
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <h1 className="text-xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+          <h1 className="text-xl font-bold text-gray-900">
             <Link href="/">Hylios</Link>
           </h1>
           <nav className="flex gap-4">
             <Link href="/jobs">
-              <span className="text-blue-600/70 hover:text-blue-600 cursor-pointer">
+              <span className="text-gray-700 hover:text-gray-900 cursor-pointer">
                 {t('navigation.jobs')}
               </span>
             </Link>
             {user.userType === "company" && (
               <Link href="/post-job">
-                <span className="text-blue-600/70 hover:text-blue-600 cursor-pointer">
+                <span className="text-gray-700 hover:text-gray-900 cursor-pointer">
                   {t('navigation.postJob')}
                 </span>
               </Link>
@@ -35,16 +35,17 @@ export default function Header() {
         </div>
 
         <div className="flex items-center gap-4">
-          <LanguageSelector />
-          <span className="text-sm text-blue-600/70">
+          <span className="text-sm text-gray-700">
             {user.userType === "company" ? user.companyName : user.username}
           </span>
+          <LanguageSelector />
           <Button
             variant="ghost"
             size="icon"
             onClick={() => logoutMutation.mutate()}
+            className="text-gray-700 hover:text-gray-900"
           >
-            <LogOut className="h-4 w-4 text-blue-600/70" />
+            <LogOut className="h-4 w-4" />
           </Button>
         </div>
       </div>
