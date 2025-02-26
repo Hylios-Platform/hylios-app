@@ -67,7 +67,7 @@ export default function Jobs() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-white to-blue-50/30">
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex items-center justify-between mb-8">
@@ -81,7 +81,7 @@ export default function Jobs() {
                     Completar KYC
                   </Button>
                 </DialogTrigger>
-                <DialogContent className="max-w-lg">
+                <DialogContent className="max-w-lg bg-white/95 backdrop-blur-sm">
                   <KycForm />
                 </DialogContent>
               </Dialog>
@@ -95,11 +95,11 @@ export default function Jobs() {
                 placeholder={t('jobs.searchPlaceholder')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 border-blue-100 focus:border-blue-200"
+                className="pl-10 border-blue-100 focus:border-blue-200 bg-white/80"
               />
             </div>
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-[180px] border-blue-100 bg-white">
+              <SelectTrigger className="w-[180px] border-blue-100 bg-white/80">
                 <SelectValue placeholder={t('jobs.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
@@ -113,7 +113,7 @@ export default function Jobs() {
 
           <div className="space-y-4">
             {filteredJobs?.length === 0 ? (
-              <div className="text-center py-8 text-blue-400">
+              <div className="text-center py-8 text-blue-400 bg-white/80 rounded-lg border border-blue-100 shadow-sm">
                 {t('jobs.noJobs')}
               </div>
             ) : (
