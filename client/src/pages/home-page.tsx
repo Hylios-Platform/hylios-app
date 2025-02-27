@@ -120,6 +120,87 @@ export default function HomePage() {
         </div>
       </motion.div>
 
+      {/* Bitcoin animado */}
+      {[...Array(2)].map((_, i) => (
+        <motion.div
+          key={`bitcoin-${i}`}
+          className="absolute"
+          initial={{ 
+            x: "20%",
+            y: "50%",
+            opacity: 0 
+          }}
+          animate={{
+            x: ["20%", "80%"],
+            y: ["50%", "50%"],
+            opacity: [0, 1, 1, 0],
+            scale: [0.8, 1.2, 0.8],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            delay: i * 2,
+            ease: "easeInOut",
+          }}
+        >
+          <Bitcoin className="h-6 w-6 text-amber-400" />
+        </motion.div>
+      ))}
+
+      {/* Partículas brilhantes */}
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-500"
+          initial={{ 
+            x: "50%",
+            y: "50%",
+            opacity: 0,
+            scale: 0 
+          }}
+          animate={{
+            x: [
+              "50%",
+              `${35 + Math.random() * 30}%`,
+              `${35 + Math.random() * 30}%`,
+              "50%"
+            ],
+            y: [
+              "50%",
+              `${35 + Math.random() * 30}%`,
+              `${35 + Math.random() * 30}%`,
+              "50%"
+            ],
+            opacity: [0, 1, 1, 0],
+            scale: [0, 1, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      {/* Efeito de pagamento */}
+      <motion.div
+        className="absolute left-1/2 bottom-0 transform -translate-x-1/2 bg-green-100 px-3 py-1 rounded-full text-sm text-green-600 font-medium"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{
+          y: [-20, -40],
+          opacity: [0, 1, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          repeatDelay: 3,
+          ease: "easeOut",
+        }}
+      >
+        + 0.05 BTC
+      </motion.div>
       {/* Partículas flutuantes */}
       {[...Array(3)].map((_, i) => (
         <motion.div
