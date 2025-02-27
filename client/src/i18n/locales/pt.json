@@ -109,27 +109,6 @@
       }
     }
   },
-  "mascot": {
-    "name": "Hylo",
-    "welcome": "Olá! Eu sou o Hylo, seu assistente pessoal! 👋",
-    "tips": {
-      "home": {
-        "welcome": "Bem-vindo ao Hylios! Aqui você pode encontrar projetos e conectar-se com empresas.",
-        "explore": "Explore os trabalhos disponíveis clicando em 'Trabalhos' no menu superior.",
-        "profile": "Complete seu perfil para aumentar suas chances de ser selecionado!"
-      },
-      "jobs": {
-        "search": "Use os filtros para encontrar trabalhos que combinem com suas habilidades.",
-        "apply": "Não se esqueça de verificar os requisitos antes de se candidatar!",
-        "status": "Acompanhe o status das suas candidaturas aqui."
-      },
-      "profile": {
-        "kyc": "Complete a verificação KYC para começar a se candidatar a trabalhos.",
-        "skills": "Mantenha suas habilidades atualizadas para melhores oportunidades.",
-        "portfolio": "Adicione projetos ao seu portfólio para destacar seu trabalho!"
-      }
-    }
-  },
   "gamification": {
     "level": "Nível",
     "points": "pontos",
