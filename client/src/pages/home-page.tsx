@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Building2, UserCheck, Bitcoin } from "lucide-react";
+import { Building2, UserCheck, Bitcoin, Sparkles } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
@@ -29,6 +29,176 @@ export default function HomePage() {
     show: { opacity: 1, y: 0 }
   };
 
+  const MatchAnimation = () => (
+    <div className="relative h-32 overflow-hidden my-8">
+      <motion.div
+        className="absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400"
+        initial={{ scaleX: 0, opacity: 0 }}
+        animate={{
+          scaleX: [0, 1, 1, 0],
+          opacity: [0, 1, 1, 0],
+        }}
+        transition={{
+          duration: 4,
+          repeat: Infinity,
+          ease: "easeInOut",
+        }}
+      />
+
+      <motion.div
+        animate={{
+          x: ["0%", "20%", "0%"],
+          scale: [1, 1.1, 1],
+          rotate: [0, 3, -3, 0]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute left-0 top-1/2 -translate-y-1/2"
+      >
+        <div className="flex items-center gap-4">
+          <div className="bg-blue-100 p-3 rounded-full shadow-md">
+            <Building2 className="h-6 w-6 text-blue-600" />
+          </div>
+          <span className="text-blue-600 font-medium">Empresa A</span>
+        </div>
+      </motion.div>
+
+      <motion.div
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{
+          scale: [0, 1.2, 1],
+          opacity: [0, 1, 0]
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          ease: "easeInOut",
+          repeatDelay: 2
+        }}
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+      >
+        <div className="relative">
+          <Sparkles className="h-8 w-8 text-amber-400" />
+          <motion.div
+            animate={{
+              scale: [1, 1.5, 1],
+              opacity: [0.2, 0, 0.2],
+            }}
+            transition={{
+              duration: 2,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+            className="absolute inset-0 bg-amber-200 rounded-full blur-xl"
+          />
+        </div>
+      </motion.div>
+
+      <motion.div
+        animate={{
+          x: ["100%", "80%", "100%"],
+          scale: [1, 1.1, 1],
+          rotate: [0, -3, 3, 0]
+        }}
+        transition={{
+          duration: 8,
+          repeat: Infinity,
+          ease: "linear"
+        }}
+        className="absolute right-0 top-1/2 -translate-y-1/2"
+      >
+        <div className="flex items-center gap-4">
+          <span className="text-violet-600 font-medium">Profissional B</span>
+          <div className="bg-violet-100 p-3 rounded-full shadow-md">
+            <UserCheck className="h-6 w-6 text-violet-600" />
+          </div>
+        </div>
+      </motion.div>
+
+      {[...Array(2)].map((_, i) => (
+        <motion.div
+          key={`bitcoin-${i}`}
+          className="absolute"
+          initial={{ 
+            x: "20%",
+            y: "50%",
+            opacity: 0 
+          }}
+          animate={{
+            x: ["20%", "80%"],
+            y: ["50%", "50%"],
+            opacity: [0, 1, 1, 0],
+            scale: [0.8, 1.2, 0.8],
+            rotate: [0, 360],
+          }}
+          transition={{
+            duration: 4,
+            repeat: Infinity,
+            delay: i * 2,
+            ease: "easeInOut",
+          }}
+        >
+          <Bitcoin className="h-6 w-6 text-amber-400" />
+        </motion.div>
+      ))}
+
+      {[...Array(5)].map((_, i) => (
+        <motion.div
+          key={`particle-${i}`}
+          className="absolute w-2 h-2 rounded-full bg-gradient-to-r from-amber-300 to-amber-500"
+          initial={{ 
+            x: "50%",
+            y: "50%",
+            opacity: 0,
+            scale: 0 
+          }}
+          animate={{
+            x: [
+              "50%",
+              `${35 + Math.random() * 30}%`,
+              `${35 + Math.random() * 30}%`,
+              "50%"
+            ],
+            y: [
+              "50%",
+              `${35 + Math.random() * 30}%`,
+              `${35 + Math.random() * 30}%`,
+              "50%"
+            ],
+            opacity: [0, 1, 1, 0],
+            scale: [0, 1, 1, 0],
+          }}
+          transition={{
+            duration: 3,
+            repeat: Infinity,
+            delay: i * 0.5,
+            ease: "easeInOut",
+          }}
+        />
+      ))}
+
+      <motion.div
+        className="absolute left-1/2 bottom-0 transform -translate-x-1/2 bg-green-100 px-3 py-1 rounded-full text-sm text-green-600 font-medium"
+        initial={{ y: 20, opacity: 0 }}
+        animate={{
+          y: [-20, -40],
+          opacity: [0, 1, 0],
+        }}
+        transition={{
+          duration: 2,
+          repeat: Infinity,
+          repeatDelay: 3,
+          ease: "easeOut",
+        }}
+      >
+        + 0.05 BTC
+      </motion.div>
+    </div>
+  );
+
   if (user?.userType === "company") {
     return (
       <div className="min-h-screen bg-white">
@@ -44,6 +214,7 @@ export default function HomePage() {
             <p className="text-xl text-blue-400 mb-10">
               {t('home.subtitle')}
             </p>
+            <MatchAnimation />
             <Link href="/post-job">
               <Button size="lg" className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg">
                 {t('navigation.postJob')}
@@ -72,6 +243,7 @@ export default function HomePage() {
             <p className="text-xl text-blue-400 mb-6">
               {t('home.subtitle')}
             </p>
+            <MatchAnimation />
             <Button 
               variant="secondary" 
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
