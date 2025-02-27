@@ -123,7 +123,6 @@ export default function AuthPage() {
                           <FormControl>
                             <Input
                               className="bg-white/80 border-gray-200 text-gray-900"
-                              placeholder="admin"
                               autoComplete="username"
                               {...field}
                             />
@@ -148,7 +147,6 @@ export default function AuthPage() {
                               <Input
                                 type={showLoginPassword ? "text" : "password"}
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10"
-                                placeholder="admin123"
                                 autoComplete="current-password"
                                 {...field}
                               />
@@ -205,10 +203,6 @@ export default function AuthPage() {
                       >
                         {t('auth.forgotPassword')}
                       </a>
-                    </div>
-
-                    <div className="text-sm text-center text-gray-500 mt-2">
-                      Credenciais de teste: admin / admin123
                     </div>
                   </form>
                 </Form>

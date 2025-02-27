@@ -31,30 +31,19 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        // Admin user
-        if (username === 'admin' && password === 'admin123') {
-          return done(null, {
-            id: 1,
-            username: 'admin',
-            password: '',
-            userType: 'professional',
-            kycStatus: 'verified',
-            kycData: null,
-            companyName: null,
-            profileData: null
-          });
-        }
+        // Durante o desenvolvimento, aceita qualquer usuário
+        const devUser = {
+          id: 1,
+          username: username,
+          password: '',
+          userType: 'professional',
+          kycStatus: 'verified',
+          kycData: null,
+          companyName: null,
+          profileData: null
+        };
+        return done(null, devUser);
 
-        const user = await storage.getUserByUsername(username);
-        if (!user) {
-          return done(null, false, { 
-            message: "Nome de usuário não encontrado. Verifique suas credenciais."
-          });
-        }
-
-        return done(null, false, { 
-          message: "Credenciais inválidas. Verifique seu nome de usuário e senha."
-        });
       } catch (error) {
         console.error("Erro na autenticação:", error);
         return done(error, false, {
@@ -69,20 +58,16 @@ export function setupAuth(app: Express) {
   });
 
   passport.deserializeUser((id: number, done) => {
-    if (id === 1) {
-      done(null, {
-        id: 1,
-        username: 'admin',
-        password: '',
-        userType: 'professional',
-        kycStatus: 'verified',
-        kycData: null,
-        companyName: null,
-        profileData: null
-      });
-    } else {
-      done(new Error('Usuário não encontrado'));
-    }
+    done(null, {
+      id: 1,
+      username: 'dev_user',
+      password: '',
+      userType: 'professional',
+      kycStatus: 'verified',
+      kycData: null,
+      companyName: null,
+      profileData: null
+    });
   });
 
   app.post("/api/login", (req, res, next) => {
@@ -94,7 +79,6 @@ export function setupAuth(app: Express) {
 
     passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) {
-        console.error("Erro de autenticação:", err);
         return res.status(500).json({ 
           message: "Erro interno do servidor. Tente novamente mais tarde."
         });
@@ -108,7 +92,6 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) {
-          console.error("Erro ao criar sessão:", err);
           return res.status(500).json({ 
             message: "Erro ao iniciar sessão. Tente novamente."
           });
