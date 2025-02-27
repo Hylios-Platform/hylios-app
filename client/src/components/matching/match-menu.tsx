@@ -8,9 +8,13 @@ import {
   MapPin, 
   Briefcase,
   GraduationCap,
-  Star
+  Star,
+  Clock,
+  UserCheck,
+  Building2
 } from "lucide-react";
 import { motion } from "framer-motion";
+import { simulateHiring } from "@/lib/matching-service";
 
 interface MatchMenuProps {
   job: Job;
@@ -24,13 +28,16 @@ export function MatchMenu({ job, userSkills, userLocation, matchScore }: MatchMe
   const matchedSkills = job.requiredSkills?.filter(skill => 
     userSkills.includes(skill)
   ) || [];
-  
+
   const missingSkills = job.requiredSkills?.filter(skill => 
     !userSkills.includes(skill)
   ) || [];
 
   // Calcular match de localização
   const locationMatch = userLocation === `${job.city}, ${job.country}`;
+
+  // Simular processo de contratação
+  const hiringSimulation = simulateHiring(matchScore);
 
   // Determinar o status do match
   const getMatchStatus = () => {
@@ -121,6 +128,25 @@ export function MatchMenu({ job, userSkills, userLocation, matchScore }: MatchMe
             <span className="text-gray-600">Tipo de Trabalho:</span>
             <span className="text-blue-600 capitalize">{job.workType}</span>
           </div>
+
+          {/* Simulação de Contratação */}
+          {hiringSimulation.success && (
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="mt-2 p-3 bg-green-50 rounded-lg border border-green-100"
+            >
+              <div className="flex items-center gap-2 text-sm text-green-700 mb-2">
+                <Clock className="h-4 w-4" />
+                <span>Simulação de Contratação</span>
+              </div>
+              <p className="text-sm text-green-600">
+                {hiringSimulation.message}
+                <br />
+                Tempo estimado: {hiringSimulation.timeToHire} dias
+              </p>
+            </motion.div>
+          )}
         </div>
       </CardContent>
     </Card>
