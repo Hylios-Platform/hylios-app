@@ -22,15 +22,10 @@ async function hashPassword(password: string) {
 }
 
 async function comparePasswords(supplied: string, stored: string) {
-  try {
-    const [hashedPassword, salt] = stored.split(".");
-    const hashedBuf = Buffer.from(hashedPassword, "hex");
-    const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
-    return timingSafeEqual(hashedBuf, suppliedBuf);
-  } catch (error) {
-    console.error("Erro ao comparar senhas:", error);
-    return false;
-  }
+  const [hashedPassword, salt] = stored.split(".");
+  const hashedBuf = Buffer.from(hashedPassword, "hex");
+  const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
+  return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
 export function setupAuth(app: Express) {
@@ -133,30 +128,6 @@ export function setupAuth(app: Express) {
         res.json(user);
       });
     })(req, res, next);
-  });
-
-  app.post("/api/register", async (req, res) => {
-    try {
-      const existingUser = await storage.getUserByUsername(req.body.username);
-      if (existingUser) {
-        return res.status(400).json({ message: "Usuário já existe" });
-      }
-
-      const hashedPassword = await hashPassword(req.body.password);
-      const user = await storage.createUser({
-        ...req.body,
-        password: hashedPassword,
-      });
-
-      req.login(user, (err) => {
-        if (err) {
-          return res.status(500).json({ message: "Erro ao criar sessão" });
-        }
-        res.status(201).json(user);
-      });
-    } catch (error) {
-      res.status(500).json({ message: "Erro interno do servidor" });
-    }
   });
 
   app.post("/api/logout", (req, res) => {
