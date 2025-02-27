@@ -129,5 +129,32 @@
         "portfolio": "Adicione projetos ao seu portfólio para destacar seu trabalho!"
       }
     }
+  },
+  "gamification": {
+    "level": "Nível",
+    "points": "pontos",
+    "experience": "XP",
+    "nextLevel": "Próximo nível",
+    "achievements": {
+      "title": "Conquistas",
+      "new": "Nova Conquista!",
+      "progress": "Progresso",
+      "locked": "Bloqueada",
+      "unlocked": "Desbloqueada",
+      "categories": {
+        "profile": "Perfil",
+        "jobs": "Trabalhos",
+        "kyc": "Verificação",
+        "engagement": "Engajamento"
+      }
+    },
+    "rewards": {
+      "title": "Recompensas",
+      "claim": "Resgatar",
+      "claimed": "Resgatado",
+      "daily": "Diária",
+      "weekly": "Semanal",
+      "monthly": "Mensal"
+    }
   }
 }

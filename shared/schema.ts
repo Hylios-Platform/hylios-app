@@ -10,7 +10,29 @@ export const users = pgTable("users", {
   kycStatus: text("kyc_status").notNull().default("pending"), // "pending", "verified", "rejected"
   kycData: jsonb("kyc_data"),
   companyName: text("company_name"),
-  profileData: jsonb("profile_data")
+  profileData: jsonb("profile_data"),
+  // Gamification fields
+  level: integer("level").notNull().default(1),
+  points: integer("points").notNull().default(0),
+  experience: integer("experience").notNull().default(0)
+});
+
+export const achievements = pgTable("achievements", {
+  id: serial("id").primaryKey(),
+  name: text("name").notNull(),
+  description: text("description").notNull(),
+  type: text("type").notNull(), // "profile", "jobs", "kyc", "engagement"
+  pointsReward: integer("points_reward").notNull(),
+  requiredValue: integer("required_value").notNull(), // Value needed to unlock
+  icon: text("icon").notNull() // Icon identifier for the achievement
+});
+
+export const userAchievements = pgTable("user_achievements", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull(),
+  achievementId: integer("achievement_id").notNull(),
+  unlockedAt: timestamp("unlocked_at").notNull().defaultNow(),
+  progress: integer("progress").notNull().default(0)
 });
 
 export const jobs = pgTable("jobs", {
@@ -24,6 +46,11 @@ export const jobs = pgTable("jobs", {
   createdAt: timestamp("created_at").notNull().defaultNow()
 });
 
+// Schema for user achievements
+export const achievementSchema = createInsertSchema(achievements);
+export const userAchievementSchema = createInsertSchema(userAchievements);
+
+// Extend user insert schema with gamification fields
 export const insertUserSchema = createInsertSchema(users).pick({
   username: true,
   password: true,
@@ -48,8 +75,11 @@ export const kycSchema = z.object({
   address: z.string()
 });
 
+// Types
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type User = typeof users.$inferSelect;
 export type InsertJob = z.infer<typeof insertJobSchema>;
 export type Job = typeof jobs.$inferSelect;
 export type KycData = z.infer<typeof kycSchema>;
+export type Achievement = typeof achievements.$inferSelect;
+export type UserAchievement = typeof userAchievements.$inferSelect;

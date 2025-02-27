@@ -6,30 +6,30 @@ import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
 import { useTutorial } from "@/hooks/use-tutorial";
-
-const container = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1
-    }
-  }
-};
-
-const item = {
-  hidden: { opacity: 0, y: 20 },
-  show: { opacity: 1, y: 0 }
-};
+import { UserProgress } from "@/components/user-progress";
 
 export default function HomePage() {
   const { user } = useAuth();
   const { t } = useTranslation();
   const tutorial = useTutorial();
 
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { opacity: 1, y: 0 }
+  };
+
   const MatchAnimation = () => (
     <div className="relative h-32 overflow-hidden my-8">
-      {/* Linha de conexão animada */}
       <motion.div
         className="absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400"
         initial={{ scaleX: 0, opacity: 0 }}
@@ -44,7 +44,6 @@ export default function HomePage() {
         }}
       />
 
-      {/* Empresa */}
       <motion.div
         animate={{
           x: ["0%", "20%", "0%"],
@@ -66,7 +65,6 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* Efeito de Match Central */}
       <motion.div
         initial={{ scale: 0, opacity: 0 }}
         animate={{
@@ -98,7 +96,6 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* Profissional */}
       <motion.div
         animate={{
           x: ["100%", "80%", "100%"],
@@ -120,7 +117,6 @@ export default function HomePage() {
         </div>
       </motion.div>
 
-      {/* Bitcoin animado */}
       {[...Array(2)].map((_, i) => (
         <motion.div
           key={`bitcoin-${i}`}
@@ -148,7 +144,6 @@ export default function HomePage() {
         </motion.div>
       ))}
 
-      {/* Partículas brilhantes */}
       {[...Array(5)].map((_, i) => (
         <motion.div
           key={`particle-${i}`}
@@ -184,7 +179,6 @@ export default function HomePage() {
         />
       ))}
 
-      {/* Efeito de pagamento */}
       <motion.div
         className="absolute left-1/2 bottom-0 transform -translate-x-1/2 bg-green-100 px-3 py-1 rounded-full text-sm text-green-600 font-medium"
         initial={{ y: 20, opacity: 0 }}
@@ -201,7 +195,6 @@ export default function HomePage() {
       >
         + 0.05 BTC
       </motion.div>
-      {/* Partículas flutuantes */}
       {[...Array(3)].map((_, i) => (
         <motion.div
           key={i}
@@ -277,6 +270,14 @@ export default function HomePage() {
             >
               {t('tutorial.start')}
             </Button>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-8"
+          >
+            <UserProgress />
           </motion.div>
 
           <motion.div 
