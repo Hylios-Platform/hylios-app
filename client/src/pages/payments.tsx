@@ -23,9 +23,11 @@ export default function Payments() {
             <div className="grid gap-6">
               <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Bitcoin className="h-5 w-5 text-amber-400" />
-                    <CardTitle className="text-2xl">{t("payments.balance")}</CardTitle>
+                  <div className="flex items-center gap-2 border-b pb-4">
+                    <Bitcoin className="h-6 w-6 text-amber-400" />
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-amber-500 to-amber-700 bg-clip-text text-transparent">
+                      Saldo Atual
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -40,9 +42,11 @@ export default function Payments() {
 
               <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <ArrowUpDown className="h-5 w-5 text-blue-500" />
-                    <CardTitle className="text-2xl">{t("payments.pending")}</CardTitle>
+                  <div className="flex items-center gap-2 border-b pb-4">
+                    <ArrowUpDown className="h-6 w-6 text-blue-500" />
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-blue-500 to-blue-700 bg-clip-text text-transparent">
+                      Pagamentos Pendentes
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -62,9 +66,11 @@ export default function Payments() {
 
               <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <History className="h-5 w-5 text-green-500" />
-                    <CardTitle className="text-2xl">{t("payments.history")}</CardTitle>
+                  <div className="flex items-center gap-2 border-b pb-4">
+                    <History className="h-6 w-6 text-green-500" />
+                    <CardTitle className="text-2xl font-bold bg-gradient-to-r from-green-500 to-green-700 bg-clip-text text-transparent">
+                      Histórico de Pagamentos
+                    </CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
