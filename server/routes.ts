@@ -9,8 +9,13 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configuração do CORS
   app.use(cors({
-    origin: true, // Permite requisições da mesma origem
-    credentials: true // Permite o envio de cookies
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://seu-dominio-producao.com' 
+      : ['http://localhost:3000', 'http://localhost:5000'],
+    credentials: true, // Permite o envio de cookies
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    exposedHeaders: ['set-cookie']
   }));
 
   const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
