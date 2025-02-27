@@ -41,12 +41,14 @@ export function Mascot() {
   const { t } = useTranslation();
   const [location] = useLocation();
   const [isVisible, setIsVisible] = useState(true);
+  const [showTips, setShowTips] = useState(true);
   const [currentTip, setCurrentTip] = useState(0);
   const [tips, setTips] = useState<string[]>([]);
 
   useEffect(() => {
     // Reset visibility when location changes
     setIsVisible(true);
+    setShowTips(true);
 
     // Get tips based on current location
     const pageTips = [];
@@ -75,52 +77,54 @@ export function Mascot() {
 
   // Rotate tips every 10 seconds
   useEffect(() => {
-    if (!tips.length) return;
+    if (!tips.length || !showTips) return;
 
     const interval = setInterval(() => {
       setCurrentTip((prev) => (prev + 1) % tips.length);
     }, 10000);
 
     return () => clearInterval(interval);
-  }, [tips]);
+  }, [tips, showTips]);
 
   if (!isVisible || !tips.length) return null;
 
   return (
     <AnimatePresence>
-      <div className="fixed bottom-4 right-4 flex items-end gap-3 z-50">
+      <div className="fixed bottom-4 right-4 flex items-end gap-2 z-50">
         {/* Tip Bubble */}
-        <motion.div
-          variants={bubbleVariants}
-          initial="hidden"
-          animate="visible"
-          exit="exit"
-          className="max-w-xs bg-gradient-to-br from-blue-50 to-violet-50 rounded-2xl p-4 shadow-lg border border-blue-100"
-        >
-          <div className="flex justify-between items-start gap-4">
-            <p className="text-sm text-gray-600">{tips[currentTip]}</p>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="h-6 w-6 p-0 hover:bg-blue-100/50"
-              onClick={() => setIsVisible(false)}
-            >
-              <X className="h-4 w-4" />
-            </Button>
-          </div>
-          {tips.length > 1 && (
-            <div className="flex justify-center gap-1 mt-2">
-              {tips.map((_, index) => (
-                <div
-                  key={index}
-                  className={`h-1.5 w-1.5 rounded-full transition-colors ${
-                    index === currentTip ? 'bg-blue-500' : 'bg-gray-200'
-                  }`}
-                />
-              ))}
+        {showTips && (
+          <motion.div
+            variants={bubbleVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
+            className="max-w-[200px] bg-gradient-to-br from-blue-50 to-violet-50 rounded-xl p-3 shadow-lg border border-blue-100"
+          >
+            <div className="flex justify-between items-start gap-2">
+              <p className="text-xs text-gray-600">{tips[currentTip]}</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-5 w-5 p-0 hover:bg-blue-100/50"
+                onClick={() => setShowTips(false)}
+              >
+                <X className="h-3 w-3" />
+              </Button>
             </div>
-          )}
-        </motion.div>
+            {tips.length > 1 && (
+              <div className="flex justify-center gap-1 mt-2">
+                {tips.map((_, index) => (
+                  <div
+                    key={index}
+                    className={`h-1 w-1 rounded-full transition-colors ${
+                      index === currentTip ? 'bg-blue-500' : 'bg-gray-200'
+                    }`}
+                  />
+                ))}
+              </div>
+            )}
+          </motion.div>
+        )}
 
         {/* Mascot */}
         <motion.div
@@ -129,10 +133,16 @@ export function Mascot() {
           animate="visible"
           exit="exit"
           whileHover={{ scale: 1.1 }}
-          className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer select-none"
-          onClick={() => setIsVisible(true)}
+          className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer select-none"
+          onClick={() => {
+            if (!showTips) {
+              setShowTips(true);
+            } else {
+              setShowTips(false);
+            }
+          }}
         >
-          <span className="text-2xl transform -scale-x-100">🧌</span>
+          <span className="text-xl transform -scale-x-100">🧌</span>
         </motion.div>
       </div>
     </AnimatePresence>
