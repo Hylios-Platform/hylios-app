@@ -21,29 +21,29 @@ export default function Header() {
           </h1>
         </div>
 
-        <div className="flex items-center gap-4">
-          <nav className="flex gap-4">
+        <div className="flex items-center gap-3">
+          <nav className="flex gap-3">
             <Link href="/jobs">
-              <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+              <Button size="sm" variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md px-3">
                 {t('navigation.jobs')}
               </Button>
             </Link>
             <Link href="/post-job">
-              <Button variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+              <Button size="sm" variant="default" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md px-3">
                 {t('navigation.postJob')}
               </Button>
             </Link>
           </nav>
 
-          <div className="flex items-center gap-4 ml-4 pl-4 border-l border-blue-200">
+          <div className="flex items-center gap-3 ml-3 pl-3 border-l border-blue-200">
             <span className="text-sm text-gray-700">
               {user?.username || 'Dev User'}
             </span>
             <Button
               variant="ghost"
-              size="icon"
+              size="sm"
               onClick={() => logoutMutation.mutate()}
-              className="text-gray-600 hover:text-gray-900 hover:bg-transparent"
+              className="text-gray-600 hover:text-gray-900 hover:bg-transparent px-2"
             >
               <LogOut className="h-4 w-4" />
             </Button>
