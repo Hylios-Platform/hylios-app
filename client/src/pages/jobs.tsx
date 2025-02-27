@@ -141,7 +141,7 @@ export default function Jobs() {
       <div className="container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+            <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
               {t('jobs.title')}
             </h1>
             <div className="flex items-center gap-2">
@@ -186,14 +186,14 @@ export default function Jobs() {
 
             <Card className="border-blue-100">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg flex items-center gap-2">
-                  <SlidersHorizontal className="h-4 w-4" />
+                <CardTitle className="text-lg font-medium text-blue-600">
+                  <SlidersHorizontal className="h-4 w-4 text-blue-600" />
                   Filtros
                 </CardTitle>
               </CardHeader>
-              <CardContent className="grid gap-4">
+              <CardContent className="grid gap-4 p-4">
                 <div className="space-y-2">
-                  <label className="text-sm font-medium">{t('jobs.filterByPrice')}</label>
+                  <label className="text-sm font-medium text-gray-700">{t('jobs.filterByPrice')}</label>
                   <div className="pt-2">
                     <Slider
                       defaultValue={[0, maxPrice]}
@@ -212,37 +212,37 @@ export default function Jobs() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900">
+                    <SelectTrigger className="w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm">
                       <MapPin className="mr-2 h-4 w-4 text-blue-500" />
                       <SelectValue placeholder="Selecione o país" className="text-gray-900" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px] overflow-y-auto">
-                      <SelectItem value="all" className="text-gray-900 font-medium">Todos os países</SelectItem>
+                    <SelectContent className="max-h-[300px] overflow-y-auto bg-white">
+                      <SelectItem value="all" className="text-gray-900 font-medium text-base py-2">Todos os países</SelectItem>
 
                       {/* Europa */}
-                      <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">Europa</div>
-                      <SelectItem value="Portugal" className="text-gray-900">Portugal</SelectItem>
-                      <SelectItem value="Espanha" className="text-gray-900">Espanha</SelectItem>
-                      <SelectItem value="França" className="text-gray-900">França</SelectItem>
-                      <SelectItem value="Alemanha" className="text-gray-900">Alemanha</SelectItem>
-                      <SelectItem value="Itália" className="text-gray-900">Itália</SelectItem>
-                      <SelectItem value="Reino Unido" className="text-gray-900">Reino Unido</SelectItem>
-                      <SelectItem value="Holanda" className="text-gray-900">Holanda</SelectItem>
-                      <SelectItem value="Bélgica" className="text-gray-900">Bélgica</SelectItem>
-                      <SelectItem value="Suíça" className="text-gray-900">Suíça</SelectItem>
-                      <SelectItem value="Irlanda" className="text-gray-900">Irlanda</SelectItem>
-                      <SelectItem value="Suécia" className="text-gray-900">Suécia</SelectItem>
-                      <SelectItem value="Noruega" className="text-gray-900">Noruega</SelectItem>
-                      <SelectItem value="Dinamarca" className="text-gray-900">Dinamarca</SelectItem>
-                      <SelectItem value="Finlândia" className="text-gray-900">Finlândia</SelectItem>
-                      <SelectItem value="Áustria" className="text-gray-900">Áustria</SelectItem>
+                      <div className="mt-2 px-3 py-2 text-sm font-semibold text-blue-600 bg-blue-50/30">Europa</div>
+                      <SelectItem value="Portugal" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Portugal</SelectItem>
+                      <SelectItem value="Espanha" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Espanha</SelectItem>
+                      <SelectItem value="França" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">França</SelectItem>
+                      <SelectItem value="Alemanha" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Alemanha</SelectItem>
+                      <SelectItem value="Itália" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Itália</SelectItem>
+                      <SelectItem value="Reino Unido" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Reino Unido</SelectItem>
+                      <SelectItem value="Holanda" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Holanda</SelectItem>
+                      <SelectItem value="Bélgica" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Bélgica</SelectItem>
+                      <SelectItem value="Suíça" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Suíça</SelectItem>
+                      <SelectItem value="Irlanda" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Irlanda</SelectItem>
+                      <SelectItem value="Suécia" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Suécia</SelectItem>
+                      <SelectItem value="Noruega" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Noruega</SelectItem>
+                      <SelectItem value="Dinamarca" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Dinamarca</SelectItem>
+                      <SelectItem value="Finlândia" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Finlândia</SelectItem>
+                      <SelectItem value="Áustria" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Áustria</SelectItem>
 
                       {/* Ocidente */}
-                      <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">Ocidente</div>
-                      <SelectItem value="Estados Unidos" className="text-gray-900">Estados Unidos</SelectItem>
-                      <SelectItem value="Canadá" className="text-gray-900">Canadá</SelectItem>
-                      <SelectItem value="Austrália" className="text-gray-900">Austrália</SelectItem>
-                      <SelectItem value="Nova Zelândia" className="text-gray-900">Nova Zelândia</SelectItem>
+                      <div className="mt-3 px-3 py-2 text-sm font-semibold text-blue-600 bg-blue-50/30">Ocidente</div>
+                      <SelectItem value="Estados Unidos" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Estados Unidos</SelectItem>
+                      <SelectItem value="Canadá" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Canadá</SelectItem>
+                      <SelectItem value="Austrália" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Austrália</SelectItem>
+                      <SelectItem value="Nova Zelândia" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Nova Zelândia</SelectItem>
                     </SelectContent>
                   </Select>
 
@@ -252,7 +252,7 @@ export default function Jobs() {
                     disabled={selectedCountry === "all"}
                   >
                     <SelectTrigger 
-                      className={`w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900 
+                      className={`w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm
                         ${selectedCountry === "all" ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
                       <MapPin className="mr-2 h-4 w-4 text-blue-500" />
@@ -263,10 +263,10 @@ export default function Jobs() {
                         className="text-gray-900" 
                       />
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
-                      <SelectItem value="all" className="text-gray-900 font-medium">Todas as cidades</SelectItem>
+                    <SelectContent className="max-h-[300px] bg-white">
+                      <SelectItem value="all" className="text-gray-900 font-medium text-base py-2">Todas as cidades</SelectItem>
                       {availableCities.map((city) => (
-                        <SelectItem key={city} value={city} className="text-gray-900">
+                        <SelectItem key={city} value={city} className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">
                           {city}
                         </SelectItem>
                       ))}
@@ -274,15 +274,15 @@ export default function Jobs() {
                   </Select>
 
                   <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
-                    <SelectTrigger className="w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900">
+                    <SelectTrigger className="w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm">
                       <Briefcase className="mr-2 h-4 w-4 text-blue-500" />
                       <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all" className="text-gray-900 font-medium">Todos os tipos</SelectItem>
-                      <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
-                      <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
-                      <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="all" className="text-gray-900 font-medium text-base py-2">Todos os tipos</SelectItem>
+                      <SelectItem value="remote" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">{t('jobs.workType.remote')}</SelectItem>
+                      <SelectItem value="onsite" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">{t('jobs.workType.onsite')}</SelectItem>
+                      <SelectItem value="hybrid" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">{t('jobs.workType.hybrid')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
