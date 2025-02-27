@@ -2,8 +2,9 @@ import { QueryClient, QueryFunction } from "@tanstack/react-query";
 
 async function throwIfResNotOk(res: Response) {
   if (!res.ok) {
-    const text = (await res.text()) || res.statusText;
-    throw new Error(`${res.status}: ${text}`);
+    const text = await res.text();
+    const message = text ? JSON.parse(text).message : res.statusText;
+    throw new Error(message);
   }
 }
 
@@ -12,11 +13,12 @@ export async function apiRequest(
   url: string,
   data?: unknown | undefined,
 ): Promise<Response> {
+  console.log(`[API] Fazendo requisição ${method} para ${url}`);
   const res = await fetch(url, {
     method,
     headers: data ? { "Content-Type": "application/json" } : {},
     body: data ? JSON.stringify(data) : undefined,
-    credentials: "include",
+    credentials: "include", // Importante: envia cookies de autenticação
   });
 
   await throwIfResNotOk(res);
@@ -29,11 +31,13 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    console.log(`[API] Fazendo consulta para ${queryKey[0]}`);
     const res = await fetch(queryKey[0] as string, {
-      credentials: "include",
+      credentials: "include", // Importante: envia cookies de autenticação
     });
 
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {
+      console.log("[API] Usuário não autenticado, retornando null");
       return null;
     }
 
