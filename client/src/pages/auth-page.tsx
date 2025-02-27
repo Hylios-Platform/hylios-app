@@ -2,7 +2,6 @@ import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { insertUserSchema, type InsertUser } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -13,13 +12,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -37,6 +30,8 @@ import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
+import { insertUserSchema, type InsertUser } from "@shared/schema";
+
 
 // Atualizando o schema de validação
 const authSchema = insertUserSchema.extend({
@@ -86,6 +81,7 @@ export default function AuthPage() {
       age: undefined,
       gender: undefined,
       userType: "professional",
+      companyName: "",
     },
   });
 
@@ -154,13 +150,10 @@ export default function AuthPage() {
                           <FormControl>
                             <Input
                               className="bg-white/80 border-gray-200 text-gray-900"
-                              autoComplete="username"
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -178,7 +171,6 @@ export default function AuthPage() {
                               <Input
                                 type={showLoginPassword ? "text" : "password"}
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10"
-                                autoComplete="current-password"
                                 {...field}
                               />
                             </FormControl>
@@ -196,25 +188,10 @@ export default function AuthPage() {
                               )}
                             </Button>
                           </div>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
-
-                    <AnimatePresence>
-                      {loginMutation.error && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-500"
-                        >
-                          {t('auth.errors.invalidCredentials')}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
 
                     <Button
                       type="submit"
@@ -226,15 +203,6 @@ export default function AuthPage() {
                       )}
                       {t('auth.login')}
                     </Button>
-
-                    <div className="text-center">
-                      <a
-                        href="/password-reset"
-                        className="text-sm text-blue-600 hover:text-blue-700"
-                      >
-                        {t('auth.forgotPassword')}
-                      </a>
-                    </div>
                   </form>
                 </Form>
               </TabsContent>
@@ -256,13 +224,10 @@ export default function AuthPage() {
                           <FormControl>
                             <Input
                               className="bg-white/80 border-gray-200 text-gray-900"
-                              autoComplete="username"
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -279,13 +244,10 @@ export default function AuthPage() {
                             <Input
                               type="email"
                               className="bg-white/80 border-gray-200 text-gray-900"
-                              autoComplete="email"
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -306,9 +268,7 @@ export default function AuthPage() {
                               onChange={(e) => field.onChange(parseInt(e.target.value))}
                             />
                           </FormControl>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -321,7 +281,7 @@ export default function AuthPage() {
                           <FormLabel className="text-gray-600">
                             {t('auth.gender')} <span className="text-red-500">*</span>
                           </FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
                                 <SelectValue placeholder={t('auth.selectGender')} />
@@ -332,9 +292,7 @@ export default function AuthPage() {
                               <SelectItem value="female">{t('auth.genderTypes.female')}</SelectItem>
                             </SelectContent>
                           </Select>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -352,7 +310,6 @@ export default function AuthPage() {
                               <Input
                                 type={showRegisterPassword ? "text" : "password"}
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10"
-                                autoComplete="new-password"
                                 {...field}
                               />
                             </FormControl>
@@ -370,9 +327,7 @@ export default function AuthPage() {
                               )}
                             </Button>
                           </div>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -383,7 +338,7 @@ export default function AuthPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-600">{t('auth.iAm')}</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={field.onChange} value={field.value}>
                             <FormControl>
                               <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
                                 <SelectValue />
@@ -398,9 +353,7 @@ export default function AuthPage() {
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                          <FormMessage>
-                            {(msg) => msg && t(msg as string)}
-                          </FormMessage>
+                          <FormMessage />
                         </FormItem>
                       )}
                     />
@@ -420,26 +373,11 @@ export default function AuthPage() {
                                 {...field}
                               />
                             </FormControl>
-                            <FormMessage>
-                              {(msg) => msg && t(msg as string)}
-                            </FormMessage>
+                            <FormMessage />
                           </FormItem>
                         )}
                       />
                     )}
-
-                    <AnimatePresence>
-                      {registerMutation.error && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -10 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -10 }}
-                          className="rounded-md bg-red-50 p-3 text-sm font-medium text-red-500"
-                        >
-                          {t('auth.errors.userExists')}
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
 
                     <Button
                       type="submit"
