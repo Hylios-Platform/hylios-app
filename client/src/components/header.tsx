@@ -42,10 +42,10 @@ export default function Header() {
             {user.username}
           </span>
           <Button
-            variant="outline"
+            variant="ghost"
             size="icon"
             onClick={() => logoutMutation.mutate()}
-            className="text-gray-900 hover:bg-gray-100 border-gray-200"
+            className="text-gray-600 hover:text-gray-900 hover:bg-transparent"
           >
             <LogOut className="h-4 w-4" />
           </Button>
