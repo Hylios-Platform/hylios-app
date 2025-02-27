@@ -1,5 +1,6 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Job } from "@shared/schema";
 import { JobCard } from "@/components/job-card";
 import { Input } from "@/components/ui/input";
@@ -10,14 +11,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
 import { KycForm } from "@/components/kyc-form";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Search, MapPin, Coins, SlidersHorizontal, ArrowUpDown } from "lucide-react";
+import { Loader2, Search, MapPin, Coins, SlidersHorizontal, ArrowUpDown, LayoutGrid, LayoutList } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { motion, AnimatePresence } from "framer-motion";
 
 const EXCHANGE_RATES = {
   EUR: { EUR: 1, AED: 3.96 },
@@ -26,6 +29,7 @@ const EXCHANGE_RATES = {
 
 type SortOption = "recent" | "oldest" | "priceAsc" | "priceDesc";
 type WorkType = "remote" | "onsite" | "hybrid" | "all";
+type ViewMode = "list" | "grid";
 
 export default function Jobs() {
   const { user } = useAuth();
@@ -38,6 +42,7 @@ export default function Jobs() {
   const [workType, setWorkType] = useState<WorkType>("all");
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
 
   const { data: jobs, isLoading } = useQuery<Job[]>({
     queryKey: ["/api/jobs"],
@@ -132,6 +137,8 @@ export default function Jobs() {
     );
   }
 
+  const maxPrice = Math.max(...(jobs?.map(job => parseFloat(job.amount)) || [100000]));
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
@@ -140,18 +147,32 @@ export default function Jobs() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
               {t('jobs.title')}
             </h1>
-            {user?.userType === "professional" && user?.kycStatus !== "verified" && (
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-                    Completar KYC
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-lg bg-white shadow-lg border-blue-200">
-                  <KycForm />
-                </DialogContent>
-              </Dialog>
-            )}
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setViewMode(viewMode === "list" ? "grid" : "list")}
+                className="border-blue-100 hover:bg-blue-50"
+              >
+                {viewMode === "list" ? (
+                  <LayoutGrid className="h-4 w-4" />
+                ) : (
+                  <LayoutList className="h-4 w-4" />
+                )}
+              </Button>
+              {user?.userType === "professional" && user?.kycStatus !== "verified" && (
+                <Dialog>
+                  <DialogTrigger asChild>
+                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
+                      Completar KYC
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-lg bg-white shadow-lg border-blue-200">
+                    <KycForm />
+                  </DialogContent>
+                </Dialog>
+              )}
+            </div>
           </div>
 
           <div className="grid gap-4 mb-6">
@@ -178,69 +199,112 @@ export default function Jobs() {
               </Select>
             </div>
 
-            <div className="flex flex-col md:flex-row gap-4">
-              <Select value={location} onValueChange={setLocation}>
-                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
-                  <MapPin className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder="Localização" className="text-gray-900" />
-                </SelectTrigger>
-                <SelectContent>
-                  {locations?.map((loc) => (
-                    <SelectItem key={loc} value={loc} className="text-gray-900">
-                      {loc === "all" ? "Todas localizações" : loc}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+            <Card className="border-blue-100">
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4" />
+                  Filtros
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="grid gap-4">
+                <div className="space-y-2">
+                  <label className="text-sm font-medium">{t('jobs.filterByPrice')}</label>
+                  <div className="pt-2">
+                    <Slider
+                      defaultValue={[0, maxPrice]}
+                      max={maxPrice}
+                      step={100}
+                      value={priceRange}
+                      onValueChange={(value: [number, number]) => setPriceRange(value)}
+                      className="w-full"
+                    />
+                    <div className="flex justify-between mt-2 text-sm text-gray-600">
+                      <span>{formatCurrency(priceRange[0].toString(), currency)}</span>
+                      <span>{formatCurrency(priceRange[1].toString(), currency)}</span>
+                    </div>
+                  </div>
+                </div>
 
-              <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
-                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
-                  <SlidersHorizontal className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all" className="text-gray-900">Todos os tipos</SelectItem>
-                  <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
-                  <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
-                  <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
-                </SelectContent>
-              </Select>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <Select value={location} onValueChange={setLocation}>
+                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder="Localização" className="text-gray-900" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {locations?.map((loc) => (
+                        <SelectItem key={loc} value={loc} className="text-gray-900">
+                          {loc === "all" ? "Todas localizações" : loc}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
 
-              <Select value={sortBy} onValueChange={(val: SortOption) => setSortBy(val)}>
-                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
-                  <ArrowUpDown className="mr-2 h-4 w-4" />
-                  <SelectValue placeholder={t('jobs.sortBy')} className="text-gray-900" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="recent" className="text-gray-900">{t('jobs.sort.recent')}</SelectItem>
-                  <SelectItem value="oldest" className="text-gray-900">{t('jobs.sort.oldest')}</SelectItem>
-                  <SelectItem value="priceAsc" className="text-gray-900">{t('jobs.sort.priceAsc')}</SelectItem>
-                  <SelectItem value="priceDesc" className="text-gray-900">{t('jobs.sort.priceDesc')}</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+                  <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
+                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
+                      <SlidersHorizontal className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all" className="text-gray-900">Todos os tipos</SelectItem>
+                      <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
+                      <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
+                      <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+
+                  <Select value={sortBy} onValueChange={(val: SortOption) => setSortBy(val)}>
+                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
+                      <ArrowUpDown className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder={t('jobs.sortBy')} className="text-gray-900" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="recent" className="text-gray-900">{t('jobs.sort.recent')}</SelectItem>
+                      <SelectItem value="oldest" className="text-gray-900">{t('jobs.sort.oldest')}</SelectItem>
+                      <SelectItem value="priceAsc" className="text-gray-900">{t('jobs.sort.priceAsc')}</SelectItem>
+                      <SelectItem value="priceDesc" className="text-gray-900">{t('jobs.sort.priceDesc')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
-          <div className="space-y-4">
-            {sortedJobs?.length === 0 ? (
-              <div className="text-center py-8 text-gray-600 bg-white rounded-lg border border-blue-100 shadow-sm">
-                {t('jobs.noJobs')}
-              </div>
-            ) : (
-              sortedJobs?.map((job) => (
-                <JobCard
-                  key={job.id}
-                  job={job}
-                  onApply={() => applyMutation.mutate(job.id)}
-                  isPending={applyMutation.isPending}
-                  userType={user?.userType || ""}
-                  kycStatus={user?.kycStatus || ""}
-                  displayAmount={job.displayAmount}
-                  location={job.location}
-                />
-              ))
-            )}
-          </div>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={viewMode}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className={viewMode === "grid" ? "grid grid-cols-1 md:grid-cols-2 gap-4" : "space-y-4"}
+            >
+              {sortedJobs?.length === 0 ? (
+                <div className="text-center py-8 text-gray-600 bg-white rounded-lg border border-blue-100 shadow-sm">
+                  {t('jobs.noJobs')}
+                </div>
+              ) : (
+                sortedJobs?.map((job) => (
+                  <motion.div
+                    key={job.id}
+                    layout
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                  >
+                    <JobCard
+                      job={job}
+                      onApply={() => applyMutation.mutate(job.id)}
+                      isPending={applyMutation.isPending}
+                      userType={user?.userType || ""}
+                      kycStatus={user?.kycStatus || ""}
+                      displayAmount={job.displayAmount}
+                      location={job.location}
+                    />
+                  </motion.div>
+                ))
+              )}
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
     </div>
