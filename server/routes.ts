@@ -7,17 +7,25 @@ import { insertJobSchema, kycSchema } from "@shared/schema";
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
-  // ===== Endpoints de Vagas =====
+  // Middleware de logging para todas as requisições
+  app.use((req, res, next) => {
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
+    console.log('Session ID:', req.sessionID);
+    console.log('Is Authenticated:', req.isAuthenticated());
+    console.log('Current user:', req.user);
+    next();
+  });
 
-  /**
-   * Criar uma nova vaga
-   * POST /api/jobs
-   * Requer: Usuário autenticado e do tipo empresa
-   * Body: title, description, amount, currency, location
-   */
+  // ===== Endpoints de Vagas =====
   app.post("/api/jobs", async (req, res) => {
-    if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    if (req.user.userType !== "company") return res.status(403).json({ error: "Apenas empresas podem publicar vagas" });
+    if (!req.isAuthenticated()) {
+      console.log('Unauthorized attempt to create job');
+      return res.status(401).json({ error: "Usuário não autenticado" });
+    }
+    if (req.user.userType !== "company") {
+      console.log('Forbidden attempt to create job by non-company user');
+      return res.status(403).json({ error: "Apenas empresas podem publicar vagas" });
+    }
 
     try {
       const jobData = insertJobSchema.parse(req.body);
@@ -26,6 +34,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         companyId: req.user.id
       });
 
+      console.log(`Job created successfully by company ${req.user.id}`);
+
       // Recompensas por publicar vaga
       await storage.addUserPoints(req.user.id, 50);
       await storage.addUserExperience(req.user.id, 100);
@@ -33,6 +43,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       res.status(201).json(job);
     } catch (error) {
+      console.error('Error creating job:', error);
       res.status(400).json({ error: String(error) });
     }
   });

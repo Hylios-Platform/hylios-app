@@ -1,4 +1,4 @@
-import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData, achievements, userAchievements, type Achievement, type UserAchievement } from "@shared/schema";
+import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData, type Achievement, type UserAchievement, achievements, userAchievements } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
 import session from "express-session";
@@ -47,16 +47,20 @@ export class DatabaseStorage implements IStorage {
       pool,
       createTableIfMissing: true,
     });
+    console.log('Database storage initialized with PostgreSQL session store');
   }
 
-  // Existing methods remain the same
   async getUser(id: number): Promise<User | undefined> {
+    console.log(`Getting user with ID: ${id}`);
     const [user] = await db.select().from(users).where(eq(users.id, id));
+    console.log(`Found user:`, user ? 'yes' : 'no');
     return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
+    console.log(`Getting user by username: ${username}`);
     const [user] = await db.select().from(users).where(eq(users.username, username));
+    console.log(`Found user by username:`, user ? 'yes' : 'no');
     return user;
   }
 
@@ -150,11 +154,41 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserAchievements(userId: number): Promise<(UserAchievement & { achievement: Achievement })[]> {
-    return db
-      .select()
-      .from(userAchievements)
-      .where(eq(userAchievements.userId, userId))
-      .leftJoin(achievements, eq(userAchievements.achievementId, achievements.id));
+    try {
+      console.log(`Fetching achievements for user ID: ${userId}`);
+      const userAchievementsWithData = await db
+        .select({
+          id: userAchievements.id,
+          userId: userAchievements.userId,
+          achievementId: userAchievements.achievementId,
+          progress: userAchievements.progress,
+          unlockedAt: userAchievements.unlockedAt,
+          achievement: achievements
+        })
+        .from(userAchievements)
+        .leftJoin(achievements, eq(userAchievements.achievementId, achievements.id))
+        .where(eq(userAchievements.userId, userId));
+
+      console.log(`Found ${userAchievementsWithData.length} achievements`);
+
+      return userAchievementsWithData.map(record => {
+        if (!record.achievement) {
+          console.error(`Achievement not found for id: ${record.achievementId}`);
+          throw new Error(`Achievement not found for id: ${record.achievementId}`);
+        }
+        return {
+          id: record.id,
+          userId: record.userId,
+          achievementId: record.achievementId,
+          progress: record.progress,
+          unlockedAt: record.unlockedAt,
+          achievement: record.achievement
+        };
+      });
+    } catch (error) {
+      console.error('Error fetching user achievements:', error);
+      throw error;
+    }
   }
 
   async unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement> {
