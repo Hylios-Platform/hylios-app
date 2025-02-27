@@ -4,12 +4,23 @@
     "register": "Cadastrar",
     "username": "Nome de Usuário",
     "password": "Senha",
+    "email": "Email",
+    "age": "Idade",
+    "gender": "Sexo",
+    "selectGender": "Selecione seu sexo",
+    "gender": {
+      "male": "Masculino",
+      "female": "Feminino",
+      "other": "Outro"
+    },
     "iAm": "Eu sou",
     "professional": "Profissional",
     "company": "Empresa",
     "companyName": "Nome da Empresa",
     "forgotPassword": "Esqueceu sua senha?",
     "rememberPassword": "Lembrou sua senha? Entre aqui",
+    "confirmRegistration": "Confirmar Cadastro",
+    "confirmRegistrationDescription": "Por favor, confirme se as informações abaixo estão corretas:",
     "errors": {
       "usernameRequired": "Nome de usuário é obrigatório",
       "usernameMin": "Nome de usuário deve ter pelo menos 3 caracteres",
@@ -20,8 +31,16 @@
       "companyNameRequired": "Nome da empresa é obrigatório",
       "invalidCredentials": "Credenciais inválidas",
       "userExists": "Este usuário já existe",
-      "serverError": "Erro no servidor, tente novamente mais tarde"
+      "serverError": "Erro no servidor, tente novamente mais tarde",
+      "invalidEmail": "Email inválido",
+      "ageMin": "Você deve ter pelo menos 18 anos",
+      "ageMax": "Idade inválida",
+      "genderRequired": "Sexo é obrigatório"
     }
+  },
+  "common": {
+    "confirm": "Confirmar",
+    "cancel": "Cancelar"
   },
   "passwordReset": {
     "title": "Recuperação de Senha",

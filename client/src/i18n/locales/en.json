@@ -4,12 +4,23 @@
     "register": "Register",
     "username": "Username",
     "password": "Password",
+    "email": "Email",
+    "age": "Age",
+    "gender": "Gender",
+    "selectGender": "Select your gender",
+    "gender": {
+      "male": "Male",
+      "female": "Female",
+      "other": "Other"
+    },
     "iAm": "I am a",
     "professional": "Professional",
     "company": "Company",
     "companyName": "Company Name",
     "forgotPassword": "Forgot your password?",
     "rememberPassword": "Remember your password? Login here",
+    "confirmRegistration": "Confirm Registration",
+    "confirmRegistrationDescription": "Please confirm if the information below is correct:",
     "errors": {
       "usernameRequired": "Username is required",
       "usernameMin": "Username must be at least 3 characters",
@@ -20,8 +31,16 @@
       "companyNameRequired": "Company name is required",
       "invalidCredentials": "Invalid credentials",
       "userExists": "This username already exists",
-      "serverError": "Server error, please try again later"
+      "serverError": "Server error, please try again later",
+      "invalidEmail": "Invalid email",
+      "ageMin": "You must be at least 18 years old",
+      "ageMax": "Invalid age",
+      "genderRequired": "Gender is required"
     }
+  },
+  "common": {
+    "confirm": "Confirm",
+    "cancel": "Cancel"
   },
   "passwordReset": {
     "title": "Password Reset",

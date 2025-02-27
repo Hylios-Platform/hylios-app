@@ -28,6 +28,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogClose,
+} from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
@@ -42,15 +51,27 @@ const authSchema = insertUserSchema.extend({
   password: z.string()
     .min(6, "auth.errors.passwordMin")
     .max(50, "auth.errors.passwordMax"),
+  email: z.string()
+    .email("auth.errors.invalidEmail"),
+  age: z.number()
+    .min(18, "auth.errors.ageMin")
+    .max(100, "auth.errors.ageMax"),
+  gender: z.enum(["male", "female", "other"], {
+    errorMap: () => ({ message: "auth.errors.genderRequired" })
+  }),
   companyName: z.string().optional()
     .refine((val) => val !== undefined && val !== "" || true, "auth.errors.companyNameRequired"),
 });
+
+type RegisterData = z.infer<typeof authSchema>;
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
   const { t } = useTranslation();
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = useState(false);
+  const [registerData, setRegisterData] = useState<RegisterData | null>(null);
   const [, navigate] = useLocation();
 
   const loginForm = useForm<InsertUser>({
@@ -61,11 +82,14 @@ export default function AuthPage() {
     },
   });
 
-  const registerForm = useForm<InsertUser>({
+  const registerForm = useForm<RegisterData>({
     resolver: zodResolver(authSchema),
     defaultValues: {
       username: "",
       password: "",
+      email: "",
+      age: undefined,
+      gender: undefined,
       userType: "professional",
     },
   });
@@ -75,6 +99,18 @@ export default function AuthPage() {
       navigate("/");
     }
   }, [user, navigate]);
+
+  const handleRegisterSubmit = (data: RegisterData) => {
+    setRegisterData(data);
+    setShowConfirmDialog(true);
+  };
+
+  const confirmRegister = () => {
+    if (registerData) {
+      registerMutation.mutate(registerData);
+      setShowConfirmDialog(false);
+    }
+  };
 
   if (user) {
     return null;
@@ -211,9 +247,7 @@ export default function AuthPage() {
               <TabsContent value="register">
                 <Form {...registerForm}>
                   <form
-                    onSubmit={registerForm.handleSubmit((data) =>
-                      registerMutation.mutate(data)
-                    )}
+                    onSubmit={registerForm.handleSubmit(handleRegisterSubmit)}
                     className="space-y-4"
                   >
                     <FormField
@@ -231,6 +265,79 @@ export default function AuthPage() {
                               {...field}
                             />
                           </FormControl>
+                          <FormMessage className="text-sm font-medium text-red-500">
+                            {(msg) => t(msg as string)}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="email"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.email')} <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="email"
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                              autoComplete="email"
+                              {...field}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-sm font-medium text-red-500">
+                            {(msg) => t(msg as string)}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="age"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.age')} <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              type="number"
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                              {...field}
+                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                            />
+                          </FormControl>
+                          <FormMessage className="text-sm font-medium text-red-500">
+                            {(msg) => t(msg as string)}
+                          </FormMessage>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="gender"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.gender')} <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                                <SelectValue placeholder={t('auth.selectGender')} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="male">{t('auth.gender.male')}</SelectItem>
+                              <SelectItem value="female">{t('auth.gender.female')}</SelectItem>
+                              <SelectItem value="other">{t('auth.gender.other')}</SelectItem>
+                            </SelectContent>
+                          </Select>
                           <FormMessage className="text-sm font-medium text-red-500">
                             {(msg) => t(msg as string)}
                           </FormMessage>
@@ -372,6 +479,47 @@ export default function AuthPage() {
           </p>
         </div>
       </motion.div>
+
+      <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>{t('auth.confirmRegistration')}</DialogTitle>
+            <DialogDescription>
+              {t('auth.confirmRegistrationDescription')}
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div>
+              <strong>{t('auth.username')}:</strong> {registerData?.username}
+            </div>
+            <div>
+              <strong>{t('auth.email')}:</strong> {registerData?.email}
+            </div>
+            <div>
+              <strong>{t('auth.age')}:</strong> {registerData?.age}
+            </div>
+            <div>
+              <strong>{t('auth.gender')}:</strong> {t(`auth.gender.${registerData?.gender}`)}
+            </div>
+            <div>
+              <strong>{t('auth.userType')}:</strong> {t(`auth.${registerData?.userType}`)}
+            </div>
+            {registerData?.userType === "company" && (
+              <div>
+                <strong>{t('auth.companyName')}:</strong> {registerData?.companyName}
+              </div>
+            )}
+          </div>
+
+          <DialogFooter>
+            <DialogClose asChild>
+              <Button variant="outline">{t('common.cancel')}</Button>
+            </DialogClose>
+            <Button onClick={confirmRegister}>{t('common.confirm')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
