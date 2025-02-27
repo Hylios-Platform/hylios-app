@@ -1,11 +1,14 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
+import express from "express"; // This line was added
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 
 declare global {
   namespace Express {
@@ -29,6 +32,17 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
+  // Configurar CORS para permitir credenciais
+  app.use(cors({
+    origin: true,
+    credentials: true
+  }));
+
+  // Configurar parsers antes da sessão
+  app.use(cookieParser());
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
+
   const sessionSettings: session.SessionOptions = {
     secret: process.env.SESSION_SECRET || 'hylios-secret-key',
     resave: false,
@@ -36,7 +50,7 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     name: 'hylios.sid',
     cookie: {
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Desabilitar em desenvolvimento
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
       sameSite: 'lax'

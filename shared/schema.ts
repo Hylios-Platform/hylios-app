@@ -119,6 +119,22 @@ export const jobCategorySkills = {
   other: []
 } as const;
 
+export const europeanCountries = {
+  "Portugal": ["Lisboa", "Porto", "Faro", "Braga", "Coimbra"],
+  "Espanha": ["Madrid", "Barcelona", "Valencia", "Sevilha", "Málaga"],
+  "França": ["Paris", "Lyon", "Marselha", "Bordeaux", "Nice"],
+  "Alemanha": ["Berlim", "Munique", "Frankfurt", "Hamburgo", "Colônia"],
+  "Itália": ["Roma", "Milão", "Florença", "Veneza", "Nápoles"],
+  "Reino Unido": ["Londres", "Manchester", "Liverpool", "Edinburgh", "Birmingham"],
+  "Holanda": ["Amsterdã", "Rotterdam", "Haia", "Utrecht", "Eindhoven"],
+  "Bélgica": ["Bruxelas", "Antuérpia", "Gent", "Bruges", "Liège"],
+  "Suíça": ["Zurique", "Genebra", "Basileia", "Berna", "Lausanne"],
+  "Irlanda": ["Dublin", "Cork", "Galway", "Limerick", "Waterford"]
+} as const;
+
+export type Country = keyof typeof europeanCountries;
+export type City = typeof europeanCountries[Country][number];
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -163,13 +179,13 @@ export const jobs = pgTable("jobs", {
   companyId: integer("company_id").notNull(),
   currency: text("currency").notNull().default("EUR"),
   amount: text("amount").notNull(),
-  location: text("location").notNull(),
+  country: text("country").notNull(),
+  city: text("city").notNull(),
   workType: text("work_type").notNull().default("remote"),
   requiredSkills: jsonb("required_skills").$type<string[]>(),
   status: text("status").notNull().default("open"),
   assignedTo: integer("assigned_to"),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  category: text("category").notNull().default("other")
+  createdAt: timestamp("created_at").notNull().defaultNow()
 });
 
 // Schema for user achievements
@@ -187,19 +203,20 @@ export const insertUserSchema = createInsertSchema(users).pick({
   companyName: z.string().optional()
 });
 
-// Extend job insert schema with currency and location
+// Update job insert schema
 export const insertJobSchema = createInsertSchema(jobs).pick({
   title: true,
   description: true,
   amount: true,
   currency: true,
-  location: true,
+  country: true,
+  city: true,
   workType: true,
-  requiredSkills: true,
-  category: true
+  requiredSkills: true
 }).extend({
   workType: z.enum(["remote", "onsite", "hybrid"]),
-  category: z.enum(jobCategories),
+  country: z.enum(Object.keys(europeanCountries) as [string, ...string[]]),
+  city: z.string(),
   requiredSkills: z.array(z.string()).optional()
 });
 

@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Job, jobCategories, jobCategorySkills } from "@shared/schema";
+import { Job, europeanCountries } from "@shared/schema";
 import { JobCard } from "@/components/job-card";
 import { Input } from "@/components/ui/input";
 import { 
@@ -13,7 +13,6 @@ import {
 } from "@/components/ui/select";
 import { Slider } from "@/components/ui/slider";
 import { useState } from "react";
-import { KycForm } from "@/components/kyc-form";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
@@ -38,9 +37,9 @@ export default function Jobs() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
   const [currency, setCurrency] = useState<"EUR" | "AED">("EUR");
-  const [location, setLocation] = useState<string>("all");
+  const [selectedCountry, setSelectedCountry] = useState<string>("all");
+  const [selectedCity, setSelectedCity] = useState<string>("all");
   const [workType, setWorkType] = useState<WorkType>("all");
-  const [category, setCategory] = useState<typeof jobCategories[number]>("other");
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
@@ -105,14 +104,14 @@ export default function Jobs() {
     const matchesSearch = job.title.toLowerCase().includes(search.toLowerCase()) ||
       job.description.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = status === "all" || job.status === status;
-    const matchesLocation = location === "all" || job.location === location;
+    const matchesCountry = selectedCountry === "all" || job.country === selectedCountry;
+    const matchesCity = selectedCity === "all" || job.city === selectedCity;
     const matchesWorkType = workType === "all" || job.workType === workType;
-    const matchesCategory = category === "other" || job.category === category;
     const amount = parseFloat(job.amount);
     const matchesPriceRange = amount >= priceRange[0] && amount <= priceRange[1];
 
-    return matchesSearch && matchesStatus && matchesLocation && 
-           matchesWorkType && matchesPriceRange && matchesCategory;
+    return matchesSearch && matchesStatus && matchesCountry && 
+           matchesCity && matchesWorkType && matchesPriceRange;
   })
   .map(job => ({
     ...job,
@@ -124,12 +123,8 @@ export default function Jobs() {
 
   const sortedJobs = filteredJobs ? sortJobs(filteredJobs) : [];
 
-  const locations = jobs?.reduce((acc, job) => {
-    if (!acc.includes(job.location)) {
-      acc.push(job.location);
-    }
-    return acc;
-  }, ["all"] as string[]);
+  const availableCountries = Object.keys(europeanCountries);
+  const availableCities = selectedCountry === "all" ? [] : europeanCountries[selectedCountry as keyof typeof europeanCountries];
 
   if (isLoading) {
     return (
@@ -162,18 +157,6 @@ export default function Jobs() {
                   <LayoutList className="h-4 w-4" />
                 )}
               </Button>
-              {user?.userType === "professional" && user?.kycStatus !== "verified" && (
-                <Dialog>
-                  <DialogTrigger asChild>
-                    <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-                      Completar KYC
-                    </Button>
-                  </DialogTrigger>
-                  <DialogContent className="max-w-lg bg-white shadow-lg border-blue-200">
-                    <KycForm />
-                  </DialogContent>
-                </Dialog>
-              )}
             </div>
           </div>
 
@@ -228,21 +211,37 @@ export default function Jobs() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Select value={category} onValueChange={(value: typeof jobCategories[number]) => setCategory(value)}>
+                  <Select value={selectedCountry} onValueChange={setSelectedCountry}>
                     <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
                       <MapPin className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder="Categoria" />
+                      <SelectValue placeholder="País" className="text-gray-900" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="sales">Vendedor/Comercial</SelectItem>
-                      <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
-                      <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
-                      <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
-                      <SelectItem value="driver">Motorista/Entregador</SelectItem>
-                      <SelectItem value="education">Professor/Instrutor</SelectItem>
-                      <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
-                      <SelectItem value="production">Operador de Produção</SelectItem>
-                      <SelectItem value="other">Outras categorias</SelectItem>
+                      <SelectItem value="all" className="text-gray-900">Todos os países</SelectItem>
+                      {availableCountries.map((country) => (
+                        <SelectItem key={country} value={country} className="text-gray-900">
+                          {country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+
+                  <Select 
+                    value={selectedCity} 
+                    onValueChange={setSelectedCity}
+                    disabled={selectedCountry === "all"}
+                  >
+                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
+                      <MapPin className="mr-2 h-4 w-4" />
+                      <SelectValue placeholder="Cidade" className="text-gray-900" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="all" className="text-gray-900">Todas as cidades</SelectItem>
+                      {availableCities.map((city) => (
+                        <SelectItem key={city} value={city} className="text-gray-900">
+                          {city}
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
 
@@ -256,19 +255,6 @@ export default function Jobs() {
                       <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
                       <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
                       <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-
-                  <Select value={sortBy} onValueChange={(val: SortOption) => setSortBy(val)}>
-                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
-                      <ArrowUpDown className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder={t('jobs.sortBy')} className="text-gray-900" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="recent" className="text-gray-900">{t('jobs.sort.recent')}</SelectItem>
-                      <SelectItem value="oldest" className="text-gray-900">{t('jobs.sort.oldest')}</SelectItem>
-                      <SelectItem value="priceAsc" className="text-gray-900">{t('jobs.sort.priceAsc')}</SelectItem>
-                      <SelectItem value="priceDesc" className="text-gray-900">{t('jobs.sort.priceDesc')}</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -304,7 +290,7 @@ export default function Jobs() {
                       userType={user?.userType || ""}
                       kycStatus={user?.kycStatus || ""}
                       displayAmount={job.displayAmount}
-                      location={job.location}
+                      location={`${job.city}, ${job.country}`}
                     />
                   </motion.div>
                 ))
