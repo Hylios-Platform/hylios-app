@@ -51,8 +51,9 @@ export default function Header() {
               variant="ghost"
               size="sm"
               onClick={() => logoutMutation.mutate()}
-              className="text-gray-600 hover:text-gray-900 hover:bg-transparent px-1 h-8"
+              className="text-gray-600 hover:text-red-600 hover:bg-red-50 flex items-center gap-1 px-2 h-8 transition-colors"
             >
+              <span className="text-sm">Sair</span>
               <LogOut className="h-4 w-4" />
             </Button>
           </div>
