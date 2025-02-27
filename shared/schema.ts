@@ -2,6 +2,123 @@ import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal } fr
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
+// Adicionar enums para categorias profissionais
+export const jobCategories = [
+  "sales", // Vendedor/Comercial
+  "reception", // Recepcionista/Atendimento
+  "administrative", // Auxiliar Administrativo/Digitador
+  "healthcare", // Cuidador/Profissional de Saúde
+  "driver", // Motorista/Entregador
+  "education", // Professor/Instrutor
+  "restaurant", // Garçom/Profissional de Restaurante
+  "production", // Operador de Produção
+  "cleaning", // Serviços de Limpeza
+  "security", // Segurança
+  "retail", // Atendente de Loja
+  "construction", // Construção Civil
+  "other" // Outras categorias
+] as const;
+
+export const jobCategorySkills = {
+  sales: [
+    "Atendimento ao cliente",
+    "Negociação",
+    "Técnicas de vendas",
+    "Prospecção de clientes",
+    "CRM",
+    "Metas e resultados"
+  ],
+  reception: [
+    "Atendimento ao público",
+    "Organização",
+    "Comunicação",
+    "Agenda",
+    "Pacote Office",
+    "Telefonia"
+  ],
+  administrative: [
+    "Digitação",
+    "Excel avançado",
+    "Word",
+    "Arquivo",
+    "Organização",
+    "Gestão de documentos"
+  ],
+  healthcare: [
+    "Cuidados básicos",
+    "Primeiros socorros",
+    "Medicação",
+    "Higiene",
+    "Empatia",
+    "Cuidados especiais"
+  ],
+  driver: [
+    "CNH",
+    "Direção defensiva",
+    "GPS",
+    "Manutenção básica",
+    "Atendimento",
+    "Conhecimento de rotas"
+  ],
+  education: [
+    "Didática",
+    "Planejamento",
+    "Avaliação",
+    "Comunicação",
+    "Tecnologia educacional",
+    "Gestão de sala"
+  ],
+  restaurant: [
+    "Atendimento",
+    "Higiene alimentar",
+    "Organização",
+    "Agilidade",
+    "Trabalho em equipe",
+    "Controle de pedidos"
+  ],
+  production: [
+    "Operação de máquinas",
+    "Controle de qualidade",
+    "Segurança do trabalho",
+    "Organização",
+    "Trabalho em equipe",
+    "Manutenção preventiva"
+  ],
+  cleaning: [
+    "Limpeza geral",
+    "Produtos químicos",
+    "Equipamentos específicos",
+    "Higienização",
+    "Organização",
+    "Protocolos de limpeza"
+  ],
+  security: [
+    "Vigilância",
+    "Controle de acesso",
+    "Prevenção de riscos",
+    "Primeiros socorros",
+    "Defesa pessoal",
+    "Relatórios de ocorrência"
+  ],
+  retail: [
+    "Atendimento ao cliente",
+    "Organização de loja",
+    "Controle de estoque",
+    "Vendas",
+    "Visual merchandising",
+    "Caixa"
+  ],
+  construction: [
+    "Leitura de projetos",
+    "Ferramentas específicas",
+    "Segurança do trabalho",
+    "Acabamento",
+    "Trabalho em equipe",
+    "Manutenção básica"
+  ],
+  other: []
+} as const;
+
 export const users = pgTable("users", {
   id: serial("id").primaryKey(),
   username: text("username").notNull().unique(),
@@ -38,79 +155,6 @@ export const userAchievements = pgTable("user_achievements", {
   unlockedAt: timestamp("unlocked_at").notNull().defaultNow(),
   progress: integer("progress").notNull().default(0)
 });
-
-// Adicionar enums para categorias profissionais
-export const jobCategories = [
-  "sales", // Vendedor/Comercial
-  "reception", // Recepcionista/Atendimento
-  "administrative", // Auxiliar Administrativo/Digitador
-  "healthcare", // Cuidador/Profissional de Saúde
-  "driver", // Motorista/Entregador
-  "education", // Professor/Instrutor
-  "restaurant", // Garçom/Profissional de Restaurante
-  "production", // Operador de Produção
-  "other" // Outras categorias
-] as const;
-
-export const jobCategorySkills = {
-  sales: [
-    "Atendimento ao cliente",
-    "Negociação",
-    "Técnicas de vendas",
-    "Prospecção de clientes",
-    "CRM"
-  ],
-  reception: [
-    "Atendimento ao público",
-    "Organização",
-    "Comunicação",
-    "Agenda",
-    "Pacote Office"
-  ],
-  administrative: [
-    "Digitação",
-    "Excel",
-    "Word",
-    "Arquivo",
-    "Organização"
-  ],
-  healthcare: [
-    "Cuidados básicos",
-    "Primeiros socorros",
-    "Medicação",
-    "Higiene",
-    "Empatia"
-  ],
-  driver: [
-    "CNH",
-    "Direção defensiva",
-    "GPS",
-    "Manutenção básica",
-    "Atendimento"
-  ],
-  education: [
-    "Didática",
-    "Planejamento",
-    "Avaliação",
-    "Comunicação",
-    "Tecnologia educacional"
-  ],
-  restaurant: [
-    "Atendimento",
-    "Higiene",
-    "Organização",
-    "Agilidade",
-    "Trabalho em equipe"
-  ],
-  production: [
-    "Operação de máquinas",
-    "Controle de qualidade",
-    "Segurança do trabalho",
-    "Organização",
-    "Trabalho em equipe"
-  ],
-  other: []
-} as const;
 
 export const jobs = pgTable("jobs", {
   id: serial("id").primaryKey(),

@@ -86,7 +86,7 @@ export default function PostJob() {
 
   return (
     <div className="min-h-screen bg-white">
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8">
         <motion.div 
           className="max-w-2xl mx-auto"
           initial={{ opacity: 0, y: 20 }}
@@ -99,6 +99,44 @@ export default function PostJob() {
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit((data) => mutation.mutate(data))} className="space-y-6">
+              <FormField
+                control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Categoria Profissional</FormLabel>
+                    <Select 
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        addSuggestedSkills(value as keyof typeof jobCategorySkills);
+                      }} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                          <SelectValue placeholder="Selecione a categoria" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="sales">Vendedor/Comercial</SelectItem>
+                        <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
+                        <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
+                        <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
+                        <SelectItem value="driver">Motorista/Entregador</SelectItem>
+                        <SelectItem value="education">Professor/Instrutor</SelectItem>
+                        <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
+                        <SelectItem value="production">Operador de Produção</SelectItem>
+                        <SelectItem value="cleaning">Serviços de Limpeza</SelectItem>
+                        <SelectItem value="security">Segurança</SelectItem>
+                        <SelectItem value="retail">Atendente de Loja</SelectItem>
+                        <SelectItem value="construction">Construção Civil</SelectItem>
+                        <SelectItem value="other">Outra categoria</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
               <FormField
                 control={form.control}
                 name="title"
@@ -212,41 +250,6 @@ export default function PostJob() {
                         <SelectItem value="remote">Remoto</SelectItem>
                         <SelectItem value="onsite">Presencial</SelectItem>
                         <SelectItem value="hybrid">Híbrido</SelectItem>
-                      </SelectContent>
-                    </Select>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-
-              <FormField
-                control={form.control}
-                name="category"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel className="text-gray-700">Categoria Profissional</FormLabel>
-                    <Select 
-                      onValueChange={(value) => {
-                        field.onChange(value);
-                        addSuggestedSkills(value as keyof typeof jobCategorySkills);
-                      }} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
-                          <SelectValue placeholder="Selecione a categoria" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        <SelectItem value="sales">Vendedor/Comercial</SelectItem>
-                        <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
-                        <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
-                        <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
-                        <SelectItem value="driver">Motorista/Entregador</SelectItem>
-                        <SelectItem value="education">Professor/Instrutor</SelectItem>
-                        <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
-                        <SelectItem value="production">Operador de Produção</SelectItem>
-                        <SelectItem value="other">Outra categoria</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
