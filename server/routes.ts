@@ -11,7 +11,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.use(cors({
     origin: process.env.NODE_ENV === 'production' 
       ? 'https://seu-dominio-producao.com' 
-      : ['http://localhost:3000', 'http://localhost:5000'],
+      : 'http://localhost:3000',
     credentials: true, // Permite o envio de cookies
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],

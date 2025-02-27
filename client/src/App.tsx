@@ -9,6 +9,7 @@ import HomePage from "@/pages/home-page";
 import PostJob from "@/pages/post-job";
 import Jobs from "@/pages/jobs";
 import Settings from "@/pages/settings";
+import Payments from "@/pages/payments";
 import PasswordReset from "@/pages/password-reset";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
@@ -27,6 +28,7 @@ function Router() {
           <ProtectedRoute path="/post-job" component={PostJob} />
           <ProtectedRoute path="/jobs" component={Jobs} />
           <ProtectedRoute path="/settings" component={Settings} />
+          <ProtectedRoute path="/payments" component={Payments} />
           <Route component={NotFound} />
         </Switch>
       </PageTransition>

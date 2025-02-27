@@ -41,6 +41,15 @@ export default function Header() {
                 {t('navigation.postJob')}
               </Button>
             </Link>
+            <Link href="/payments">
+              <Button 
+                size="sm" 
+                variant="default" 
+                className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-2 h-8 shadow-sm"
+              >
+                {t('navigation.payments')}
+              </Button>
+            </Link>
           </nav>
 
           <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200">
