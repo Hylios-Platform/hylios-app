@@ -43,7 +43,7 @@ import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
 
-// Extend the schema with custom validation messages
+// Atualizando o schema de validação
 const authSchema = insertUserSchema.extend({
   username: z.string()
     .min(3, "auth.errors.usernameMin")
@@ -56,7 +56,7 @@ const authSchema = insertUserSchema.extend({
   age: z.number()
     .min(18, "auth.errors.ageMin")
     .max(100, "auth.errors.ageMax"),
-  gender: z.enum(["male", "female", "other"], {
+  gender: z.enum(["male", "female"], {
     errorMap: () => ({ message: "auth.errors.genderRequired" })
   }),
   companyName: z.string().optional()
@@ -333,9 +333,8 @@ export default function AuthPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="male">{t('auth.gender.male')}</SelectItem>
-                              <SelectItem value="female">{t('auth.gender.female')}</SelectItem>
-                              <SelectItem value="other">{t('auth.gender.other')}</SelectItem>
+                              <SelectItem value="male">{t('auth.genderTypes.male')}</SelectItem>
+                              <SelectItem value="female">{t('auth.genderTypes.female')}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage className="text-sm font-medium text-red-500">

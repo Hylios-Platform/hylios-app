@@ -10,8 +10,7 @@
     "selectGender": "Select your gender",
     "genderTypes": {
       "male": "Male",
-      "female": "Female",
-      "other": "Other"
+      "female": "Female"
     },
     "iAm": "I am a",
     "professional": "Professional",
