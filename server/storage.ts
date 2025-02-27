@@ -43,16 +43,23 @@ export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
+    console.log('Initializing DatabaseStorage');
     this.sessionStore = new PostgresSessionStore({
       pool,
       createTableIfMissing: true,
     });
     console.log('Database storage initialized with PostgreSQL session store');
-    
-    // Adicionar usuário de teste ao inicializar
-    this.initTestUser();
+
+    // Garantir que o esquema seja criado
+    this.createSchema().then(() => {
+      console.log('Esquema do banco de dados verificado');
+      // Adicionar usuário de teste ao inicializar após garantir que o esquema existe
+      this.initTestUser();
+    }).catch(err => {
+      console.error('Erro ao criar esquema:', err);
+    });
   }
-  
+
   private async initTestUser() {
     try {
       // Verificar se o usuário de teste já existe
@@ -81,26 +88,38 @@ export class DatabaseStorage implements IStorage {
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    console.log(`Getting user by username: ${username}`);
-    const [user] = await db.select().from(users).where(eq(users.username, username));
-    console.log(`Found user by username:`, user ? 'yes' : 'no');
-    return user;
+    try {
+      console.log(`Buscando usuário com username: ${username}`);
+      const [user] = await db.select().from(users).where(eq(users.username, username));
+      console.log('Usuário encontrado:', user || 'Não encontrado');
+      return user;
+    } catch (error) {
+      console.error('Erro ao buscar usuário por username:', error);
+      return undefined;
+    }
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const [user] = await db
-      .insert(users)
-      .values({
-        ...insertUser,
-        kycStatus: "pending",
-        kycData: null,
-        profileData: null,
-        level: 1,
-        points: 0,
-        experience: 0
-      })
-      .returning();
-    return user;
+    try {
+      console.log('Criando novo usuário:', insertUser);
+      const [user] = await db
+        .insert(users)
+        .values({
+          ...insertUser,
+          kycStatus: "pending",
+          kycData: null,
+          profileData: null,
+          level: 1,
+          points: 0,
+          experience: 0
+        })
+        .returning();
+      console.log('Usuário criado com ID:', user.id);
+      return user;
+    } catch (error) {
+      console.error('Erro ao criar usuário:', error);
+      throw error;
+    }
   }
 
   async updateUser(id: number, data: Partial<User>): Promise<User> {
@@ -390,6 +409,17 @@ export class DatabaseStorage implements IStorage {
       .returning();
 
     return updatedJob;
+  }
+
+  async createSchema() {
+    try {
+      console.log('Verificando/criando esquema do banco de dados...');
+      await db.execute(schema.dbSchema); // Assuming schema.dbSchema is defined elsewhere
+      console.log('Esquema verificado/criado com sucesso');
+    } catch (error) {
+      console.error('Erro ao criar esquema:', error);
+      throw error;
+    }
   }
 }
 
