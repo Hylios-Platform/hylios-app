@@ -48,6 +48,29 @@ export class DatabaseStorage implements IStorage {
       createTableIfMissing: true,
     });
     console.log('Database storage initialized with PostgreSQL session store');
+    
+    // Adicionar usuário de teste ao inicializar
+    this.initTestUser();
+  }
+  
+  private async initTestUser() {
+    try {
+      // Verificar se o usuário de teste já existe
+      const testUser = await this.getUserByUsername('teste');
+      if (!testUser) {
+        // Criar usuário de teste
+        await this.createUser({
+          username: 'teste',
+          password: 'senha123',
+          userType: 'professional',
+        });
+        console.log('Usuário de teste criado com sucesso');
+      } else {
+        console.log('Usuário de teste já existe');
+      }
+    } catch (error) {
+      console.error('Erro ao criar usuário de teste:', error);
+    }
   }
 
   async getUser(id: number): Promise<User | undefined> {

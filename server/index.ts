@@ -1,10 +1,10 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import cors from 'cors'; // Added cors middleware
 
 const app = express();
-
-// Trust first proxy
+app.use(cors()); // Enabled CORS
 app.set('trust proxy', 1);
 
 app.use(express.json());
@@ -61,7 +61,7 @@ app.use((req, res, next) => {
     serveStatic(app);
   }
 
-  const port = 5000;
+  const port = 3000; // Changed port to 3000
   server.listen({
     port,
     host: "0.0.0.0",
@@ -69,4 +69,7 @@ app.use((req, res, next) => {
   }, () => {
     log(`serving on port ${port}`);
   });
+
+  // Placeholder for user authentication - needs further implementation
+  // Example:  Add authentication middleware here.  This requires additional code and setup.
 })();
