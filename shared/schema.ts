@@ -234,7 +234,12 @@ export const kycSchema = z.object({
   dateOfBirth: z.string(),
   documentType: z.enum(["passport", "id_card", "drivers_license"]),
   documentNumber: z.string(),
-  address: z.string()
+  nationality: z.string(),
+  phoneNumber: z.string(),
+  address: z.string(),
+  city: z.string(),
+  country: z.string(),
+  postalCode: z.string()
 });
 
 // Types
