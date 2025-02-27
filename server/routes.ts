@@ -19,7 +19,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   }));
 
   const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
-  if (!process.env.SESSION_SECRET) {
+  if (!sessionSecret) {
     console.warn('Aviso: SESSION_SECRET não definido, usando valor padrão');
   }
 
@@ -30,7 +30,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
     console.log('Session ID:', req.sessionID);
     console.log('Is Authenticated:', req.isAuthenticated());
-    console.log('Current user:', req.user);
     next();
   });
 
