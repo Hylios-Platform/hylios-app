@@ -27,12 +27,18 @@ export function FloatingMatchButton() {
 
   return (
     <>
-      <Button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed bottom-4 right-4 bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg z-50"
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        className="fixed bottom-6 right-6 z-50"
       >
-        <Sparkles className="h-6 w-6" />
-      </Button>
+        <Button
+          onClick={() => setIsOpen(!isOpen)}
+          className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white rounded-full p-6 shadow-lg"
+        >
+          <Sparkles className="h-8 w-8" />
+        </Button>
+      </motion.div>
 
       <AnimatePresence>
         {isOpen && (
@@ -40,12 +46,14 @@ export function FloatingMatchButton() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="fixed bottom-20 right-4 w-80 z-50"
+            className="fixed bottom-28 right-6 w-96 z-50"
           >
             <Card className="border-blue-100 bg-white shadow-xl">
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium text-blue-600">Matches em Tempo Real</h3>
+                  <h3 className="text-lg font-medium bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+                    Matches em Tempo Real
+                  </h3>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -62,16 +70,25 @@ export function FloatingMatchButton() {
                       key={job.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="p-3 bg-blue-50/50 rounded-lg border border-blue-100"
+                      className="p-4 bg-blue-50/50 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors cursor-pointer"
                     >
                       <div className="flex items-start justify-between">
-                        <div>
+                        <div className="space-y-1">
                           <h4 className="font-medium text-gray-900">{job.title}</h4>
                           <p className="text-sm text-gray-600">{job.city}, {job.country}</p>
+                          <div className="flex items-center gap-2 text-sm">
+                            <span className="text-gray-500">Tipo:</span>
+                            <span className="text-blue-600 capitalize">{job.workType}</span>
+                          </div>
                         </div>
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                          {score}%
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                            {score}%
+                          </span>
+                          {score >= 80 && (
+                            <span className="text-xs text-green-600 mt-1">Match Perfeito!</span>
+                          )}
+                        </div>
                       </div>
                     </motion.div>
                   ))}
