@@ -26,6 +26,17 @@ export interface IStorage {
   getUserAchievements(userId: number): Promise<(UserAchievement & { achievement: Achievement })[]>;
   unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement>;
   updateAchievementProgress(userId: number, achievementId: number, progress: number): Promise<UserAchievement>;
+
+  // Novos métodos para carteira
+  updateWalletAddress(userId: number, walletAddress: string): Promise<User>;
+  updateWalletBalance(userId: number, amount: string): Promise<User>;
+
+  // Novos métodos para créditos
+  addCompanyCredits(companyId: number, amount: string): Promise<User>;
+  removeCompanyCredits(companyId: number, amount: string): Promise<User>;
+
+  // Novo método para pagamentos
+  processJobPayment(jobId: number): Promise<Job>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -239,6 +250,89 @@ export class DatabaseStorage implements IStorage {
       .returning();
 
     return created;
+  }
+
+  async updateWalletAddress(userId: number, walletAddress: string): Promise<User> {
+    const [user] = await db
+      .update(users)
+      .set({ walletAddress })
+      .where(eq(users.id, userId))
+      .returning();
+    if (!user) throw new Error("Usuário não encontrado");
+    return user;
+  }
+
+  async updateWalletBalance(userId: number, amount: string): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) throw new Error("Usuário não encontrado");
+
+    const newBalance = (parseFloat(user.walletBalance || "0") + parseFloat(amount)).toString();
+
+    const [updatedUser] = await db
+      .update(users)
+      .set({ walletBalance: newBalance })
+      .where(eq(users.id, userId))
+      .returning();
+    return updatedUser;
+  }
+
+  async addCompanyCredits(companyId: number, amount: string): Promise<User> {
+    const company = await this.getUser(companyId);
+    if (!company) throw new Error("Empresa não encontrada");
+    if (company.userType !== "company") throw new Error("Usuário não é uma empresa");
+
+    const newCredits = (parseFloat(company.companyCredits || "0") + parseFloat(amount)).toString();
+
+    const [updatedCompany] = await db
+      .update(users)
+      .set({ companyCredits: newCredits })
+      .where(eq(users.id, companyId))
+      .returning();
+    return updatedCompany;
+  }
+
+  async removeCompanyCredits(companyId: number, amount: string): Promise<User> {
+    const company = await this.getUser(companyId);
+    if (!company) throw new Error("Empresa não encontrada");
+    if (company.userType !== "company") throw new Error("Usuário não é uma empresa");
+
+    const currentCredits = parseFloat(company.companyCredits || "0");
+    const amountToRemove = parseFloat(amount);
+
+    if (currentCredits < amountToRemove) {
+      throw new Error("Créditos insuficientes");
+    }
+
+    const newCredits = (currentCredits - amountToRemove).toString();
+
+    const [updatedCompany] = await db
+      .update(users)
+      .set({ companyCredits: newCredits })
+      .where(eq(users.id, companyId))
+      .returning();
+    return updatedCompany;
+  }
+
+  async processJobPayment(jobId: number): Promise<Job> {
+    const job = await this.getJob(jobId);
+    if (!job) throw new Error("Trabalho não encontrado");
+    if (job.status !== "completed") throw new Error("Trabalho não está concluído");
+    if (!job.assignedTo) throw new Error("Trabalho não está atribuído a nenhum profissional");
+
+    // Remover créditos da empresa
+    await this.removeCompanyCredits(job.companyId, job.amount);
+
+    // Adicionar saldo na carteira do profissional
+    await this.updateWalletBalance(job.assignedTo, job.amount);
+
+    // Atualizar status do trabalho
+    const [updatedJob] = await db
+      .update(jobs)
+      .set({ status: "paid" })
+      .where(eq(jobs.id, jobId))
+      .returning();
+
+    return updatedJob;
   }
 }
 
