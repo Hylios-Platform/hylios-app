@@ -25,14 +25,14 @@ export default function Payments() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Bitcoin className="h-5 w-5 text-amber-400" />
-                    <CardTitle>{t("payments.balance")}</CardTitle>
+                    <CardTitle className="text-2xl">{t("payments.balance")}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-2xl font-semibold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
+                  <p className="text-4xl font-bold bg-gradient-to-r from-amber-400 to-amber-600 bg-clip-text text-transparent">
                     {user?.walletBalance || "0"} BTC
                   </p>
-                  <p className="text-sm text-gray-600 mt-1">
+                  <p className="text-lg text-gray-600 mt-1">
                     ≈ ${(parseFloat(user?.walletBalance || "0") * 50000).toFixed(2)} USD
                   </p>
                 </CardContent>
@@ -42,17 +42,17 @@ export default function Payments() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <ArrowUpDown className="h-5 w-5 text-blue-500" />
-                    <CardTitle>{t("payments.pending")}</CardTitle>
+                    <CardTitle className="text-2xl">{t("payments.pending")}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100">
+                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-blue-100 hover:border-blue-300 transition-colors">
                       <div>
-                        <p className="font-medium text-gray-900">Trabalho #123</p>
-                        <p className="text-sm text-gray-600">Pagamento pendente</p>
+                        <p className="text-xl font-semibold text-gray-900">Trabalho #123</p>
+                        <p className="text-base text-gray-600">Pagamento pendente</p>
                       </div>
-                      <span className="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-full text-sm">
+                      <span className="px-4 py-2 bg-yellow-100 text-yellow-700 rounded-full text-lg font-medium">
                         0.05 BTC
                       </span>
                     </div>
@@ -64,19 +64,22 @@ export default function Payments() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <History className="h-5 w-5 text-green-500" />
-                    <CardTitle>{t("payments.history")}</CardTitle>
+                    <CardTitle className="text-2xl">{t("payments.history")}</CardTitle>
                   </div>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    <div className="flex items-center justify-between p-3 bg-white rounded-lg border border-blue-100">
+                    <div className="flex items-center justify-between p-4 bg-white rounded-lg border border-blue-100 hover:border-blue-300 transition-colors">
                       <div>
-                        <p className="font-medium text-gray-900">Trabalho #122</p>
-                        <p className="text-sm text-gray-600">Concluído em 25/02/2025</p>
+                        <p className="text-xl font-semibold text-gray-900">Trabalho #122</p>
+                        <p className="text-base text-gray-600">Concluído em 25/02/2025</p>
                       </div>
-                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-sm">
-                        0.1 BTC
-                      </span>
+                      <div className="flex flex-col items-end">
+                        <span className="px-4 py-2 bg-green-100 text-green-700 rounded-full text-lg font-medium">
+                          0.1 BTC
+                        </span>
+                        <span className="text-sm text-green-600 mt-1">Pagamento Confirmado</span>
+                      </div>
                     </div>
                   </div>
                 </CardContent>
