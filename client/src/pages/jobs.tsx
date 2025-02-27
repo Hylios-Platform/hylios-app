@@ -16,8 +16,13 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Search } from "lucide-react";
+import { Loader2, Search, MapPin, Coins } from "lucide-react";
 import { useTranslation } from "react-i18next";
+
+const EXCHANGE_RATES = {
+  EUR: { EUR: 1, AED: 3.96 },
+  AED: { EUR: 0.25, AED: 1 }
+};
 
 export default function Jobs() {
   const { user } = useAuth();
@@ -25,6 +30,8 @@ export default function Jobs() {
   const { t } = useTranslation();
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState<string>("all");
+  const [currency, setCurrency] = useState<"EUR" | "AED">("EUR");
+  const [location, setLocation] = useState<string>("all");
 
   const { data: jobs, isLoading } = useQuery<Job[]>({
     queryKey: ["/api/jobs"],
@@ -51,12 +58,40 @@ export default function Jobs() {
     },
   });
 
+  const convertCurrency = (amount: string, from: string, to: string) => {
+    const value = parseFloat(amount);
+    const rate = EXCHANGE_RATES[from as keyof typeof EXCHANGE_RATES][to as keyof typeof EXCHANGE_RATES];
+    return (value * rate).toFixed(2);
+  };
+
+  const formatCurrency = (amount: string, currency: string) => {
+    const value = parseFloat(amount);
+    return new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: currency
+    }).format(value);
+  };
+
   const filteredJobs = jobs?.filter((job) => {
     const matchesSearch = job.title.toLowerCase().includes(search.toLowerCase()) ||
       job.description.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = status === "all" || job.status === status;
-    return matchesSearch && matchesStatus;
-  });
+    const matchesLocation = location === "all" || job.location === location;
+    return matchesSearch && matchesStatus && matchesLocation;
+  }).map(job => ({
+    ...job,
+    displayAmount: formatCurrency(
+      convertCurrency(job.amount, job.currency, currency),
+      currency
+    )
+  }));
+
+  const locations = jobs?.reduce((acc, job) => {
+    if (!acc.includes(job.location)) {
+      acc.push(job.location);
+    }
+    return acc;
+  }, ["all"] as string[]);
 
   if (isLoading) {
     return (
@@ -98,15 +133,41 @@ export default function Jobs() {
                 className="pl-10 border-blue-100 focus:border-blue-200 bg-white"
               />
             </div>
+
+            <Select value={currency} onValueChange={(val: "EUR" | "AED") => setCurrency(val)}>
+              <SelectTrigger className="w-full md:w-[120px] border-blue-100 bg-white">
+                <Coins className="mr-2 h-4 w-4" />
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="EUR">EUR</SelectItem>
+                <SelectItem value="AED">AED</SelectItem>
+              </SelectContent>
+            </Select>
+
+            <Select value={location} onValueChange={setLocation}>
+              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white">
+                <MapPin className="mr-2 h-4 w-4" />
+                <SelectValue placeholder="Localização" />
+              </SelectTrigger>
+              <SelectContent>
+                {locations?.map((loc) => (
+                  <SelectItem key={loc} value={loc}>
+                    {loc === "all" ? "Todas localizações" : loc}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+
             <Select value={status} onValueChange={setStatus}>
               <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white">
                 <SelectValue placeholder={t('jobs.filterByStatus')} />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">{t('jobs.allJobs')}</SelectItem>
-                <SelectItem value="open">{t('jobs.open')}</SelectItem>
-                <SelectItem value="assigned">{t('jobs.assigned')}</SelectItem>
-                <SelectItem value="completed">{t('jobs.completed')}</SelectItem>
+                <SelectItem value="open">{t('jobs.status.open')}</SelectItem>
+                <SelectItem value="assigned">{t('jobs.status.assigned')}</SelectItem>
+                <SelectItem value="completed">{t('jobs.status.completed')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -125,6 +186,8 @@ export default function Jobs() {
                   isPending={applyMutation.isPending}
                   userType={user?.userType || ""}
                   kycStatus={user?.kycStatus || ""}
+                  displayAmount={job.displayAmount}
+                  location={job.location}
                 />
               ))
             )}

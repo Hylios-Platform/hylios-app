@@ -1,7 +1,7 @@
 import { Job } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
-import { Bitcoin, Calendar, Loader2 } from "lucide-react";
+import { Bitcoin, Calendar, Loader2, MapPin, Coins } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useTranslation } from "react-i18next";
 
@@ -11,9 +11,11 @@ interface JobCardProps {
   isPending: boolean;
   userType: string;
   kycStatus: string;
+  displayAmount: string;
+  location: string;
 }
 
-export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCardProps) {
+export function JobCard({ job, onApply, isPending, userType, kycStatus, displayAmount, location }: JobCardProps) {
   const { t } = useTranslation();
 
   const canApply = userType === "professional" && 
@@ -31,8 +33,12 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus }: JobCar
             </p>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
-                <Bitcoin className="h-4 w-4 text-amber-400" />
-                <span className="text-blue-400">{job.bitcoinAmount} BTC</span>
+                <Coins className="h-4 w-4 text-amber-400" />
+                <span className="text-blue-400">{displayAmount}</span>
+              </div>
+              <div className="flex items-center gap-1">
+                <MapPin className="h-4 w-4 text-blue-400" />
+                <span className="text-blue-400">{location}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4 text-blue-400" />

@@ -40,7 +40,9 @@ export const jobs = pgTable("jobs", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   companyId: integer("company_id").notNull(),
-  bitcoinAmount: text("bitcoin_amount").notNull(),
+  currency: text("currency").notNull().default("EUR"), // "EUR" ou "AED"
+  amount: text("amount").notNull(),
+  location: text("location").notNull(), // "Dubai, UAE" ou "Paris, France" etc
   status: text("status").notNull().default("open"), // "open", "assigned", "completed"
   assignedTo: integer("assigned_to"),
   createdAt: timestamp("created_at").notNull().defaultNow()
@@ -61,10 +63,13 @@ export const insertUserSchema = createInsertSchema(users).pick({
   companyName: z.string().optional()
 });
 
+// Extend job insert schema with currency and location
 export const insertJobSchema = createInsertSchema(jobs).pick({
   title: true,
   description: true,
-  bitcoinAmount: true
+  amount: true,
+  currency: true,
+  location: true
 });
 
 export const kycSchema = z.object({
