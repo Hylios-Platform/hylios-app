@@ -5,11 +5,16 @@ import * as schema from "@shared/schema";
 
 neonConfig.webSocketConstructor = ws;
 
-if (!process.env.DATABASE_URL) {
-  throw new Error(
-    "DATABASE_URL must be set. Did you forget to provision a database?",
-  );
-}
+// Usar URL padrão para desenvolvimento se não for configurada
+const DATABASE_URL = process.env.DATABASE_URL || 'postgres://postgres:postgres@localhost:5432/postgres';
 
-export const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// Configurando um timeout maior para evitar problemas de conexão
+neonConfig.connectionTimeoutMillis = 10000;
+
+export const pool = new Pool({ 
+  connectionString: DATABASE_URL,
+  max: 20, // Máximo de conexões no pool
+  idleTimeoutMillis: 30000, // Tempo máximo que uma conexão pode ficar inativa
+  connectionTimeoutMillis: 10000 // Tempo máximo para estabelecer uma conexão
+});
 export const db = drizzle({ client: pool, schema });

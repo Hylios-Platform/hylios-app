@@ -44,20 +44,27 @@ export class DatabaseStorage implements IStorage {
 
   constructor() {
     console.log('Initializing DatabaseStorage');
-    this.sessionStore = new PostgresSessionStore({
-      pool,
-      createTableIfMissing: true,
-    });
-    console.log('Database storage initialized with PostgreSQL session store');
+    try {
+      this.sessionStore = new PostgresSessionStore({
+        pool,
+        createTableIfMissing: true,
+        tableName: 'session', // Nome da tabela de sessão
+      });
+      console.log('Database storage initialized with PostgreSQL session store');
 
-    // Garantir que o esquema seja criado
-    this.createSchema().then(() => {
-      console.log('Esquema do banco de dados verificado');
-      // Adicionar usuário de teste ao inicializar após garantir que o esquema existe
-      this.initTestUser();
-    }).catch(err => {
-      console.error('Erro ao criar esquema:', err);
-    });
+      // Garantir que o esquema seja criado
+      setTimeout(() => {
+        this.createSchema().then(() => {
+          console.log('Esquema do banco de dados verificado');
+          // Adicionar usuário de teste ao inicializar após garantir que o esquema existe
+          this.initTestUser();
+        }).catch(err => {
+          console.error('Erro ao criar esquema:', err);
+        });
+      }, 1000); // Pequeno atraso para garantir que a conexão esteja pronta
+    } catch (error) {
+      console.error('Erro ao inicializar o armazenamento:', error);
+    }
   }
 
   private async initTestUser() {

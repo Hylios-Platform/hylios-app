@@ -24,6 +24,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== Endpoints de Autenticação =====
+  const insertUserSchema = z.object({
+    username: z.string(),
+    password: z.string(),
+    userType: z.enum(["company", "professional"]),
+    companyName: z.string().optional()
+  });
+
   app.post("/api/register", async (req, res) => {
     try {
       const userData = insertUserSchema.parse(req.body);
