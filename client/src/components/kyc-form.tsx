@@ -26,7 +26,7 @@ import { Loader2 } from "lucide-react";
 
 export function KycForm() {
   const { toast } = useToast();
-  
+
   const form = useForm<KycData>({
     resolver: zodResolver(kycSchema),
     defaultValues: {
@@ -46,13 +46,13 @@ export function KycForm() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/user"] });
       toast({
-        title: "KYC Submitted",
-        description: "Your verification documents have been submitted for review",
+        title: "KYC Enviado",
+        description: "Seus documentos foram enviados para verificação",
       });
     },
     onError: (error: Error) => {
       toast({
-        title: "Error",
+        title: "Erro",
         description: error.message,
         variant: "destructive",
       });
@@ -63,7 +63,7 @@ export function KycForm() {
     <div className="p-4">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold mb-4">
-          KYC Verification
+          Verificação KYC
         </DialogTitle>
       </DialogHeader>
 
@@ -77,9 +77,9 @@ export function KycForm() {
             name="fullName"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Full Name</FormLabel>
+                <FormLabel>Nome Completo</FormLabel>
                 <FormControl>
-                  <Input placeholder="John Doe" {...field} />
+                  <Input placeholder="João da Silva" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -91,7 +91,7 @@ export function KycForm() {
             name="dateOfBirth"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Date of Birth</FormLabel>
+                <FormLabel>Data de Nascimento</FormLabel>
                 <FormControl>
                   <Input type="date" {...field} />
                 </FormControl>
@@ -105,7 +105,7 @@ export function KycForm() {
             name="documentType"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Document Type</FormLabel>
+                <FormLabel>Tipo de Documento</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger>
@@ -113,9 +113,9 @@ export function KycForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="passport">Passport</SelectItem>
-                    <SelectItem value="id_card">ID Card</SelectItem>
-                    <SelectItem value="drivers_license">Driver's License</SelectItem>
+                    <SelectItem value="passport">Passaporte</SelectItem>
+                    <SelectItem value="id_card">RG</SelectItem>
+                    <SelectItem value="drivers_license">CNH</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -128,7 +128,7 @@ export function KycForm() {
             name="documentNumber"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Document Number</FormLabel>
+                <FormLabel>Número do Documento</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -142,7 +142,7 @@ export function KycForm() {
             name="address"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Residential Address</FormLabel>
+                <FormLabel>Endereço Residencial</FormLabel>
                 <FormControl>
                   <Input {...field} />
                 </FormControl>
@@ -159,7 +159,7 @@ export function KycForm() {
             {mutation.isPending && (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             )}
-            Submit Verification
+            Enviar Verificação
           </Button>
         </form>
       </Form>

@@ -16,7 +16,7 @@ export function KycSettings() {
     <Card>
       <CardHeader>
         <div className="flex items-center gap-2">
-          {statusIcons[user?.kycStatus || "pending"]}
+          {statusIcons[user?.kycStatus as keyof typeof statusIcons]}
           <CardTitle>Verificação KYC</CardTitle>
         </div>
       </CardHeader>
