@@ -128,8 +128,12 @@ export default function AuthPage() {
           <CardContent>
             <Tabs defaultValue="login">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login">{t('auth.login')}</TabsTrigger>
-                <TabsTrigger value="register">{t('auth.register')}</TabsTrigger>
+                <TabsTrigger value="login" className="px-4 py-2 text-sm">
+                  {t('auth.login')}
+                </TabsTrigger>
+                <TabsTrigger value="register" className="px-4 py-2 text-sm">
+                  {t('auth.register')}
+                </TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
