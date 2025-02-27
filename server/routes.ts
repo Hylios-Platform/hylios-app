@@ -4,6 +4,7 @@ import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { insertJobSchema, kycSchema } from "@shared/schema";
 import cors from "cors";
+import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Configuração do CORS
@@ -11,6 +12,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
     origin: true, // Permite requisições da mesma origem
     credentials: true // Permite o envio de cookies
   }));
+
+  const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
+  if (!process.env.SESSION_SECRET) {
+    console.warn('Aviso: SESSION_SECRET não definido, usando valor padrão');
+  }
 
   setupAuth(app);
 

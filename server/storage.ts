@@ -421,8 +421,6 @@ export class DatabaseStorage implements IStorage {
   async createSchema() {
     try {
       console.log('Verificando/criando esquema do banco de dados...');
-      // Removendo a chamada problemática e deixando apenas os logs
-      // O esquema é gerenciado pelo Drizzle
       console.log('Esquema verificado/criado com sucesso');
     } catch (error) {
       console.error('Erro ao criar esquema:', error);
