@@ -500,7 +500,7 @@ export default function AuthPage() {
               <strong>{t('auth.age')}:</strong> {registerData?.age}
             </div>
             <div>
-              <strong>{t('auth.gender')}:</strong> {t(`auth.gender.${registerData?.gender}`)}
+              <strong>{t('auth.gender')}:</strong> {t(`auth.genderTypes.${registerData?.gender}`)}
             </div>
             <div>
               <strong>{t('auth.userType')}:</strong> {t(`auth.${registerData?.userType}`)}

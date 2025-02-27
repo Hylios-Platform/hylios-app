@@ -8,7 +8,7 @@
     "age": "Age",
     "gender": "Gender",
     "selectGender": "Select your gender",
-    "gender": {
+    "genderTypes": {
       "male": "Male",
       "female": "Female",
       "other": "Other"
