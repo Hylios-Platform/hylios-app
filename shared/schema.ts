@@ -44,10 +44,12 @@ export const jobs = pgTable("jobs", {
   title: text("title").notNull(),
   description: text("description").notNull(),
   companyId: integer("company_id").notNull(),
-  currency: text("currency").notNull().default("EUR"), // "EUR" ou "AED"
+  currency: text("currency").notNull().default("EUR"),
   amount: text("amount").notNull(),
-  location: text("location").notNull(), // "Dubai, UAE" ou "Paris, France" etc
-  status: text("status").notNull().default("open"), // "open", "assigned", "completed"
+  location: text("location").notNull(),
+  workType: text("work_type").notNull().default("remote"),
+  requiredSkills: jsonb("required_skills").$type<string[]>(),
+  status: text("status").notNull().default("open"),
   assignedTo: integer("assigned_to"),
   createdAt: timestamp("created_at").notNull().defaultNow()
 });
@@ -73,7 +75,12 @@ export const insertJobSchema = createInsertSchema(jobs).pick({
   description: true,
   amount: true,
   currency: true,
-  location: true
+  location: true,
+  workType: true,
+  requiredSkills: true
+}).extend({
+  workType: z.enum(["remote", "onsite", "hybrid"]),
+  requiredSkills: z.array(z.string()).optional()
 });
 
 export const kycSchema = z.object({

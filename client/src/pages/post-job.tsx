@@ -12,6 +12,13 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
@@ -27,7 +34,11 @@ export default function PostJob() {
     defaultValues: {
       title: "",
       description: "",
-      bitcoinAmount: ""
+      amount: "",
+      currency: "EUR",
+      location: "",
+      workType: "remote",
+      requiredSkills: []
     }
   });
 
@@ -39,14 +50,14 @@ export default function PostJob() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/jobs"] });
       toast({
-        title: "Job Posted",
-        description: "Your job has been posted successfully"
+        title: "Trabalho Publicado",
+        description: "Seu trabalho foi publicado com sucesso"
       });
       setLocation("/jobs");
     },
     onError: (error: Error) => {
       toast({
-        title: "Error",
+        title: "Erro",
         description: error.message,
         variant: "destructive"
       });
@@ -63,7 +74,7 @@ export default function PostJob() {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
-            Post a New Job
+            Publicar Novo Trabalho
           </h1>
 
           <Form {...form}>
@@ -73,10 +84,10 @@ export default function PostJob() {
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Job Title</FormLabel>
+                    <FormLabel className="text-gray-700">Título do Trabalho</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="e.g. Excel Data Analysis" 
+                        placeholder="ex: Análise de Dados em Excel" 
                         {...field}
                         className="border-blue-100 focus:border-blue-200 bg-white" 
                       />
@@ -91,10 +102,10 @@ export default function PostJob() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Job Description</FormLabel>
+                    <FormLabel className="text-gray-700">Descrição do Trabalho</FormLabel>
                     <FormControl>
                       <Textarea
-                        placeholder="Describe the job requirements and deliverables"
+                        placeholder="Descreva os requisitos e entregas do trabalho"
                         className="min-h-[120px] border-blue-100 focus:border-blue-200 bg-white"
                         {...field}
                       />
@@ -104,16 +115,102 @@ export default function PostJob() {
                 )}
               />
 
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="amount"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Valor</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number"
+                          placeholder="ex: 1000" 
+                          {...field}
+                          className="border-blue-100 focus:border-blue-200 bg-white" 
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="currency"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-gray-700">Moeda</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                            <SelectValue placeholder="Selecione a moeda" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="EUR">EUR</SelectItem>
+                          <SelectItem value="AED">AED</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
               <FormField
                 control={form.control}
-                name="bitcoinAmount"
+                name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Payment Amount (BTC)</FormLabel>
+                    <FormLabel className="text-gray-700">Localização</FormLabel>
                     <FormControl>
                       <Input 
-                        placeholder="e.g. 0.001" 
+                        placeholder="ex: Dubai, UAE" 
                         {...field}
+                        className="border-blue-100 focus:border-blue-200 bg-white" 
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="workType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Tipo de Trabalho</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                          <SelectValue placeholder="Selecione o tipo de trabalho" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="remote">Remoto</SelectItem>
+                        <SelectItem value="onsite">Presencial</SelectItem>
+                        <SelectItem value="hybrid">Híbrido</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="requiredSkills"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Habilidades Necessárias</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Digite as habilidades separadas por vírgula" 
+                        {...field}
+                        onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
+                        value={field.value?.join(', ')}
                         className="border-blue-100 focus:border-blue-200 bg-white" 
                       />
                     </FormControl>
@@ -127,7 +224,7 @@ export default function PostJob() {
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-colors"
                 disabled={mutation.isPending}
               >
-                Post Job
+                Publicar Trabalho
               </Button>
             </form>
           </Form>

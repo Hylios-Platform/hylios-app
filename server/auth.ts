@@ -6,8 +6,6 @@ import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
-import connectPg from "connect-pg-simple";
-import { pool } from "./db";
 
 declare global {
   namespace Express {
@@ -38,10 +36,10 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     name: 'hylios.sid',
     cookie: {
-      secure: false, // Permitir HTTP em desenvolvimento
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
-      sameSite: 'lax' // Mais permissivo para desenvolvimento
+      sameSite: 'lax'
     }
   };
 
