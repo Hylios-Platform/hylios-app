@@ -31,14 +31,14 @@ import {
 } from "@/components/ui/select";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function AuthPage() {
-  const [, setLocation] = useLocation();
   const { user, loginMutation, registerMutation } = useAuth();
   const { t } = useTranslation();
   const [showLoginPassword, setShowLoginPassword] = useState(false);
   const [showRegisterPassword, setShowRegisterPassword] = useState(false);
+  const [, navigate] = useLocation();
 
   const loginForm = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
@@ -57,14 +57,20 @@ export default function AuthPage() {
     },
   });
 
+  useEffect(() => {
+    if (user) {
+      navigate("/");
+    }
+  }, [user, navigate]);
+
+  // If user is already logged in, don't render the auth page
   if (user) {
-    setLocation("/");
     return null;
   }
 
   return (
     <div className="min-h-screen grid md:grid-cols-2 bg-white">
-      <motion.div 
+      <motion.div
         className="flex items-center justify-center p-8"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
@@ -106,10 +112,10 @@ export default function AuthPage() {
                             {t('auth.username')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input 
-                              className="bg-white/80 border-gray-200 text-gray-900" 
+                            <Input
+                              className="bg-white/80 border-gray-200 text-gray-900"
                               placeholder="admin"
-                              {...field} 
+                              {...field}
                             />
                           </FormControl>
                           <FormMessage />
@@ -126,11 +132,11 @@ export default function AuthPage() {
                           </FormLabel>
                           <div className="relative">
                             <FormControl>
-                              <Input 
-                                type={showLoginPassword ? "text" : "password"} 
-                                className="bg-white/80 border-gray-200 text-gray-900 pr-10" 
+                              <Input
+                                type={showLoginPassword ? "text" : "password"}
+                                className="bg-white/80 border-gray-200 text-gray-900 pr-10"
                                 placeholder="admin123"
-                                {...field} 
+                                {...field}
                               />
                             </FormControl>
                             <Button
@@ -198,10 +204,10 @@ export default function AuthPage() {
                           </FormLabel>
                           <div className="relative">
                             <FormControl>
-                              <Input 
-                                type={showRegisterPassword ? "text" : "password"} 
-                                className="bg-white/80 border-gray-200 text-gray-900 pr-10" 
-                                {...field} 
+                              <Input
+                                type={showRegisterPassword ? "text" : "password"}
+                                className="bg-white/80 border-gray-200 text-gray-900 pr-10"
+                                {...field}
                               />
                             </FormControl>
                             <Button
@@ -281,7 +287,7 @@ export default function AuthPage() {
         </Card>
       </motion.div>
 
-      <motion.div 
+      <motion.div
         className="hidden md:flex flex-col justify-center p-16"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
