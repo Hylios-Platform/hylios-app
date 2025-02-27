@@ -11,13 +11,18 @@ const mascotVariants = {
     opacity: 1, 
     y: 0, 
     scale: 1,
-    transition: { type: "spring", stiffness: 200, damping: 20 }
+    transition: { 
+      type: "spring", 
+      stiffness: 300, 
+      damping: 20,
+      duration: 0.6 
+    }
   },
   exit: { 
     opacity: 0, 
     y: 20, 
     scale: 0.8,
-    transition: { duration: 0.2 }
+    transition: { duration: 0.3 }
   }
 };
 
@@ -27,13 +32,19 @@ const bubbleVariants = {
     opacity: 1, 
     scale: 1, 
     x: 0,
-    transition: { delay: 0.2, type: "spring", stiffness: 200, damping: 20 }
+    transition: { 
+      delay: 0.2, 
+      type: "spring", 
+      stiffness: 300, 
+      damping: 20,
+      duration: 0.6 
+    }
   },
   exit: { 
     opacity: 0, 
     scale: 0.8, 
     x: -20,
-    transition: { duration: 0.2 }
+    transition: { duration: 0.3 }
   }
 };
 
@@ -46,11 +57,9 @@ export function Mascot() {
   const [tips, setTips] = useState<string[]>([]);
 
   useEffect(() => {
-    // Reset visibility when location changes
     setIsVisible(true);
     setShowTips(true);
 
-    // Get tips based on current location
     const pageTips = [];
     if (location === "/") {
       pageTips.push(
@@ -75,7 +84,6 @@ export function Mascot() {
     setCurrentTip(0);
   }, [location, t]);
 
-  // Rotate tips every 10 seconds
   useEffect(() => {
     if (!tips.length || !showTips) return;
 
@@ -91,21 +99,20 @@ export function Mascot() {
   return (
     <AnimatePresence>
       <div className="fixed bottom-4 right-4 flex items-end gap-2 z-50">
-        {/* Tip Bubble */}
         {showTips && (
           <motion.div
             variants={bubbleVariants}
             initial="hidden"
             animate="visible"
             exit="exit"
-            className="max-w-[200px] bg-gradient-to-br from-blue-50 to-violet-50 rounded-xl p-3 shadow-lg border border-blue-100"
+            className="max-w-[200px] bg-gradient-to-br from-indigo-50/90 to-purple-50/90 rounded-xl p-3 shadow-lg border border-indigo-200/50 backdrop-blur-sm"
           >
             <div className="flex justify-between items-start gap-2">
-              <p className="text-xs text-gray-600">{tips[currentTip]}</p>
+              <p className="text-xs text-indigo-700">{tips[currentTip]}</p>
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-5 w-5 p-0 hover:bg-blue-100/50"
+                className="h-5 w-5 p-0 hover:bg-indigo-100/50"
                 onClick={() => setShowTips(false)}
               >
                 <X className="h-3 w-3" />
@@ -117,7 +124,7 @@ export function Mascot() {
                   <div
                     key={index}
                     className={`h-1 w-1 rounded-full transition-colors ${
-                      index === currentTip ? 'bg-blue-500' : 'bg-gray-200'
+                      index === currentTip ? 'bg-indigo-500' : 'bg-indigo-200'
                     }`}
                   />
                 ))}
@@ -126,14 +133,17 @@ export function Mascot() {
           </motion.div>
         )}
 
-        {/* Mascot */}
         <motion.div
           variants={mascotVariants}
           initial="hidden"
           animate="visible"
           exit="exit"
-          whileHover={{ scale: 1.1 }}
-          className="w-12 h-12 bg-gradient-to-br from-blue-400 to-violet-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer select-none"
+          whileHover={{ 
+            scale: 1.1,
+            rotate: [0, -5, 5, -5, 0],
+            transition: { duration: 0.5 }
+          }}
+          className="w-12 h-12 bg-gradient-to-br from-indigo-500 via-purple-500 to-blue-600 rounded-full flex items-center justify-center shadow-lg cursor-pointer select-none relative overflow-hidden"
           onClick={() => {
             if (!showTips) {
               setShowTips(true);
@@ -142,7 +152,8 @@ export function Mascot() {
             }
           }}
         >
-          <span className="text-xl transform -scale-x-100">🧌</span>
+          <span className="text-xl transform -scale-x-100">🐲</span>
+          <div className="absolute inset-0 bg-gradient-to-t from-transparent to-white/10 pointer-events-none" />
         </motion.div>
       </div>
     </AnimatePresence>
