@@ -216,13 +216,33 @@ export default function Jobs() {
                       <MapPin className="mr-2 h-4 w-4 text-blue-500" />
                       <SelectValue placeholder="Selecione o país" className="text-gray-900" />
                     </SelectTrigger>
-                    <SelectContent className="max-h-[300px]">
+                    <SelectContent className="max-h-[300px] overflow-y-auto">
                       <SelectItem value="all" className="text-gray-900 font-medium">Todos os países</SelectItem>
-                      {availableCountries.map((country) => (
-                        <SelectItem key={country} value={country} className="text-gray-900">
-                          {country}
-                        </SelectItem>
-                      ))}
+
+                      {/* Europa */}
+                      <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">Europa</div>
+                      <SelectItem value="Portugal" className="text-gray-900">Portugal</SelectItem>
+                      <SelectItem value="Espanha" className="text-gray-900">Espanha</SelectItem>
+                      <SelectItem value="França" className="text-gray-900">França</SelectItem>
+                      <SelectItem value="Alemanha" className="text-gray-900">Alemanha</SelectItem>
+                      <SelectItem value="Itália" className="text-gray-900">Itália</SelectItem>
+                      <SelectItem value="Reino Unido" className="text-gray-900">Reino Unido</SelectItem>
+                      <SelectItem value="Holanda" className="text-gray-900">Holanda</SelectItem>
+                      <SelectItem value="Bélgica" className="text-gray-900">Bélgica</SelectItem>
+                      <SelectItem value="Suíça" className="text-gray-900">Suíça</SelectItem>
+                      <SelectItem value="Irlanda" className="text-gray-900">Irlanda</SelectItem>
+                      <SelectItem value="Suécia" className="text-gray-900">Suécia</SelectItem>
+                      <SelectItem value="Noruega" className="text-gray-900">Noruega</SelectItem>
+                      <SelectItem value="Dinamarca" className="text-gray-900">Dinamarca</SelectItem>
+                      <SelectItem value="Finlândia" className="text-gray-900">Finlândia</SelectItem>
+                      <SelectItem value="Áustria" className="text-gray-900">Áustria</SelectItem>
+
+                      {/* Ocidente */}
+                      <div className="px-2 py-1.5 text-sm font-semibold text-muted-foreground">Ocidente</div>
+                      <SelectItem value="Estados Unidos" className="text-gray-900">Estados Unidos</SelectItem>
+                      <SelectItem value="Canadá" className="text-gray-900">Canadá</SelectItem>
+                      <SelectItem value="Austrália" className="text-gray-900">Austrália</SelectItem>
+                      <SelectItem value="Nova Zelândia" className="text-gray-900">Nova Zelândia</SelectItem>
                     </SelectContent>
                   </Select>
 
