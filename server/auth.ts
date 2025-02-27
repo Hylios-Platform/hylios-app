@@ -38,13 +38,14 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     name: 'hylios.sid',
     cookie: {
-      secure: false, // false em desenvolvimento para permitir HTTP
+      secure: false, // Permitir HTTP em desenvolvimento
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
-      sameSite: 'none' // permite cookies entre diferentes origens
+      sameSite: 'lax' // Mais permissivo para desenvolvimento
     }
   };
 
+  app.set('trust proxy', 1);
   app.use(session(sessionSettings));
   app.use(passport.initialize());
   app.use(passport.session());
@@ -112,7 +113,10 @@ export function setupAuth(app: Express) {
 
       console.log('[Auth] Usuário registrado com sucesso:', user.username);
       req.login(user, (err) => {
-        if (err) return next(err);
+        if (err) {
+          console.error('[Auth] Erro ao iniciar sessão após registro:', err);
+          return next(err);
+        }
         res.status(201).json(user);
       });
     } catch (error) {
@@ -122,7 +126,7 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    console.log('[Auth] Tentativa de login recebida:', req.body.username);
+    console.log('[Auth] Tentativa de login recebida:', req.body);
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         console.error('[Auth] Erro no login:', err);
@@ -138,6 +142,7 @@ export function setupAuth(app: Express) {
           return next(err);
         }
         console.log('[Auth] Login bem-sucedido:', user.username);
+        console.log('[Auth] Session ID após login:', req.sessionID);
         res.json(user);
       });
     })(req, res, next);

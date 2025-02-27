@@ -16,13 +16,16 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Search, MapPin, Coins } from "lucide-react";
+import { Loader2, Search, MapPin, Coins, SlidersHorizontal, ArrowUpDown } from "lucide-react";
 import { useTranslation } from "react-i18next";
 
 const EXCHANGE_RATES = {
   EUR: { EUR: 1, AED: 3.96 },
   AED: { EUR: 0.25, AED: 1 }
 };
+
+type SortOption = "recent" | "oldest" | "priceAsc" | "priceDesc";
+type WorkType = "remote" | "onsite" | "hybrid" | "all";
 
 export default function Jobs() {
   const { user } = useAuth();
@@ -32,6 +35,9 @@ export default function Jobs() {
   const [status, setStatus] = useState<string>("all");
   const [currency, setCurrency] = useState<"EUR" | "AED">("EUR");
   const [location, setLocation] = useState<string>("all");
+  const [workType, setWorkType] = useState<WorkType>("all");
+  const [sortBy, setSortBy] = useState<SortOption>("recent");
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
 
   const { data: jobs, isLoading } = useQuery<Job[]>({
     queryKey: ["/api/jobs"],
@@ -72,19 +78,44 @@ export default function Jobs() {
     }).format(value);
   };
 
+  const sortJobs = (jobs: Job[]) => {
+    return [...jobs].sort((a, b) => {
+      switch (sortBy) {
+        case "recent":
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        case "oldest":
+          return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+        case "priceAsc":
+          return parseFloat(a.amount) - parseFloat(b.amount);
+        case "priceDesc":
+          return parseFloat(b.amount) - parseFloat(a.amount);
+        default:
+          return 0;
+      }
+    });
+  };
+
   const filteredJobs = jobs?.filter((job) => {
     const matchesSearch = job.title.toLowerCase().includes(search.toLowerCase()) ||
       job.description.toLowerCase().includes(search.toLowerCase());
     const matchesStatus = status === "all" || job.status === status;
     const matchesLocation = location === "all" || job.location === location;
-    return matchesSearch && matchesStatus && matchesLocation;
-  }).map(job => ({
+    const matchesWorkType = workType === "all" || job.workType === workType;
+    const amount = parseFloat(job.amount);
+    const matchesPriceRange = amount >= priceRange[0] && amount <= priceRange[1];
+
+    return matchesSearch && matchesStatus && matchesLocation && 
+           matchesWorkType && matchesPriceRange;
+  })
+  .map(job => ({
     ...job,
     displayAmount: formatCurrency(
       convertCurrency(job.amount, job.currency, currency),
       currency
     )
   }));
+
+  const sortedJobs = filteredJobs ? sortJobs(filteredJobs) : [];
 
   const locations = jobs?.reduce((acc, job) => {
     if (!acc.includes(job.location)) {
@@ -123,62 +154,80 @@ export default function Jobs() {
             )}
           </div>
 
-          <div className="flex flex-col md:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-4 w-4" />
-              <Input
-                placeholder={t('jobs.searchPlaceholder')}
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 border-blue-100 focus:border-blue-200 bg-white text-gray-900"
-              />
+          <div className="grid gap-4 mb-6">
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-4 w-4" />
+                <Input
+                  placeholder={t('jobs.searchPlaceholder')}
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  className="pl-10 border-blue-100 focus:border-blue-200 bg-white text-gray-900"
+                />
+              </div>
+
+              <Select value={currency} onValueChange={(val: "EUR" | "AED") => setCurrency(val)}>
+                <SelectTrigger className="w-full md:w-[120px] border-blue-100 bg-white text-gray-900">
+                  <Coins className="mr-2 h-4 w-4" />
+                  <SelectValue className="text-gray-900" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="EUR" className="text-gray-900">EUR</SelectItem>
+                  <SelectItem value="AED" className="text-gray-900">AED</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
-            <Select value={currency} onValueChange={(val: "EUR" | "AED") => setCurrency(val)}>
-              <SelectTrigger className="w-full md:w-[120px] border-blue-100 bg-white text-gray-900">
-                <Coins className="mr-2 h-4 w-4" />
-                <SelectValue className="text-gray-900" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="EUR" className="text-gray-900">EUR</SelectItem>
-                <SelectItem value="AED" className="text-gray-900">AED</SelectItem>
-              </SelectContent>
-            </Select>
+            <div className="flex flex-col md:flex-row gap-4">
+              <Select value={location} onValueChange={setLocation}>
+                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
+                  <MapPin className="mr-2 h-4 w-4" />
+                  <SelectValue placeholder="Localização" className="text-gray-900" />
+                </SelectTrigger>
+                <SelectContent>
+                  {locations?.map((loc) => (
+                    <SelectItem key={loc} value={loc} className="text-gray-900">
+                      {loc === "all" ? "Todas localizações" : loc}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
 
-            <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
-                <MapPin className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Localização" className="text-gray-900" />
-              </SelectTrigger>
-              <SelectContent>
-                {locations?.map((loc) => (
-                  <SelectItem key={loc} value={loc} className="text-gray-900">
-                    {loc === "all" ? "Todas localizações" : loc}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+              <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
+                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
+                  <SlidersHorizontal className="mr-2 h-4 w-4" />
+                  <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" className="text-gray-900">Todos os tipos</SelectItem>
+                  <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
+                  <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
+                  <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
+                </SelectContent>
+              </Select>
 
-            <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
-                <SelectValue placeholder={t('jobs.filterByStatus')} className="text-gray-900" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all" className="text-gray-900">{t('jobs.allJobs')}</SelectItem>
-                <SelectItem value="open" className="text-gray-900">{t('jobs.status.open')}</SelectItem>
-                <SelectItem value="assigned" className="text-gray-900">{t('jobs.status.assigned')}</SelectItem>
-                <SelectItem value="completed" className="text-gray-900">{t('jobs.status.completed')}</SelectItem>
-              </SelectContent>
-            </Select>
+              <Select value={sortBy} onValueChange={(val: SortOption) => setSortBy(val)}>
+                <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
+                  <ArrowUpDown className="mr-2 h-4 w-4" />
+                  <SelectValue placeholder={t('jobs.sortBy')} className="text-gray-900" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="recent" className="text-gray-900">{t('jobs.sort.recent')}</SelectItem>
+                  <SelectItem value="oldest" className="text-gray-900">{t('jobs.sort.oldest')}</SelectItem>
+                  <SelectItem value="priceAsc" className="text-gray-900">{t('jobs.sort.priceAsc')}</SelectItem>
+                  <SelectItem value="priceDesc" className="text-gray-900">{t('jobs.sort.priceDesc')}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-4">
-            {filteredJobs?.length === 0 ? (
+            {sortedJobs?.length === 0 ? (
               <div className="text-center py-8 text-gray-600 bg-white rounded-lg border border-blue-100 shadow-sm">
                 {t('jobs.noJobs')}
               </div>
             ) : (
-              filteredJobs?.map((job) => (
+              sortedJobs?.map((job) => (
                 <JobCard
                   key={job.id}
                   job={job}
