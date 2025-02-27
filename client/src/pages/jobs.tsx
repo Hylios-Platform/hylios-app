@@ -184,10 +184,10 @@ export default function Jobs() {
               </Select>
             </div>
 
-            <Card className="border-blue-100">
+            <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="pb-3">
-                <CardTitle className="text-lg font-medium text-blue-600">
-                  <SlidersHorizontal className="h-4 w-4 text-blue-600" />
+                <CardTitle className="text-lg font-medium text-blue-500 flex items-center gap-2">
+                  <SlidersHorizontal className="h-4 w-4 text-blue-400" />
                   Filtros
                 </CardTitle>
               </CardHeader>
@@ -213,14 +213,14 @@ export default function Jobs() {
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
                     <SelectTrigger className="w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm">
-                      <MapPin className="mr-2 h-4 w-4 text-blue-500" />
+                      <MapPin className="mr-2 h-4 w-4 text-blue-400" />
                       <SelectValue placeholder="Selecione o país" className="text-gray-900" />
                     </SelectTrigger>
                     <SelectContent className="max-h-[300px] overflow-y-auto bg-white">
                       <SelectItem value="all" className="text-gray-900 font-medium text-base py-2">Todos os países</SelectItem>
 
                       {/* Europa */}
-                      <div className="mt-2 px-3 py-2 text-sm font-semibold text-blue-600 bg-blue-50/30">Europa</div>
+                      <div className="mt-2 px-3 py-2 text-sm font-semibold text-blue-400 bg-gradient-to-r from-blue-50 to-transparent">Europa</div>
                       <SelectItem value="Portugal" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Portugal</SelectItem>
                       <SelectItem value="Espanha" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Espanha</SelectItem>
                       <SelectItem value="França" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">França</SelectItem>
@@ -238,7 +238,7 @@ export default function Jobs() {
                       <SelectItem value="Áustria" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Áustria</SelectItem>
 
                       {/* Ocidente */}
-                      <div className="mt-3 px-3 py-2 text-sm font-semibold text-blue-600 bg-blue-50/30">Ocidente</div>
+                      <div className="mt-4 px-3 py-2 text-sm font-semibold text-blue-400 bg-gradient-to-r from-blue-50 to-transparent">Ocidente</div>
                       <SelectItem value="Estados Unidos" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Estados Unidos</SelectItem>
                       <SelectItem value="Canadá" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Canadá</SelectItem>
                       <SelectItem value="Austrália" className="text-gray-900 text-base py-2 px-3 hover:bg-blue-50/50">Austrália</SelectItem>
@@ -255,7 +255,7 @@ export default function Jobs() {
                       className={`w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm
                         ${selectedCountry === "all" ? "opacity-50 cursor-not-allowed" : ""}`}
                     >
-                      <MapPin className="mr-2 h-4 w-4 text-blue-500" />
+                      <MapPin className="mr-2 h-4 w-4 text-blue-400" />
                       <SelectValue 
                         placeholder={selectedCountry === "all" 
                           ? "Selecione um país primeiro" 
@@ -275,7 +275,7 @@ export default function Jobs() {
 
                   <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
                     <SelectTrigger className="w-full border-gray-200 focus:border-blue-200 bg-white text-gray-900 text-base shadow-sm">
-                      <Briefcase className="mr-2 h-4 w-4 text-blue-500" />
+                      <Briefcase className="mr-2 h-4 w-4 text-blue-400" />
                       <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
                     </SelectTrigger>
                     <SelectContent className="bg-white">
