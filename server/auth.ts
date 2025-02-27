@@ -44,9 +44,22 @@ export function setupAuth(app: Express) {
             profileData: null
           });
         }
-        return done(null, false, { message: "Credenciais inválidas" });
+
+        const user = await storage.getUserByUsername(username);
+        if (!user) {
+          return done(null, false, { 
+            message: "Nome de usuário não encontrado. Verifique suas credenciais."
+          });
+        }
+
+        return done(null, false, { 
+          message: "Credenciais inválidas. Verifique seu nome de usuário e senha."
+        });
       } catch (error) {
-        return done(error);
+        console.error("Erro na autenticação:", error);
+        return done(error, false, {
+          message: "Ocorreu um erro durante a autenticação. Tente novamente mais tarde."
+        });
       }
     })
   );
@@ -73,23 +86,33 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
+    if (!req.body.username || !req.body.password) {
+      return res.status(400).json({ 
+        message: "Nome de usuário e senha são obrigatórios"
+      });
+    }
+
     passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) {
         console.error("Erro de autenticação:", err);
-        return res.status(500).json({ message: "Erro interno do servidor" });
+        return res.status(500).json({ 
+          message: "Erro interno do servidor. Tente novamente mais tarde."
+        });
       }
 
       if (!user) {
-        console.log("Login falhou:", info?.message);
-        return res.status(401).json({ message: info?.message || "Credenciais inválidas" });
+        return res.status(401).json({ 
+          message: info?.message || "Credenciais inválidas. Verifique seu nome de usuário e senha."
+        });
       }
 
       req.login(user, (err) => {
         if (err) {
           console.error("Erro ao criar sessão:", err);
-          return res.status(500).json({ message: "Erro ao criar sessão" });
+          return res.status(500).json({ 
+            message: "Erro ao iniciar sessão. Tente novamente."
+          });
         }
-        console.log("Login bem-sucedido:", user.username);
         res.json(user);
       });
     })(req, res, next);
@@ -98,7 +121,9 @@ export function setupAuth(app: Express) {
   app.post("/api/logout", (req, res) => {
     req.logout((err) => {
       if (err) {
-        return res.status(500).json({ message: "Erro ao fazer logout" });
+        return res.status(500).json({ 
+          message: "Erro ao fazer logout. Tente novamente."
+        });
       }
       res.sendStatus(200);
     });
@@ -106,7 +131,9 @@ export function setupAuth(app: Express) {
 
   app.get("/api/user", (req, res) => {
     if (!req.user) {
-      return res.sendStatus(401);
+      return res.status(401).json({
+        message: "Usuário não autenticado. Faça login novamente."
+      });
     }
     res.json(req.user);
   });

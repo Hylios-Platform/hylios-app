@@ -7,7 +7,32 @@
     "iAm": "I am a",
     "professional": "Professional",
     "company": "Company",
-    "companyName": "Company Name"
+    "companyName": "Company Name",
+    "forgotPassword": "Forgot your password?",
+    "rememberPassword": "Remember your password? Login here",
+    "errors": {
+      "usernameRequired": "Username is required",
+      "usernameMin": "Username must be at least 3 characters",
+      "usernameMax": "Username must be at most 50 characters",
+      "passwordRequired": "Password is required",
+      "passwordMin": "Password must be at least 6 characters",
+      "passwordMax": "Password must be at most 50 characters",
+      "companyNameRequired": "Company name is required",
+      "invalidCredentials": "Invalid credentials",
+      "userExists": "This username already exists",
+      "serverError": "Server error, please try again later"
+    }
+  },
+  "passwordReset": {
+    "title": "Password Reset",
+    "description": "Enter your email to receive password reset instructions",
+    "email": "Email",
+    "submit": "Send Instructions",
+    "emailSent": "Email Sent",
+    "checkEmail": "Check your email for password reset instructions",
+    "error": "Error",
+    "resetSuccess": "Password changed successfully",
+    "resetError": "Error changing password"
   },
   "navigation": {
     "jobs": "Jobs",

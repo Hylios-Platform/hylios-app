@@ -7,7 +7,32 @@
     "iAm": "Eu sou",
     "professional": "Profissional",
     "company": "Empresa",
-    "companyName": "Nome da Empresa"
+    "companyName": "Nome da Empresa",
+    "forgotPassword": "Esqueceu sua senha?",
+    "rememberPassword": "Lembrou sua senha? Entre aqui",
+    "errors": {
+      "usernameRequired": "Nome de usuário é obrigatório",
+      "usernameMin": "Nome de usuário deve ter pelo menos 3 caracteres",
+      "usernameMax": "Nome de usuário deve ter no máximo 50 caracteres",
+      "passwordRequired": "Senha é obrigatória",
+      "passwordMin": "Senha deve ter pelo menos 6 caracteres",
+      "passwordMax": "Senha deve ter no máximo 50 caracteres",
+      "companyNameRequired": "Nome da empresa é obrigatório",
+      "invalidCredentials": "Credenciais inválidas",
+      "userExists": "Este usuário já existe",
+      "serverError": "Erro no servidor, tente novamente mais tarde"
+    }
+  },
+  "passwordReset": {
+    "title": "Recuperação de Senha",
+    "description": "Digite seu email para receber instruções de recuperação de senha",
+    "email": "Email",
+    "submit": "Enviar Instruções",
+    "emailSent": "Email Enviado",
+    "checkEmail": "Verifique seu email para instruções de recuperação de senha",
+    "error": "Erro",
+    "resetSuccess": "Senha alterada com sucesso",
+    "resetError": "Erro ao alterar senha"
   },
   "navigation": {
     "jobs": "Trabalhos",

@@ -1,6 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import {
@@ -29,9 +30,21 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
+
+// Extend the schema with custom validation messages
+const authSchema = insertUserSchema.extend({
+  username: z.string()
+    .min(3, "auth.errors.usernameMin")
+    .max(50, "auth.errors.usernameMax"),
+  password: z.string()
+    .min(6, "auth.errors.passwordMin")
+    .max(50, "auth.errors.passwordMax"),
+  companyName: z.string().optional()
+    .refine((val) => val !== undefined && val !== "" || true, "auth.errors.companyNameRequired"),
+});
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
@@ -41,7 +54,7 @@ export default function AuthPage() {
   const [, navigate] = useLocation();
 
   const loginForm = useForm<InsertUser>({
-    resolver: zodResolver(insertUserSchema),
+    resolver: zodResolver(authSchema),
     defaultValues: {
       username: "",
       password: "",
@@ -49,7 +62,7 @@ export default function AuthPage() {
   });
 
   const registerForm = useForm<InsertUser>({
-    resolver: zodResolver(insertUserSchema),
+    resolver: zodResolver(authSchema),
     defaultValues: {
       username: "",
       password: "",
@@ -63,7 +76,6 @@ export default function AuthPage() {
     }
   }, [user, navigate]);
 
-  // If user is already logged in, don't render the auth page
   if (user) {
     return null;
   }
@@ -97,10 +109,7 @@ export default function AuthPage() {
               <TabsContent value="login">
                 <Form {...loginForm}>
                   <form
-                    onSubmit={loginForm.handleSubmit((data) => {
-                      console.log('Login data:', data);
-                      loginMutation.mutate(data);
-                    })}
+                    onSubmit={loginForm.handleSubmit((data) => loginMutation.mutate(data))}
                     className="space-y-4"
                   >
                     <FormField
@@ -115,13 +124,15 @@ export default function AuthPage() {
                             <Input
                               className="bg-white/80 border-gray-200 text-gray-900"
                               placeholder="admin"
+                              autoComplete="username"
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage>{(msg) => t(msg)}</FormMessage>
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={loginForm.control}
                       name="password"
@@ -136,6 +147,7 @@ export default function AuthPage() {
                                 type={showLoginPassword ? "text" : "password"}
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10"
                                 placeholder="admin123"
+                                autoComplete="current-password"
                                 {...field}
                               />
                             </FormControl>
@@ -146,23 +158,50 @@ export default function AuthPage() {
                               className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-gray-600"
                               onClick={() => setShowLoginPassword(!showLoginPassword)}
                             >
-                              {showLoginPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showLoginPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
-                          <FormMessage />
+                          <FormMessage>{(msg) => t(msg)}</FormMessage>
                         </FormItem>
                       )}
                     />
+
+                    <AnimatePresence>
+                      {loginMutation.error && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="rounded-md bg-red-50 p-3 text-sm text-red-500"
+                        >
+                          {t('auth.errors.invalidCredentials')}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <Button
                       type="submit"
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
-                      {loginMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
+                      {loginMutation.isPending && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       {t('auth.login')}
                     </Button>
+
+                    <div className="text-center">
+                      <a
+                        href="/password-reset"
+                        className="text-sm text-blue-600 hover:text-blue-700"
+                      >
+                        {t('auth.forgotPassword')}
+                      </a>
+                    </div>
 
                     <div className="text-sm text-center text-gray-500 mt-2">
                       Credenciais de teste: admin / admin123
@@ -188,12 +227,17 @@ export default function AuthPage() {
                             {t('auth.username')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
+                            <Input
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                              autoComplete="username"
+                              {...field}
+                            />
                           </FormControl>
-                          <FormMessage />
+                          <FormMessage>{(msg) => t(msg)}</FormMessage>
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={registerForm.control}
                       name="password"
@@ -207,6 +251,7 @@ export default function AuthPage() {
                               <Input
                                 type={showRegisterPassword ? "text" : "password"}
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10"
+                                autoComplete="new-password"
                                 {...field}
                               />
                             </FormControl>
@@ -217,23 +262,25 @@ export default function AuthPage() {
                               className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-gray-600"
                               onClick={() => setShowRegisterPassword(!showRegisterPassword)}
                             >
-                              {showRegisterPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                              {showRegisterPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
                             </Button>
                           </div>
-                          <FormMessage />
+                          <FormMessage>{(msg) => t(msg)}</FormMessage>
                         </FormItem>
                       )}
                     />
+
                     <FormField
                       control={registerForm.control}
                       name="userType"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-600">{t('auth.iAm')}</FormLabel>
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
+                          <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
                                 <SelectValue />
@@ -248,10 +295,11 @@ export default function AuthPage() {
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                          <FormMessage />
+                          <FormMessage>{(msg) => t(msg)}</FormMessage>
                         </FormItem>
                       )}
                     />
+
                     {registerForm.watch("userType") === "company" && (
                       <FormField
                         control={registerForm.control}
@@ -262,21 +310,38 @@ export default function AuthPage() {
                               {t('auth.companyName')} <span className="text-red-500">*</span>
                             </FormLabel>
                             <FormControl>
-                              <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
+                              <Input
+                                className="bg-white/80 border-gray-200 text-gray-900"
+                                {...field}
+                              />
                             </FormControl>
-                            <FormMessage />
+                            <FormMessage>{(msg) => t(msg)}</FormMessage>
                           </FormItem>
                         )}
                       />
                     )}
+
+                    <AnimatePresence>
+                      {registerMutation.error && (
+                        <motion.div
+                          initial={{ opacity: 0, y: -10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                          className="rounded-md bg-red-50 p-3 text-sm text-red-500"
+                        >
+                          {t('auth.errors.userExists')}
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+
                     <Button
                       type="submit"
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={registerMutation.isPending}
                     >
-                      {registerMutation.isPending ? (
-                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
-                      ) : null}
+                      {registerMutation.isPending && (
+                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      )}
                       {t('auth.register')}
                     </Button>
                   </form>
