@@ -13,6 +13,7 @@ import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
 import { PageTransition } from "@/components/page-transition";
+import { Mascot } from "@/components/mascot";
 
 function Router() {
   return (
@@ -29,6 +30,7 @@ function Router() {
         </Switch>
       </PageTransition>
       <LanguageSelector />
+      <Mascot />
     </div>
   );
 }

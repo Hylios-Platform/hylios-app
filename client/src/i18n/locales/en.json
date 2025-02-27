@@ -108,5 +108,26 @@
         "description": "Complete the work and receive your payment instantly in Bitcoin"
       }
     }
+  },
+  "mascot": {
+    "name": "Hylo",
+    "welcome": "Hi! I'm Hylo, your personal assistant! 👋",
+    "tips": {
+      "home": {
+        "welcome": "Welcome to Hylios! Here you can find projects and connect with companies.",
+        "explore": "Explore available jobs by clicking 'Jobs' in the top menu.",
+        "profile": "Complete your profile to increase your chances of being selected!"
+      },
+      "jobs": {
+        "search": "Use the filters to find jobs that match your skills.",
+        "apply": "Don't forget to check the requirements before applying!",
+        "status": "Track your application status here."
+      },
+      "profile": {
+        "kyc": "Complete KYC verification to start applying for jobs.",
+        "skills": "Keep your skills updated for better opportunities.",
+        "portfolio": "Add projects to your portfolio to showcase your work!"
+      }
+    }
   }
 }
