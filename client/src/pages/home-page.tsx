@@ -216,7 +216,7 @@ export default function HomePage() {
             </p>
             <MatchAnimation />
             <Link href="/post-job">
-              <Button size="lg" className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white shadow-lg">
+              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
                 {t('navigation.postJob')}
               </Button>
             </Link>
@@ -246,6 +246,7 @@ export default function HomePage() {
             <MatchAnimation />
             <Button 
               variant="secondary" 
+              size="sm"
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
               onClick={() => tutorial.startTutorial()}
             >
@@ -282,7 +283,11 @@ export default function HomePage() {
                   <p className="text-gray-600 mb-4">
                     {t('jobs.completeKyc')}
                   </p>
-                  <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
+                  >
                     {t('jobs.startVerification')}
                   </Button>
                 </div>
@@ -303,7 +308,11 @@ export default function HomePage() {
                     {t('jobs.findOpportunities')}
                   </p>
                   <Link href="/jobs">
-                    <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
+                    <Button 
+                      variant="outline"
+                      size="sm" 
+                      className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
+                    >
                       {t('jobs.viewJobs')}
                     </Button>
                   </Link>
