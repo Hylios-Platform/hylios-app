@@ -130,29 +130,29 @@ export default function Jobs() {
                 placeholder={t('jobs.searchPlaceholder')}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                className="pl-10 border-blue-100 focus:border-blue-200 bg-white"
+                className="pl-10 border-blue-100 focus:border-blue-200 bg-white text-gray-900"
               />
             </div>
 
             <Select value={currency} onValueChange={(val: "EUR" | "AED") => setCurrency(val)}>
-              <SelectTrigger className="w-full md:w-[120px] border-blue-100 bg-white">
+              <SelectTrigger className="w-full md:w-[120px] border-blue-100 bg-white text-gray-900">
                 <Coins className="mr-2 h-4 w-4" />
-                <SelectValue />
+                <SelectValue className="text-gray-900" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="EUR">EUR</SelectItem>
-                <SelectItem value="AED">AED</SelectItem>
+                <SelectItem value="EUR" className="text-gray-900">EUR</SelectItem>
+                <SelectItem value="AED" className="text-gray-900">AED</SelectItem>
               </SelectContent>
             </Select>
 
             <Select value={location} onValueChange={setLocation}>
-              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white">
+              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
                 <MapPin className="mr-2 h-4 w-4" />
-                <SelectValue placeholder="Localização" />
+                <SelectValue placeholder="Localização" className="text-gray-900" />
               </SelectTrigger>
               <SelectContent>
                 {locations?.map((loc) => (
-                  <SelectItem key={loc} value={loc}>
+                  <SelectItem key={loc} value={loc} className="text-gray-900">
                     {loc === "all" ? "Todas localizações" : loc}
                   </SelectItem>
                 ))}
@@ -160,21 +160,21 @@ export default function Jobs() {
             </Select>
 
             <Select value={status} onValueChange={setStatus}>
-              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white">
-                <SelectValue placeholder={t('jobs.filterByStatus')} />
+              <SelectTrigger className="w-full md:w-[180px] border-blue-100 bg-white text-gray-900">
+                <SelectValue placeholder={t('jobs.filterByStatus')} className="text-gray-900" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="all">{t('jobs.allJobs')}</SelectItem>
-                <SelectItem value="open">{t('jobs.status.open')}</SelectItem>
-                <SelectItem value="assigned">{t('jobs.status.assigned')}</SelectItem>
-                <SelectItem value="completed">{t('jobs.status.completed')}</SelectItem>
+                <SelectItem value="all" className="text-gray-900">{t('jobs.allJobs')}</SelectItem>
+                <SelectItem value="open" className="text-gray-900">{t('jobs.status.open')}</SelectItem>
+                <SelectItem value="assigned" className="text-gray-900">{t('jobs.status.assigned')}</SelectItem>
+                <SelectItem value="completed" className="text-gray-900">{t('jobs.status.completed')}</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
           <div className="space-y-4">
             {filteredJobs?.length === 0 ? (
-              <div className="text-center py-8 text-blue-400 bg-white rounded-lg border border-blue-100 shadow-sm">
+              <div className="text-center py-8 text-gray-600 bg-white rounded-lg border border-blue-100 shadow-sm">
                 {t('jobs.noJobs')}
               </div>
             ) : (
