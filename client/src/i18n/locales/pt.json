@@ -10,7 +10,8 @@
     "selectGender": "Selecione seu sexo",
     "genderTypes": {
       "male": "Masculino",
-      "female": "Feminino"
+      "female": "Feminino",
+      "undefined": "Não selecionado"
     },
     "iAm": "Eu sou",
     "professional": "Profissional",
@@ -20,6 +21,8 @@
     "rememberPassword": "Lembrou sua senha? Entre aqui",
     "confirmRegistration": "Confirmar Cadastro",
     "confirmRegistrationDescription": "Por favor, confirme se as informações abaixo estão corretas:",
+    "userType": "Tipo de Usuário",
+    "undefined": "Não selecionado",
     "errors": {
       "usernameRequired": "Nome de usuário é obrigatório",
       "usernameMin": "Nome de usuário deve ter pelo menos 3 caracteres",

@@ -31,21 +31,17 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        // Modo de desenvolvimento: aceita qualquer credencial
-        const devUser = {
-          id: 1,
-          username: username || 'dev_user',
-          password: '',
-          userType: 'professional',
-          kycStatus: 'verified',
-          kycData: null,
-          companyName: null,
-          profileData: null,
-          email: 'dev@example.com',
-          age: 25,
-          gender: 'male'
-        };
-        return done(null, devUser);
+        console.log(`Tentativa de login para usuário: ${username}`);
+        const user = await storage.getUserByUsername(username);
+
+        if (!user) {
+          console.log('Usuário não encontrado');
+          return done(null, false, { message: "Usuário não encontrado" });
+        }
+
+        // Em desenvolvimento, aceita qualquer senha
+        console.log('Login bem sucedido:', user);
+        return done(null, user);
       } catch (error) {
         console.error("Erro na autenticação:", error);
         return done(error);
@@ -54,24 +50,24 @@ export function setupAuth(app: Express) {
   );
 
   passport.serializeUser((user, done) => {
+    console.log('Serializando usuário:', user.id);
     done(null, user.id);
   });
 
-  passport.deserializeUser((id: number, done) => {
-    // Retorna o mesmo usuário de desenvolvimento
-    done(null, {
-      id: 1,
-      username: 'dev_user',
-      password: '',
-      userType: 'professional',
-      kycStatus: 'verified',
-      kycData: null,
-      companyName: null,
-      profileData: null,
-      email: 'dev@example.com',
-      age: 25,
-      gender: 'male'
-    });
+  passport.deserializeUser(async (id: number, done) => {
+    try {
+      console.log('Desserializando usuário:', id);
+      const user = await storage.getUser(id);
+      if (!user) {
+        console.log('Usuário não encontrado na desserialização');
+        return done(null, false);
+      }
+      console.log('Usuário desserializado com sucesso');
+      done(null, user);
+    } catch (error) {
+      console.error('Erro na desserialização:', error);
+      done(error);
+    }
   });
 
   app.post("/api/login", (req, res, next) => {

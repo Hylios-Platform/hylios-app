@@ -27,15 +27,15 @@ export interface IStorage {
   unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement>;
   updateAchievementProgress(userId: number, achievementId: number, progress: number): Promise<UserAchievement>;
 
-  // Novos métodos para carteira
+  // Wallet methods
   updateWalletAddress(userId: number, walletAddress: string): Promise<User>;
   updateWalletBalance(userId: number, amount: string): Promise<User>;
 
-  // Novos métodos para créditos
+  // Company credits methods
   addCompanyCredits(companyId: number, amount: string): Promise<User>;
   removeCompanyCredits(companyId: number, amount: string): Promise<User>;
 
-  // Novo método para pagamentos
+  // Payment methods
   processJobPayment(jobId: number): Promise<Job>;
 }
 
@@ -129,7 +129,7 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
-  // New gamification methods
+  // Gamification methods
   async addUserPoints(userId: number, points: number): Promise<User> {
     const user = await this.getUser(userId);
     if (!user) throw new Error("User not found");
