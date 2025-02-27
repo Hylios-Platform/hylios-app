@@ -1,7 +1,7 @@
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Job } from "@shared/schema";
+import { Job, jobCategories, jobCategorySkills } from "@shared/schema";
 import { JobCard } from "@/components/job-card";
 import { Input } from "@/components/ui/input";
 import { 
@@ -40,6 +40,7 @@ export default function Jobs() {
   const [currency, setCurrency] = useState<"EUR" | "AED">("EUR");
   const [location, setLocation] = useState<string>("all");
   const [workType, setWorkType] = useState<WorkType>("all");
+  const [category, setCategory] = useState<typeof jobCategories[number]>("other");
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
@@ -106,11 +107,12 @@ export default function Jobs() {
     const matchesStatus = status === "all" || job.status === status;
     const matchesLocation = location === "all" || job.location === location;
     const matchesWorkType = workType === "all" || job.workType === workType;
+    const matchesCategory = category === "other" || job.category === category;
     const amount = parseFloat(job.amount);
     const matchesPriceRange = amount >= priceRange[0] && amount <= priceRange[1];
 
     return matchesSearch && matchesStatus && matchesLocation && 
-           matchesWorkType && matchesPriceRange;
+           matchesWorkType && matchesPriceRange && matchesCategory;
   })
   .map(job => ({
     ...job,
@@ -226,17 +228,21 @@ export default function Jobs() {
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                  <Select value={location} onValueChange={setLocation}>
+                  <Select value={category} onValueChange={(value: typeof jobCategories[number]) => setCategory(value)}>
                     <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
                       <MapPin className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder="Localização" className="text-gray-900" />
+                      <SelectValue placeholder="Categoria" />
                     </SelectTrigger>
                     <SelectContent>
-                      {locations?.map((loc) => (
-                        <SelectItem key={loc} value={loc} className="text-gray-900">
-                          {loc === "all" ? "Todas localizações" : loc}
-                        </SelectItem>
-                      ))}
+                      <SelectItem value="sales">Vendedor/Comercial</SelectItem>
+                      <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
+                      <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
+                      <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
+                      <SelectItem value="driver">Motorista/Entregador</SelectItem>
+                      <SelectItem value="education">Professor/Instrutor</SelectItem>
+                      <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
+                      <SelectItem value="production">Operador de Produção</SelectItem>
+                      <SelectItem value="other">Outras categorias</SelectItem>
                     </SelectContent>
                   </Select>
 

@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { insertJobSchema, type InsertJob } from "@shared/schema";
+import { insertJobSchema, type InsertJob, jobCategories, jobCategorySkills } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -24,6 +24,8 @@ import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useLocation } from "wouter";
 import { motion } from "framer-motion";
+import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 
 export default function PostJob() {
   const { toast } = useToast();
@@ -38,7 +40,8 @@ export default function PostJob() {
       currency: "EUR",
       location: "",
       workType: "remote",
-      requiredSkills: []
+      requiredSkills: [],
+      category: "other"
     }
   });
 
@@ -63,6 +66,23 @@ export default function PostJob() {
       });
     }
   });
+
+  // Função para adicionar habilidades sugeridas
+  const addSuggestedSkills = (category: keyof typeof jobCategorySkills) => {
+    const currentSkills = form.getValues("requiredSkills") || [];
+    const suggestedSkills = jobCategorySkills[category];
+    const newSkills = Array.from(new Set([...currentSkills, ...suggestedSkills]));
+    form.setValue("requiredSkills", newSkills);
+  };
+
+  // Função para remover uma habilidade
+  const removeSkill = (skillToRemove: string) => {
+    const currentSkills = form.getValues("requiredSkills") || [];
+    form.setValue(
+      "requiredSkills",
+      currentSkills.filter(skill => skill !== skillToRemove)
+    );
+  };
 
   return (
     <div className="min-h-screen bg-white">
@@ -201,19 +221,84 @@ export default function PostJob() {
 
               <FormField
                 control={form.control}
+                name="category"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-700">Categoria Profissional</FormLabel>
+                    <Select 
+                      onValueChange={(value) => {
+                        field.onChange(value);
+                        addSuggestedSkills(value as keyof typeof jobCategorySkills);
+                      }} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                          <SelectValue placeholder="Selecione a categoria" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="sales">Vendedor/Comercial</SelectItem>
+                        <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
+                        <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
+                        <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
+                        <SelectItem value="driver">Motorista/Entregador</SelectItem>
+                        <SelectItem value="education">Professor/Instrutor</SelectItem>
+                        <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
+                        <SelectItem value="production">Operador de Produção</SelectItem>
+                        <SelectItem value="other">Outra categoria</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
                 name="requiredSkills"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel className="text-gray-700">Habilidades Necessárias</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Digite as habilidades separadas por vírgula" 
-                        {...field}
-                        onChange={(e) => field.onChange(e.target.value.split(',').map(s => s.trim()))}
-                        value={field.value?.join(', ')}
-                        className="border-blue-100 focus:border-blue-200 bg-white" 
-                      />
-                    </FormControl>
+                    <div className="space-y-4">
+                      <FormControl>
+                        <Input 
+                          placeholder="Digite uma habilidade e pressione Enter" 
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              const value = e.currentTarget.value.trim();
+                              if (value) {
+                                const currentSkills = field.value || [];
+                                if (!currentSkills.includes(value)) {
+                                  field.onChange([...currentSkills, value]);
+                                }
+                                e.currentTarget.value = "";
+                              }
+                            }
+                          }}
+                          className="border-blue-100 focus:border-blue-200 bg-white" 
+                        />
+                      </FormControl>
+                      <div className="flex flex-wrap gap-2">
+                        {field.value?.map((skill, index) => (
+                          <Badge
+                            key={index}
+                            variant="secondary"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100"
+                          >
+                            {skill}
+                            <button
+                              type="button"
+                              onClick={() => removeSkill(skill)}
+                              className="ml-1 hover:text-red-500"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </Badge>
+                        ))}
+                      </div>
+                    </div>
                     <FormMessage />
                   </FormItem>
                 )}

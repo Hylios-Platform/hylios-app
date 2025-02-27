@@ -39,6 +39,79 @@ export const userAchievements = pgTable("user_achievements", {
   progress: integer("progress").notNull().default(0)
 });
 
+// Adicionar enums para categorias profissionais
+export const jobCategories = [
+  "sales", // Vendedor/Comercial
+  "reception", // Recepcionista/Atendimento
+  "administrative", // Auxiliar Administrativo/Digitador
+  "healthcare", // Cuidador/Profissional de Saúde
+  "driver", // Motorista/Entregador
+  "education", // Professor/Instrutor
+  "restaurant", // Garçom/Profissional de Restaurante
+  "production", // Operador de Produção
+  "other" // Outras categorias
+] as const;
+
+export const jobCategorySkills = {
+  sales: [
+    "Atendimento ao cliente",
+    "Negociação",
+    "Técnicas de vendas",
+    "Prospecção de clientes",
+    "CRM"
+  ],
+  reception: [
+    "Atendimento ao público",
+    "Organização",
+    "Comunicação",
+    "Agenda",
+    "Pacote Office"
+  ],
+  administrative: [
+    "Digitação",
+    "Excel",
+    "Word",
+    "Arquivo",
+    "Organização"
+  ],
+  healthcare: [
+    "Cuidados básicos",
+    "Primeiros socorros",
+    "Medicação",
+    "Higiene",
+    "Empatia"
+  ],
+  driver: [
+    "CNH",
+    "Direção defensiva",
+    "GPS",
+    "Manutenção básica",
+    "Atendimento"
+  ],
+  education: [
+    "Didática",
+    "Planejamento",
+    "Avaliação",
+    "Comunicação",
+    "Tecnologia educacional"
+  ],
+  restaurant: [
+    "Atendimento",
+    "Higiene",
+    "Organização",
+    "Agilidade",
+    "Trabalho em equipe"
+  ],
+  production: [
+    "Operação de máquinas",
+    "Controle de qualidade",
+    "Segurança do trabalho",
+    "Organização",
+    "Trabalho em equipe"
+  ],
+  other: []
+} as const;
+
 export const jobs = pgTable("jobs", {
   id: serial("id").primaryKey(),
   title: text("title").notNull(),
@@ -51,7 +124,8 @@ export const jobs = pgTable("jobs", {
   requiredSkills: jsonb("required_skills").$type<string[]>(),
   status: text("status").notNull().default("open"),
   assignedTo: integer("assigned_to"),
-  createdAt: timestamp("created_at").notNull().defaultNow()
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  category: text("category").notNull().default("other")
 });
 
 // Schema for user achievements
@@ -77,9 +151,11 @@ export const insertJobSchema = createInsertSchema(jobs).pick({
   currency: true,
   location: true,
   workType: true,
-  requiredSkills: true
+  requiredSkills: true,
+  category: true
 }).extend({
   workType: z.enum(["remote", "onsite", "hybrid"]),
+  category: z.enum(jobCategories),
   requiredSkills: z.array(z.string()).optional()
 });
 
