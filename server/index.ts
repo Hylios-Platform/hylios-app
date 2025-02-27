@@ -1,16 +1,20 @@
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
-import cors from 'cors'; // Added cors middleware
+import cors from 'cors';
 
 const app = express();
-app.use(cors()); // Enabled CORS
-app.set('trust proxy', 1);
 
+// Configuração básica
+app.set('trust proxy', 1);
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-// Middleware de logging para todas as requisições
+// Middleware de logging
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
@@ -45,31 +49,33 @@ app.use((req, res, next) => {
 });
 
 (async () => {
-  const server = await registerRoutes(app);
+  try {
+    const server = await registerRoutes(app);
 
-  app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-    console.error('Error:', err);
-    const status = err.status || err.statusCode || 500;
-    const message = err.message || "Internal Server Error";
+    // Error handling middleware
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      console.error('Error:', err);
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      res.status(status).json({ message });
+    });
 
-    res.status(status).json({ message });
-  });
+    if (app.get("env") === "development") {
+      await setupVite(app, server);
+    } else {
+      serveStatic(app);
+    }
 
-  if (app.get("env") === "development") {
-    await setupVite(app, server);
-  } else {
-    serveStatic(app);
+    // ALWAYS serve the app on port 5000
+    const port = 5000;
+    server.listen({
+      port,
+      host: "0.0.0.0",
+    }, () => {
+      log(`Servidor Hylios iniciado e rodando na porta ${port}`);
+    });
+  } catch (error) {
+    console.error('Falha ao iniciar o servidor:', error);
+    process.exit(1);
   }
-
-  const port = 3000; // Changed port to 3000
-  server.listen({
-    port,
-    host: "0.0.0.0",
-    reusePort: true,
-  }, () => {
-    log(`serving on port ${port}`);
-  });
-
-  // Placeholder for user authentication - needs further implementation
-  // Example:  Add authentication middleware here.  This requires additional code and setup.
 })();
