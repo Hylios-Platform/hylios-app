@@ -31,7 +31,7 @@ export function setupAuth(app: Express) {
   passport.use(
     new LocalStrategy(async (username, password, done) => {
       try {
-        // Durante o desenvolvimento, aceita qualquer usuário
+        // Modo de desenvolvimento: aceita qualquer credencial
         const devUser = {
           id: 1,
           username: username || 'dev_user',
@@ -40,7 +40,10 @@ export function setupAuth(app: Express) {
           kycStatus: 'verified',
           kycData: null,
           companyName: null,
-          profileData: null
+          profileData: null,
+          email: 'dev@example.com',
+          age: 25,
+          gender: 'male'
         };
         return done(null, devUser);
       } catch (error) {
@@ -55,6 +58,7 @@ export function setupAuth(app: Express) {
   });
 
   passport.deserializeUser((id: number, done) => {
+    // Retorna o mesmo usuário de desenvolvimento
     done(null, {
       id: 1,
       username: 'dev_user',
@@ -63,13 +67,18 @@ export function setupAuth(app: Express) {
       kycStatus: 'verified',
       kycData: null,
       companyName: null,
-      profileData: null
+      profileData: null,
+      email: 'dev@example.com',
+      age: 25,
+      gender: 'male'
     });
   });
 
   app.post("/api/login", (req, res, next) => {
+    console.log("Login attempt:", req.body); // Log para debug
     passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) {
+        console.error("Login error:", err);
         return res.status(500).json({ 
           message: "Erro interno do servidor. Tente novamente mais tarde."
         });
@@ -83,10 +92,12 @@ export function setupAuth(app: Express) {
 
       req.login(user, (err) => {
         if (err) {
+          console.error("Session error:", err);
           return res.status(500).json({ 
             message: "Erro ao iniciar sessão. Tente novamente."
           });
         }
+        console.log("Login successful:", user);
         res.json(user);
       });
     })(req, res, next);
@@ -104,6 +115,7 @@ export function setupAuth(app: Express) {
   });
 
   app.get("/api/user", (req, res) => {
+    console.log("Current user:", req.user); // Log para debug
     if (!req.user) {
       return res.status(401).json({
         message: "Usuário não autenticado. Faça login novamente."
