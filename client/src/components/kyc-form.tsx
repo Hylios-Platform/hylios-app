@@ -75,7 +75,10 @@ export function KycForm() {
       ? ["documentType", "documentNumber"]
       : ["address"];
 
-    const stepValid = fields.every(field => form.getFieldState(field).isDirty);
+    const stepValid = fields.every(field => {
+      const state = form.getFieldState(field as keyof KycData);
+      return state.isDirty && !state.error;
+    });
 
     if (stepValid) {
       setStep(prev => Math.min(prev + 1, totalSteps));
@@ -93,20 +96,20 @@ export function KycForm() {
   };
 
   return (
-    <div className="p-4">
+    <div className="p-6">
       <DialogHeader>
-        <DialogTitle className="text-2xl font-bold mb-4">
+        <DialogTitle className="text-2xl font-bold mb-6">
           Verificação KYC
         </DialogTitle>
       </DialogHeader>
 
-      <Tabs value={`step-${step}`} className="w-full">
-        <TabsList className="grid w-full grid-cols-3">
+      <Tabs value={`step-${step}`} className="w-full space-y-6">
+        <TabsList className="grid w-full grid-cols-3 gap-4">
           <TabsTrigger 
             value="step-1" 
             onClick={() => setStep(1)}
             disabled={step < 1}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100"
           >
             <User className="h-4 w-4" />
             Pessoal
@@ -115,7 +118,7 @@ export function KycForm() {
             value="step-2" 
             onClick={() => setStep(2)}
             disabled={step < 2}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100"
           >
             <FileText className="h-4 w-4" />
             Documentos
@@ -124,7 +127,7 @@ export function KycForm() {
             value="step-3" 
             onClick={() => setStep(3)}
             disabled={step < 3}
-            className="flex items-center gap-2"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100"
           >
             <MapPin className="h-4 w-4" />
             Endereço
@@ -134,9 +137,9 @@ export function KycForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-            className="space-y-4 mt-6"
+            className="space-y-6"
           >
-            <TabsContent value="step-1" className="space-y-4">
+            <TabsContent value="step-1" className="space-y-4 mt-4">
               <FormField
                 control={form.control}
                 name="fullName"
@@ -166,7 +169,7 @@ export function KycForm() {
               />
             </TabsContent>
 
-            <TabsContent value="step-2" className="space-y-4">
+            <TabsContent value="step-2" className="space-y-4 mt-4">
               <FormField
                 control={form.control}
                 name="documentType"
@@ -205,7 +208,7 @@ export function KycForm() {
               />
             </TabsContent>
 
-            <TabsContent value="step-3" className="space-y-4">
+            <TabsContent value="step-3" className="space-y-4 mt-4">
               <FormField
                 control={form.control}
                 name="address"
@@ -221,7 +224,7 @@ export function KycForm() {
               />
             </TabsContent>
 
-            <div className="flex justify-between mt-6">
+            <div className="flex justify-between pt-6">
               <Button
                 type="button"
                 variant="outline"

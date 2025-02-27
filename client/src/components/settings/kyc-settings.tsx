@@ -38,7 +38,7 @@ export function KycSettings() {
                   Iniciar Verificação KYC
                 </Button>
               </DialogTrigger>
-              <DialogContent className="max-w-lg bg-white">
+              <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto bg-white p-0">
                 <KycForm />
               </DialogContent>
             </Dialog>
