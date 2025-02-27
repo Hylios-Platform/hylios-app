@@ -12,19 +12,22 @@ import PasswordReset from "@/pages/password-reset";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
+import { PageTransition } from "@/components/page-transition";
 
 function Router() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
-      <Switch>
-        <ProtectedRoute path="/" component={HomePage} />
-        <Route path="/auth" component={AuthPage} />
-        <Route path="/password-reset" component={PasswordReset} />
-        <ProtectedRoute path="/post-job" component={PostJob} />
-        <ProtectedRoute path="/jobs" component={Jobs} />
-        <Route component={NotFound} />
-      </Switch>
+      <PageTransition>
+        <Switch>
+          <ProtectedRoute path="/" component={HomePage} />
+          <Route path="/auth" component={AuthPage} />
+          <Route path="/password-reset" component={PasswordReset} />
+          <ProtectedRoute path="/post-job" component={PostJob} />
+          <ProtectedRoute path="/jobs" component={Jobs} />
+          <Route component={NotFound} />
+        </Switch>
+      </PageTransition>
       <LanguageSelector />
     </div>
   );
