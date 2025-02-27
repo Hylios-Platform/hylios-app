@@ -17,7 +17,7 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
-import { Loader2, Search, MapPin, Coins, SlidersHorizontal, ArrowUpDown, LayoutGrid, LayoutList } from "lucide-react";
+import { Loader2, Search, MapPin, Coins, SlidersHorizontal, ArrowUpDown, LayoutGrid, LayoutList, Briefcase } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -212,12 +212,12 @@ export default function Jobs() {
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
-                      <MapPin className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder="País" className="text-gray-900" />
+                    <SelectTrigger className="w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900">
+                      <MapPin className="mr-2 h-4 w-4 text-blue-500" />
+                      <SelectValue placeholder="Selecione o país" className="text-gray-900" />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all" className="text-gray-900">Todos os países</SelectItem>
+                    <SelectContent className="max-h-[300px]">
+                      <SelectItem value="all" className="text-gray-900 font-medium">Todos os países</SelectItem>
                       {availableCountries.map((country) => (
                         <SelectItem key={country} value={country} className="text-gray-900">
                           {country}
@@ -231,12 +231,20 @@ export default function Jobs() {
                     onValueChange={setSelectedCity}
                     disabled={selectedCountry === "all"}
                   >
-                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
-                      <MapPin className="mr-2 h-4 w-4" />
-                      <SelectValue placeholder="Cidade" className="text-gray-900" />
+                    <SelectTrigger 
+                      className={`w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900 
+                        ${selectedCountry === "all" ? "opacity-50 cursor-not-allowed" : ""}`}
+                    >
+                      <MapPin className="mr-2 h-4 w-4 text-blue-500" />
+                      <SelectValue 
+                        placeholder={selectedCountry === "all" 
+                          ? "Selecione um país primeiro" 
+                          : "Selecione a cidade"} 
+                        className="text-gray-900" 
+                      />
                     </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all" className="text-gray-900">Todas as cidades</SelectItem>
+                    <SelectContent className="max-h-[300px]">
+                      <SelectItem value="all" className="text-gray-900 font-medium">Todas as cidades</SelectItem>
                       {availableCities.map((city) => (
                         <SelectItem key={city} value={city} className="text-gray-900">
                           {city}
@@ -246,12 +254,12 @@ export default function Jobs() {
                   </Select>
 
                   <Select value={workType} onValueChange={(val: WorkType) => setWorkType(val)}>
-                    <SelectTrigger className="w-full border-blue-100 bg-white text-gray-900">
-                      <SlidersHorizontal className="mr-2 h-4 w-4" />
+                    <SelectTrigger className="w-full border-blue-200 focus:border-blue-300 bg-white text-gray-900">
+                      <Briefcase className="mr-2 h-4 w-4 text-blue-500" />
                       <SelectValue placeholder={t('jobs.filterByType')} className="text-gray-900" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="all" className="text-gray-900">Todos os tipos</SelectItem>
+                      <SelectItem value="all" className="text-gray-900 font-medium">Todos os tipos</SelectItem>
                       <SelectItem value="remote" className="text-gray-900">{t('jobs.workType.remote')}</SelectItem>
                       <SelectItem value="onsite" className="text-gray-900">{t('jobs.workType.onsite')}</SelectItem>
                       <SelectItem value="hybrid" className="text-gray-900">{t('jobs.workType.hybrid')}</SelectItem>
