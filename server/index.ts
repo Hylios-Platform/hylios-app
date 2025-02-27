@@ -2,8 +2,35 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
 
 const app = express();
+
+// Configuração do multer para upload de arquivos
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, 'uploads/')
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
+  }
+});
+
+const upload = multer({ 
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // limite de 5MB
+  }
+});
+
+// Middleware para processar uploads
+app.use(upload.fields([
+  { name: 'document', maxCount: 1 },
+  { name: 'selfie', maxCount: 1 },
+  { name: 'proofOfAddress', maxCount: 1 }
+]));
 
 // Configuração básica
 app.set('trust proxy', 1);
@@ -12,7 +39,7 @@ app.use(cors({
   credentials: true
 }));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 
 // Middleware de logging
 app.use((req, res, next) => {
@@ -48,6 +75,9 @@ app.use((req, res, next) => {
   next();
 });
 
+// Pasta para arquivos enviados
+app.use('/uploads', express.static('uploads'));
+
 (async () => {
   try {
     const server = await registerRoutes(app);
@@ -72,7 +102,7 @@ app.use((req, res, next) => {
       port,
       host: "0.0.0.0",
     }, () => {
-      log(`Servidor Hylios iniciado e rodando na porta ${port}`);
+      log(`Servidor iniciado e rodando na porta ${port}`);
     });
   } catch (error) {
     console.error('Falha ao iniciar o servidor:', error);

@@ -54,18 +54,18 @@ export async function registerRoutes(app: Express): Promise<Server> {
     try {
       const userData = insertUserSchema.parse(req.body);
       const existingUser = await storage.getUserByUsername(userData.username);
-      
+
       if (existingUser) {
         return res.status(400).json({ error: "Nome de usuário já existe" });
       }
-      
+
       const newUser = await storage.createUser(userData);
-      
+
       // Automaticamente faz login após registro
       req.login(newUser, (err) => {
         if (err) {
           console.error("Erro ao iniciar sessão após registro:", err);
-          return res.status(500).json({ 
+          return res.status(500).json({
             message: "Conta criada, mas erro ao iniciar sessão. Tente fazer login."
           });
         }
@@ -88,21 +88,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log('Forbidden attempt to create job by non-company user');
       return res.status(403).json({ error: "Apenas empresas podem publicar vagas" });
     }
-    
+
     try {
       const jobData = insertJobSchema.parse(req.body);
       const job = await storage.createJob({
         ...jobData,
         companyId: req.user.id
       });
-      
+
       console.log(`Job created successfully by company ${req.user.id}`);
-      
+
       // Recompensas por publicar vaga
       await storage.addUserPoints(req.user.id, 50);
       await storage.addUserExperience(req.user.id, 100);
       await storage.updateAchievementProgress(req.user.id, 1, 1);
-      
+
       res.status(201).json(job);
     } catch (error) {
       console.error('Error creating job:', error);
@@ -132,24 +132,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (req.user.kycStatus !== "verified") {
       return res.status(400).json({ error: "Verificação KYC necessária para se candidatar" });
     }
-    
+
     const job = await storage.getJob(Number(req.params.id));
     if (!job) return res.status(404).json({ error: "Vaga não encontrada" });
     if (job.status !== "open") {
       return res.status(400).json({ error: "Vaga não está mais disponível" });
     }
-    
+
     try {
       const updatedJob = await storage.updateJob(job.id, {
         status: "assigned",
         assignedTo: req.user.id
       });
-      
+
       // Recompensas por se candidatar
       await storage.addUserPoints(req.user.id, 20);
       await storage.addUserExperience(req.user.id, 50);
       await storage.updateAchievementProgress(req.user.id, 2, 1);
-      
+
       res.json(updatedJob);
     } catch (error) {
       res.status(500).json({ error: "Erro ao processar candidatura" });
@@ -162,23 +162,43 @@ export async function registerRoutes(app: Express): Promise<Server> {
    * Enviar documentos KYC
    * POST /api/kyc
    * Requer: Usuário autenticado e do tipo profissional
-   * Body: fullName, dateOfBirth, documentType, documentNumber, address
+   * Body: Multipart form data com documentos e dados pessoais
    */
   app.post("/api/kyc", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
     if (req.user.userType !== "professional") return res.status(403).json({ error: "Apenas profissionais precisam de KYC" });
-    
+
     try {
+      // Validar dados do formulário
       const kycData = kycSchema.parse(req.body);
-      const user = await storage.submitKyc(req.user.id, kycData);
-      
+
+      // Processar upload de arquivos
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] };
+      const documentPath = files.document?.[0]?.path;
+      const selfiePath = files.selfie?.[0]?.path;
+      const proofOfAddressPath = files.proofOfAddress?.[0]?.path;
+
+      // Validar presença dos arquivos obrigatórios
+      if (!documentPath || !selfiePath || !proofOfAddressPath) {
+        return res.status(400).json({ error: "Todos os documentos são obrigatórios" });
+      }
+
+      // Atualizar status KYC do usuário
+      const user = await storage.submitKyc(req.user.id, {
+        ...kycData,
+        documentPath,
+        selfiePath,
+        proofOfAddressPath
+      });
+
       // Recompensas por completar KYC
       await storage.addUserPoints(req.user.id, 100);
       await storage.addUserExperience(req.user.id, 200);
       await storage.updateAchievementProgress(req.user.id, 3, 1);
-      
+
       res.json(user);
     } catch (error) {
+      console.error("Erro ao processar KYC:", error);
       res.status(400).json({ error: String(error) });
     }
   });
@@ -192,7 +212,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.get("/api/user/achievements", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const achievements = await storage.getUserAchievements(req.user.id);
       res.json(achievements);
@@ -209,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.post("/api/user/achievements/:id/progress", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const achievement = await storage.updateAchievementProgress(
         req.user.id,
@@ -232,13 +252,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.post("/api/wallet", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const { walletAddress } = req.body;
       if (!walletAddress) {
         return res.status(400).json({ error: "Endereço da carteira é obrigatório" });
       }
-      
+
       const user = await storage.updateWalletAddress(req.user.id, walletAddress);
       res.json(user);
     } catch (error) {
@@ -257,13 +277,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/credits/add", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
     if (req.user.userType !== "company") return res.status(403).json({ error: "Apenas empresas podem adicionar créditos" });
-    
+
     try {
       const { amount } = req.body;
       if (!amount || parseFloat(amount) <= 0) {
         return res.status(400).json({ error: "Valor inválido" });
       }
-      
+
       const user = await storage.addCompanyCredits(req.user.id, amount);
       res.json(user);
     } catch (error) {
@@ -279,14 +299,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/jobs/:id/pay", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
     if (req.user.userType !== "company") return res.status(403).json({ error: "Apenas empresas podem fazer pagamentos" });
-    
+
     try {
       const job = await storage.getJob(Number(req.params.id));
       if (!job) return res.status(404).json({ error: "Trabalho não encontrado" });
       if (job.companyId !== req.user.id) {
         return res.status(403).json({ error: "Você não tem permissão para pagar este trabalho" });
       }
-      
+
       const updatedJob = await storage.processJobPayment(job.id);
       res.json(updatedJob);
     } catch (error) {
@@ -302,7 +322,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.post("/api/profile", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const user = await storage.updateUser(req.user.id, {
         profileData: req.body
@@ -320,11 +340,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.get("/api/jobs/history", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const jobs = await storage.getJobs();
-      const userJobs = jobs.filter(job => 
-        job.assignedTo === req.user.id || 
+      const userJobs = jobs.filter(job =>
+        job.assignedTo === req.user.id ||
         (req.user.userType === "company" && job.companyId === req.user.id)
       );
       res.json(userJobs);
@@ -341,7 +361,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
    */
   app.post("/api/notifications/settings", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
-    
+
     try {
       const user = await storage.updateUser(req.user.id, {
         notificationSettings: req.body
