@@ -1,6 +1,6 @@
-import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData } from "@shared/schema";
+import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData, achievements, userAchievements, type Achievement, type UserAchievement } from "@shared/schema";
 import { db } from "./db";
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
@@ -8,6 +8,7 @@ import { pool } from "./db";
 const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
+  // Existing methods
   getUser(id: number): Promise<User | undefined>;
   getUserByUsername(username: string): Promise<User | undefined>;
   createUser(user: InsertUser): Promise<User>;
@@ -18,6 +19,13 @@ export interface IStorage {
   updateJob(id: number, data: Partial<Job>): Promise<Job>;
   submitKyc(userId: number, kycData: KycData): Promise<User>;
   sessionStore: session.Store;
+
+  // Gamification methods
+  addUserPoints(userId: number, points: number): Promise<User>;
+  addUserExperience(userId: number, experience: number): Promise<User>;
+  getUserAchievements(userId: number): Promise<(UserAchievement & { achievement: Achievement })[]>;
+  unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement>;
+  updateAchievementProgress(userId: number, achievementId: number, progress: number): Promise<UserAchievement>;
 }
 
 export class DatabaseStorage implements IStorage {
@@ -30,6 +38,7 @@ export class DatabaseStorage implements IStorage {
     });
   }
 
+  // Existing methods remain the same
   async getUser(id: number): Promise<User | undefined> {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user;
@@ -48,6 +57,9 @@ export class DatabaseStorage implements IStorage {
         kycStatus: "pending",
         kycData: null,
         profileData: null,
+        level: 1,
+        points: 0,
+        experience: 0
       })
       .returning();
     return user;
@@ -100,6 +112,133 @@ export class DatabaseStorage implements IStorage {
       kycData,
       kycStatus: "pending"
     });
+  }
+
+  // New gamification methods
+  async addUserPoints(userId: number, points: number): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) throw new Error("User not found");
+
+    return this.updateUser(userId, {
+      points: user.points + points
+    });
+  }
+
+  async addUserExperience(userId: number, experience: number): Promise<User> {
+    const user = await this.getUser(userId);
+    if (!user) throw new Error("User not found");
+
+    const LEVEL_THRESHOLD = 1000; // Experience points needed per level
+    const totalExperience = user.experience + experience;
+    const newLevel = Math.floor(totalExperience / LEVEL_THRESHOLD) + 1;
+
+    return this.updateUser(userId, {
+      experience: totalExperience,
+      level: newLevel
+    });
+  }
+
+  async getUserAchievements(userId: number): Promise<(UserAchievement & { achievement: Achievement })[]> {
+    return db
+      .select()
+      .from(userAchievements)
+      .where(eq(userAchievements.userId, userId))
+      .leftJoin(achievements, eq(userAchievements.achievementId, achievements.id));
+  }
+
+  async unlockAchievement(userId: number, achievementId: number): Promise<UserAchievement> {
+    const [existing] = await db
+      .select()
+      .from(userAchievements)
+      .where(
+        and(
+          eq(userAchievements.userId, userId),
+          eq(userAchievements.achievementId, achievementId)
+        )
+      );
+
+    if (existing) {
+      return existing;
+    }
+
+    const [achievement] = await db
+      .select()
+      .from(achievements)
+      .where(eq(achievements.id, achievementId));
+
+    if (!achievement) throw new Error("Achievement not found");
+
+    // Add achievement points to user
+    await this.addUserPoints(userId, achievement.pointsReward);
+
+    const [userAchievement] = await db
+      .insert(userAchievements)
+      .values({
+        userId,
+        achievementId,
+        progress: achievement.requiredValue,
+        unlockedAt: new Date()
+      })
+      .returning();
+
+    return userAchievement;
+  }
+
+  async updateAchievementProgress(userId: number, achievementId: number, progress: number): Promise<UserAchievement> {
+    const [achievement] = await db
+      .select()
+      .from(achievements)
+      .where(eq(achievements.id, achievementId));
+
+    if (!achievement) throw new Error("Achievement not found");
+
+    const [existing] = await db
+      .select()
+      .from(userAchievements)
+      .where(
+        and(
+          eq(userAchievements.userId, userId),
+          eq(userAchievements.achievementId, achievementId)
+        )
+      );
+
+    // If achievement already unlocked, return existing
+    if (existing && existing.progress >= achievement.requiredValue) {
+      return existing;
+    }
+
+    // If progress meets requirement, unlock achievement
+    if (progress >= achievement.requiredValue) {
+      return this.unlockAchievement(userId, achievementId);
+    }
+
+    // Otherwise update progress
+    if (existing) {
+      const [updated] = await db
+        .update(userAchievements)
+        .set({ progress })
+        .where(
+          and(
+            eq(userAchievements.userId, userId),
+            eq(userAchievements.achievementId, achievementId)
+          )
+        )
+        .returning();
+      return updated;
+    }
+
+    // Create new progress entry
+    const [created] = await db
+      .insert(userAchievements)
+      .values({
+        userId,
+        achievementId,
+        progress,
+        unlockedAt: new Date()
+      })
+      .returning();
+
+    return created;
   }
 }
 
