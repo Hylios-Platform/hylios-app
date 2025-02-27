@@ -27,30 +27,30 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus, displayA
       <CardContent className="pt-6">
         <div className="flex flex-col md:flex-row items-start justify-between gap-4">
           <div className="flex-1">
-            <h3 className="text-xl font-semibold mb-2 text-gray-700">{job.title}</h3>
-            <p className="text-blue-400 whitespace-pre-wrap mb-4">
+            <h3 className="text-xl font-semibold mb-2 text-gray-900">{job.title}</h3>
+            <p className="text-gray-600 whitespace-pre-wrap mb-4">
               {job.description}
             </p>
             <div className="flex flex-wrap items-center gap-4 text-sm">
               <div className="flex items-center gap-1">
                 <Coins className="h-4 w-4 text-amber-400" />
-                <span className="text-blue-400">{displayAmount}</span>
+                <span className="text-gray-700 font-medium">{displayAmount}</span>
               </div>
               <div className="flex items-center gap-1">
                 <MapPin className="h-4 w-4 text-blue-400" />
-                <span className="text-blue-400">{location}</span>
+                <span className="text-gray-700">{location}</span>
               </div>
               <div className="flex items-center gap-1">
                 <Calendar className="h-4 w-4 text-blue-400" />
-                <span className="text-blue-400">
+                <span className="text-gray-700">
                   {t('jobs.postedAgo', { time: formatDistanceToNow(new Date(job.createdAt)) })}
                 </span>
               </div>
               <div className="capitalize">
                 <span className={`px-2 py-1 rounded-full text-xs font-medium
-                  ${job.status === 'open' ? 'bg-emerald-50 text-emerald-400' : 
-                    job.status === 'assigned' ? 'bg-blue-50 text-blue-400' :
-                    'bg-gray-50 text-gray-400'}`}>
+                  ${job.status === 'open' ? 'bg-emerald-50 text-emerald-600' : 
+                    job.status === 'assigned' ? 'bg-blue-50 text-blue-600' :
+                    'bg-gray-50 text-gray-600'}`}>
                   {t(`jobs.status.${job.status}`)}
                 </span>
               </div>
@@ -60,7 +60,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus, displayA
       </CardContent>
 
       {canApply && (
-        <CardFooter className="border-t border-blue-200 bg-blue-50/50 flex justify-end p-4">
+        <CardFooter className="border-t border-blue-100 bg-blue-50/50 flex justify-end p-4">
           <Button 
             onClick={onApply} 
             disabled={isPending}
@@ -74,7 +74,7 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus, displayA
 
       {userType === "professional" && kycStatus !== "verified" && (
         <CardFooter className="border-t border-blue-100 bg-blue-50/50 p-4">
-          <p className="text-sm text-blue-400">
+          <p className="text-sm text-gray-600">
             {t('jobs.completeKyc')}
           </p>
         </CardFooter>

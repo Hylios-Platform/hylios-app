@@ -1,12 +1,13 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Bitcoin, Building2, UserCheck, Sparkles } from "lucide-react";
+import { Building2, UserCheck, Bitcoin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
 import { useTutorial } from "@/hooks/use-tutorial";
 import { UserProgress } from "@/components/user-progress";
+import { FloatingJobs } from "@/components/floating-jobs";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -28,7 +29,6 @@ export default function HomePage() {
     show: { opacity: 1, y: 0 }
   };
 
-  // Removendo a referência ao MatchAnimation e simplificando a página inicial
   if (user?.userType === "company") {
     return (
       <div className="min-h-screen bg-white">
@@ -50,6 +50,7 @@ export default function HomePage() {
               </Button>
             </Link>
           </motion.div>
+          <FloatingJobs />
         </div>
       </div>
     );
@@ -80,6 +81,8 @@ export default function HomePage() {
             </Button>
           </motion.div>
 
+          <FloatingJobs />
+
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -103,8 +106,8 @@ export default function HomePage() {
                   <UserCheck className="h-6 w-6 text-emerald-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('jobs.startVerification')}</h2>
-                  <p className="text-blue-400 mb-4">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('jobs.startVerification')}</h2>
+                  <p className="text-gray-600 mb-4">
                     {t('jobs.completeKyc')}
                   </p>
                   <Button variant="outline" className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm">
@@ -123,8 +126,8 @@ export default function HomePage() {
                   <Building2 className="h-6 w-6 text-blue-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('navigation.jobs')}</h2>
-                  <p className="text-blue-400 mb-4">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('navigation.jobs')}</h2>
+                  <p className="text-gray-600 mb-4">
                     {t('jobs.findOpportunities')}
                   </p>
                   <Link href="/jobs">
@@ -145,8 +148,8 @@ export default function HomePage() {
                   <Bitcoin className="h-6 w-6 text-amber-400" />
                 </div>
                 <div>
-                  <h2 className="text-xl font-semibold mb-3 text-gray-700">{t('jobs.receivePayments')}</h2>
-                  <p className="text-blue-400">
+                  <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('jobs.receivePayments')}</h2>
+                  <p className="text-gray-600">
                     {t('jobs.receivePayments')}
                   </p>
                 </div>
