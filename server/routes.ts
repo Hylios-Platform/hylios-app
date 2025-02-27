@@ -16,6 +16,35 @@ export async function registerRoutes(app: Express): Promise<Server> {
     next();
   });
 
+  // ===== Endpoints de Autenticação =====
+  app.post("/api/register", async (req, res) => {
+    try {
+      const userData = insertUserSchema.parse(req.body);
+      const existingUser = await storage.getUserByUsername(userData.username);
+      
+      if (existingUser) {
+        return res.status(400).json({ error: "Nome de usuário já existe" });
+      }
+      
+      const newUser = await storage.createUser(userData);
+      
+      // Automaticamente faz login após registro
+      req.login(newUser, (err) => {
+        if (err) {
+          console.error("Erro ao iniciar sessão após registro:", err);
+          return res.status(500).json({ 
+            message: "Conta criada, mas erro ao iniciar sessão. Tente fazer login."
+          });
+        }
+        console.log("Registro e login bem-sucedido:", newUser);
+        res.status(200).json(newUser);
+      });
+    } catch (error) {
+      console.error("Erro no registro:", error);
+      res.status(400).json({ error: String(error) });
+    }
+  });
+
   // ===== Endpoints de Vagas =====
   app.post("/api/jobs", async (req, res) => {
     if (!req.isAuthenticated()) {

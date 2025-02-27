@@ -18,7 +18,7 @@ export function setupAuth(app: Express) {
     saveUninitialized: false,
     store: storage.sessionStore,
     cookie: {
-      secure: false, // set to true in production with HTTPS
+      secure: process.env.NODE_ENV === 'production', // true em produção com HTTPS
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
       sameSite: 'lax'
@@ -41,7 +41,14 @@ export function setupAuth(app: Express) {
           return done(null, false, { message: "Usuário não encontrado" });
         }
 
-        // Em desenvolvimento, aceita qualquer senha
+        // Verificar se a senha está correta - em ambiente de desenvolvimento, permitir qualquer senha
+        const isValidPassword = process.env.NODE_ENV === 'development' || user.password === password;
+        
+        if (!isValidPassword) {
+          console.log('Senha incorreta');
+          return done(null, false, { message: "Senha incorreta" });
+        }
+        
         console.log('Login bem sucedido:', user);
         return done(null, user);
       } catch (error) {
