@@ -14,11 +14,21 @@ const archive = archiver('zip', {
 
 // Ouvir eventos do archiver
 output.on('close', () => {
-  console.log(`Backup criado com sucesso! Tamanho: ${(archive.pointer() / 1024 / 1024).toFixed(2)} MB`);
+  console.log(`\nBackup criado com sucesso!`);
+  console.log(`Tamanho do arquivo: ${(archive.pointer() / 1024 / 1024).toFixed(2)} MB`);
+  console.log('\nPara restaurar o projeto:');
+  console.log('1. Descompacte o arquivo project-backup.zip');
+  console.log('2. Execute: npm install');
+  console.log('3. Configure as variáveis de ambiente no arquivo .env');
+  console.log('4. Execute: npm run dev');
 });
 
 archive.on('error', (err) => {
   throw err;
+});
+
+archive.on('entry', (entry) => {
+  console.log(`Adicionando: ${entry.name}`);
 });
 
 // Arquivos e pastas para incluir no backup
@@ -34,7 +44,9 @@ const includes = [
   '.env.example',
   'theme.json',
   'tailwind.config.ts',
-  'drizzle.config.ts'
+  'drizzle.config.ts',
+  'postcss.config.js',
+  'index.html'
 ];
 
 // Arquivos e pastas para excluir
@@ -43,8 +55,14 @@ const excludes = [
   'dist',
   '.git',
   '*.log',
-  'uploads/*'
+  'uploads/*',
+  '.env',
+  '*.zip'
 ];
+
+console.log('\nIniciando backup do projeto...');
+console.log('Arquivos a serem incluídos:');
+includes.forEach(item => console.log(`- ${item}`));
 
 // Pipe arquivo de saída
 archive.pipe(output);
@@ -55,9 +73,13 @@ includes.forEach(item => {
   if (fs.existsSync(itemPath)) {
     if (fs.lstatSync(itemPath).isDirectory()) {
       archive.directory(itemPath, item);
+      console.log(`\nAdicionando diretório: ${item}`);
     } else {
       archive.file(itemPath, { name: path.basename(item) });
+      console.log(`\nAdicionando arquivo: ${item}`);
     }
+  } else {
+    console.log(`\nAviso: ${item} não encontrado`);
   }
 });
 
