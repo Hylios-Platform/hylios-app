@@ -47,7 +47,7 @@ export function Mascot() {
   useEffect(() => {
     // Reset visibility when location changes
     setIsVisible(true);
-    
+
     // Get tips based on current location
     const pageTips = [];
     if (location === "/") {
@@ -76,7 +76,7 @@ export function Mascot() {
   // Rotate tips every 10 seconds
   useEffect(() => {
     if (!tips.length) return;
-    
+
     const interval = setInterval(() => {
       setCurrentTip((prev) => (prev + 1) % tips.length);
     }, 10000);
@@ -95,14 +95,14 @@ export function Mascot() {
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="max-w-xs bg-white rounded-2xl p-4 shadow-lg border border-blue-100"
+          className="max-w-xs bg-gradient-to-br from-blue-50 to-violet-50 rounded-2xl p-4 shadow-lg border border-blue-100"
         >
           <div className="flex justify-between items-start gap-4">
             <p className="text-sm text-gray-600">{tips[currentTip]}</p>
             <Button
               variant="ghost"
               size="sm"
-              className="h-6 w-6 p-0 hover:bg-gray-100"
+              className="h-6 w-6 p-0 hover:bg-blue-100/50"
               onClick={() => setIsVisible(false)}
             >
               <X className="h-4 w-4" />
@@ -128,10 +128,11 @@ export function Mascot() {
           initial="hidden"
           animate="visible"
           exit="exit"
-          className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer"
+          whileHover={{ scale: 1.1 }}
+          className="w-16 h-16 bg-gradient-to-br from-blue-400 to-violet-400 rounded-full flex items-center justify-center shadow-lg cursor-pointer select-none"
           onClick={() => setIsVisible(true)}
         >
-          <span className="text-2xl">🦊</span>
+          <span className="text-2xl transform -scale-x-100">🧌</span>
         </motion.div>
       </div>
     </AnimatePresence>
