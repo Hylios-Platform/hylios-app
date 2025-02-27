@@ -8,21 +8,26 @@ async function throwIfResNotOk(res: Response) {
   }
 }
 
+type RequestOptions = {
+  onUploadProgress?: (progressEvent: { loaded: number; total: number; lengthComputable: boolean }) => void;
+};
+
 export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
+  options: RequestOptions = {}
 ): Promise<Response> {
   console.log(`[API] Fazendo requisição ${method} para ${url}`);
   console.log('[API] Headers:', {
-    'Content-Type': data ? 'application/json' : undefined,
+    'Content-Type': data instanceof FormData ? undefined : 'application/json',
     'Credentials': 'include'
   });
 
   const res = await fetch(url, {
     method,
-    headers: data ? { "Content-Type": "application/json" } : {},
-    body: data ? JSON.stringify(data) : undefined,
+    headers: data instanceof FormData ? {} : { "Content-Type": "application/json" },
+    body: data instanceof FormData ? data : data ? JSON.stringify(data) : undefined,
     credentials: "include", // Importante: envia cookies de autenticação
   });
 
