@@ -34,7 +34,7 @@ export function setupAuth(app: Express) {
         // Durante o desenvolvimento, aceita qualquer usuário
         const devUser = {
           id: 1,
-          username: username,
+          username: username || 'dev_user',
           password: '',
           userType: 'professional',
           kycStatus: 'verified',
@@ -43,12 +43,9 @@ export function setupAuth(app: Express) {
           profileData: null
         };
         return done(null, devUser);
-
       } catch (error) {
         console.error("Erro na autenticação:", error);
-        return done(error, false, {
-          message: "Ocorreu um erro durante a autenticação. Tente novamente mais tarde."
-        });
+        return done(error);
       }
     })
   );
@@ -71,12 +68,6 @@ export function setupAuth(app: Express) {
   });
 
   app.post("/api/login", (req, res, next) => {
-    if (!req.body.username || !req.body.password) {
-      return res.status(400).json({ 
-        message: "Nome de usuário e senha são obrigatórios"
-      });
-    }
-
     passport.authenticate("local", (err: any, user: any, info: any) => {
       if (err) {
         return res.status(500).json({ 
