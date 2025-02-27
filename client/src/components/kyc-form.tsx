@@ -18,11 +18,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, ArrowRight, Check } from "lucide-react";
+import { Loader2, ArrowLeft, ArrowRight, Check, User, FileText, MapPin } from "lucide-react";
 import { useState } from "react";
 
 export function KycForm() {
@@ -90,30 +96,47 @@ export function KycForm() {
     <div className="p-4">
       <DialogHeader>
         <DialogTitle className="text-2xl font-bold mb-4">
-          Verificação KYC - Etapa {step} de {totalSteps}
+          Verificação KYC
         </DialogTitle>
       </DialogHeader>
 
-      <div className="flex justify-center mb-6">
-        <div className="flex items-center space-x-2">
-          {[1, 2, 3].map((dot) => (
-            <div
-              key={dot}
-              className={`h-2 w-2 rounded-full transition-colors ${
-                dot === step ? 'bg-blue-600' : 'bg-gray-300'
-              }`}
-            />
-          ))}
-        </div>
-      </div>
+      <Tabs value={`step-${step}`} className="w-full">
+        <TabsList className="grid w-full grid-cols-3">
+          <TabsTrigger 
+            value="step-1" 
+            onClick={() => setStep(1)}
+            disabled={step < 1}
+            className="flex items-center gap-2"
+          >
+            <User className="h-4 w-4" />
+            Pessoal
+          </TabsTrigger>
+          <TabsTrigger 
+            value="step-2" 
+            onClick={() => setStep(2)}
+            disabled={step < 2}
+            className="flex items-center gap-2"
+          >
+            <FileText className="h-4 w-4" />
+            Documentos
+          </TabsTrigger>
+          <TabsTrigger 
+            value="step-3" 
+            onClick={() => setStep(3)}
+            disabled={step < 3}
+            className="flex items-center gap-2"
+          >
+            <MapPin className="h-4 w-4" />
+            Endereço
+          </TabsTrigger>
+        </TabsList>
 
-      <Form {...form}>
-        <form
-          onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
-          className="space-y-4"
-        >
-          {step === 1 && (
-            <div className="space-y-4">
+        <Form {...form}>
+          <form
+            onSubmit={form.handleSubmit((data) => mutation.mutate(data))}
+            className="space-y-4 mt-6"
+          >
+            <TabsContent value="step-1" className="space-y-4">
               <FormField
                 control={form.control}
                 name="fullName"
@@ -141,11 +164,9 @@ export function KycForm() {
                   </FormItem>
                 )}
               />
-            </div>
-          )}
+            </TabsContent>
 
-          {step === 2 && (
-            <div className="space-y-4">
+            <TabsContent value="step-2" className="space-y-4">
               <FormField
                 control={form.control}
                 name="documentType"
@@ -182,11 +203,9 @@ export function KycForm() {
                   </FormItem>
                 )}
               />
-            </div>
-          )}
+            </TabsContent>
 
-          {step === 3 && (
-            <div className="space-y-4">
+            <TabsContent value="step-3" className="space-y-4">
               <FormField
                 control={form.control}
                 name="address"
@@ -200,42 +219,42 @@ export function KycForm() {
                   </FormItem>
                 )}
               />
-            </div>
-          )}
+            </TabsContent>
 
-          <div className="flex justify-between mt-6">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={prevStep}
-              disabled={step === 1}
-            >
-              <ArrowLeft className="mr-2 h-4 w-4" />
-              Voltar
-            </Button>
-
-            {step < totalSteps ? (
-              <Button type="button" onClick={nextStep}>
-                Próximo
-                <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            ) : (
+            <div className="flex justify-between mt-6">
               <Button
-                type="submit"
-                disabled={mutation.isPending}
-                className="bg-green-600 hover:bg-green-700"
+                type="button"
+                variant="outline"
+                onClick={prevStep}
+                disabled={step === 1}
               >
-                {mutation.isPending ? (
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                  <Check className="mr-2 h-4 w-4" />
-                )}
-                Finalizar
+                <ArrowLeft className="mr-2 h-4 w-4" />
+                Voltar
               </Button>
-            )}
-          </div>
-        </form>
-      </Form>
+
+              {step < totalSteps ? (
+                <Button type="button" onClick={nextStep}>
+                  Próximo
+                  <ArrowRight className="ml-2 h-4 w-4" />
+                </Button>
+              ) : (
+                <Button
+                  type="submit"
+                  disabled={mutation.isPending}
+                  className="bg-green-600 hover:bg-green-700"
+                >
+                  {mutation.isPending ? (
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Check className="mr-2 h-4 w-4" />
+                  )}
+                  Finalizar
+                </Button>
+              )}
+            </div>
+          </form>
+        </Form>
+      </Tabs>
     </div>
   );
 }
