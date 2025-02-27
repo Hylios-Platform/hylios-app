@@ -120,16 +120,25 @@ export const jobCategorySkills = {
 } as const;
 
 export const europeanCountries = {
-  "Portugal": ["Lisboa", "Porto", "Faro", "Braga", "Coimbra"],
-  "Espanha": ["Madrid", "Barcelona", "Valencia", "Sevilha", "Málaga"],
-  "França": ["Paris", "Lyon", "Marselha", "Bordeaux", "Nice"],
-  "Alemanha": ["Berlim", "Munique", "Frankfurt", "Hamburgo", "Colônia"],
-  "Itália": ["Roma", "Milão", "Florença", "Veneza", "Nápoles"],
-  "Reino Unido": ["Londres", "Manchester", "Liverpool", "Edinburgh", "Birmingham"],
-  "Holanda": ["Amsterdã", "Rotterdam", "Haia", "Utrecht", "Eindhoven"],
-  "Bélgica": ["Bruxelas", "Antuérpia", "Gent", "Bruges", "Liège"],
-  "Suíça": ["Zurique", "Genebra", "Basileia", "Berna", "Lausanne"],
-  "Irlanda": ["Dublin", "Cork", "Galway", "Limerick", "Waterford"]
+  "Portugal": ["Lisboa", "Porto", "Faro", "Braga", "Coimbra", "Aveiro", "Funchal", "Évora"],
+  "Espanha": ["Madrid", "Barcelona", "Valencia", "Sevilha", "Málaga", "Bilbao", "Granada", "Zaragoza"],
+  "França": ["Paris", "Lyon", "Marselha", "Bordeaux", "Nice", "Toulouse", "Nantes", "Estrasburgo"],
+  "Alemanha": ["Berlim", "Munique", "Frankfurt", "Hamburgo", "Colônia", "Stuttgart", "Dresden", "Düsseldorf"],
+  "Itália": ["Roma", "Milão", "Florença", "Veneza", "Nápoles", "Turim", "Bolonha", "Verona"],
+  "Reino Unido": ["Londres", "Manchester", "Liverpool", "Edinburgh", "Birmingham", "Glasgow", "Bristol", "Leeds"],
+  "Holanda": ["Amsterdã", "Rotterdam", "Haia", "Utrecht", "Eindhoven", "Groningen", "Tilburg", "Almere"],
+  "Bélgica": ["Bruxelas", "Antuérpia", "Gent", "Bruges", "Liège", "Namur", "Leuven", "Mons"],
+  "Suíça": ["Zurique", "Genebra", "Basileia", "Berna", "Lausanne", "Lucerna", "Lugano", "St. Gallen"],
+  "Irlanda": ["Dublin", "Cork", "Galway", "Limerick", "Waterford", "Kilkenny", "Drogheda", "Dundalk"],
+  "Suécia": ["Estocolmo", "Gotemburgo", "Malmö", "Uppsala", "Västerås", "Örebro", "Linköping", "Helsingborg"],
+  "Noruega": ["Oslo", "Bergen", "Trondheim", "Stavanger", "Drammen", "Fredrikstad", "Kristiansand", "Tromsø"],
+  "Dinamarca": ["Copenhague", "Aarhus", "Odense", "Aalborg", "Esbjerg", "Randers", "Kolding", "Horsens"],
+  "Finlândia": ["Helsinki", "Espoo", "Tampere", "Vantaa", "Oulu", "Turku", "Jyväskylä", "Lahti"],
+  "Áustria": ["Viena", "Graz", "Linz", "Salzburgo", "Innsbruck", "Klagenfurt", "Villach", "Wels"],
+  "Estados Unidos": ["Nova York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Filadélfia", "San Antonio", "San Diego"],
+  "Canadá": ["Toronto", "Montreal", "Vancouver", "Calgary", "Ottawa", "Edmonton", "Quebec", "Winnipeg"],
+  "Austrália": ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Gold Coast", "Newcastle", "Canberra"],
+  "Nova Zelândia": ["Auckland", "Wellington", "Christchurch", "Hamilton", "Tauranga", "Napier-Hastings", "Dunedin", "Palmerston North"]
 } as const;
 
 export type Country = keyof typeof europeanCountries;
