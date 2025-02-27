@@ -2,6 +2,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { KycForm } from "@/components/kyc-form";
 import { Shield, CheckCircle, XCircle } from "lucide-react";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
 
 export function KycSettings() {
   const { user } = useAuth();
@@ -26,7 +28,21 @@ export function KycSettings() {
             <p className="text-green-700">Sua verificação KYC foi aprovada.</p>
           </div>
         ) : (
-          <KycForm />
+          <div className="space-y-4">
+            <p className="text-gray-600">
+              Complete sua verificação KYC para acessar todos os recursos da plataforma.
+            </p>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="outline" className="w-full md:w-auto">
+                  Iniciar Verificação KYC
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-lg">
+                <KycForm />
+              </DialogContent>
+            </Dialog>
+          </div>
         )}
       </CardContent>
     </Card>
