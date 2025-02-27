@@ -43,6 +43,9 @@ export default function Jobs() {
   const [sortBy, setSortBy] = useState<SortOption>("recent");
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [viewMode, setViewMode] = useState<ViewMode>("list");
+  const [userSkills] = useState<string[]>((user?.profileData as any)?.skills || []);
+  const [userLocation] = useState<string>((user?.profileData as any)?.location || 'Lisboa, Portugal');
+  const [preferredWorkType] = useState<string>((user?.profileData as any)?.preferredWorkType || 'remote');
 
   const { data: jobs, isLoading } = useQuery<Job[]>({
     queryKey: ["/api/jobs"],
@@ -319,6 +322,9 @@ export default function Jobs() {
                       kycStatus={user?.kycStatus || ""}
                       displayAmount={job.displayAmount}
                       location={`${job.city}, ${job.country}`}
+                      userSkills={userSkills}
+                      userLocation={userLocation}
+                      preferredWorkType={preferredWorkType}
                     />
                   </motion.div>
                 ))

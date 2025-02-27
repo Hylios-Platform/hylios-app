@@ -5,6 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Bitcoin, Calendar, Loader2, MapPin, Coins, Briefcase, Tags } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useTranslation } from "react-i18next";
+import { MatchMenu } from "./matching/match-menu";
+import { calculateMatchScore } from "@/lib/matching-service";
 
 interface JobCardProps {
   job: Job;
@@ -14,9 +16,23 @@ interface JobCardProps {
   kycStatus: string;
   displayAmount: string;
   location: string;
+  userSkills?: string[];
+  userLocation?: string;
+  preferredWorkType?: string;
 }
 
-export function JobCard({ job, onApply, isPending, userType, kycStatus, displayAmount, location }: JobCardProps) {
+export function JobCard({ 
+  job, 
+  onApply, 
+  isPending, 
+  userType, 
+  kycStatus, 
+  displayAmount, 
+  location,
+  userSkills = [],
+  userLocation = "",
+  preferredWorkType = "remote"
+}: JobCardProps) {
   const { t } = useTranslation();
 
   const canApply = userType === "professional" && 
@@ -28,6 +44,10 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus, displayA
     onsite: "bg-blue-100 text-blue-800",
     hybrid: "bg-purple-100 text-purple-800"
   };
+
+  const matchScore = userType === "professional" 
+    ? calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
+    : 0;
 
   return (
     <Card className="border-blue-100 bg-white shadow-md hover:shadow-lg transition-shadow">
@@ -93,6 +113,16 @@ export function JobCard({ job, onApply, isPending, userType, kycStatus, displayA
             </div>
           </div>
         </div>
+        {userType === "professional" && (
+          <div className="mt-6">
+            <MatchMenu
+              job={job}
+              userSkills={userSkills}
+              userLocation={userLocation}
+              matchScore={matchScore}
+            />
+          </div>
+        )}
       </CardContent>
 
       {canApply && (
