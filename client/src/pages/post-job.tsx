@@ -93,7 +93,7 @@ export default function PostJob() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold mb-8 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
             Publicar Novo Trabalho
           </h1>
 
@@ -104,7 +104,7 @@ export default function PostJob() {
                 name="category"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Categoria Profissional</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Categoria Profissional</FormLabel>
                     <Select 
                       onValueChange={(value) => {
                         field.onChange(value);
@@ -113,44 +113,45 @@ export default function PostJob() {
                       defaultValue={field.value}
                     >
                       <FormControl>
-                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                        <SelectTrigger className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base">
                           <SelectValue placeholder="Selecione a categoria" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="sales">Vendedor/Comercial</SelectItem>
-                        <SelectItem value="reception">Recepcionista/Atendimento</SelectItem>
-                        <SelectItem value="administrative">Auxiliar Administrativo/Digitador</SelectItem>
-                        <SelectItem value="healthcare">Cuidador/Profissional de Saúde</SelectItem>
-                        <SelectItem value="driver">Motorista/Entregador</SelectItem>
-                        <SelectItem value="education">Professor/Instrutor</SelectItem>
-                        <SelectItem value="restaurant">Garçom/Profissional de Restaurante</SelectItem>
-                        <SelectItem value="production">Operador de Produção</SelectItem>
-                        <SelectItem value="cleaning">Serviços de Limpeza</SelectItem>
-                        <SelectItem value="security">Segurança</SelectItem>
-                        <SelectItem value="retail">Atendente de Loja</SelectItem>
-                        <SelectItem value="construction">Construção Civil</SelectItem>
-                        <SelectItem value="other">Outra categoria</SelectItem>
+                        <SelectItem value="sales" className="text-base">Vendedor/Comercial</SelectItem>
+                        <SelectItem value="reception" className="text-base">Recepcionista/Atendimento</SelectItem>
+                        <SelectItem value="administrative" className="text-base">Auxiliar Administrativo/Digitador</SelectItem>
+                        <SelectItem value="healthcare" className="text-base">Cuidador/Profissional de Saúde</SelectItem>
+                        <SelectItem value="driver" className="text-base">Motorista/Entregador</SelectItem>
+                        <SelectItem value="education" className="text-base">Professor/Instrutor</SelectItem>
+                        <SelectItem value="restaurant" className="text-base">Garçom/Profissional de Restaurante</SelectItem>
+                        <SelectItem value="production" className="text-base">Operador de Produção</SelectItem>
+                        <SelectItem value="cleaning" className="text-base">Serviços de Limpeza</SelectItem>
+                        <SelectItem value="security" className="text-base">Segurança</SelectItem>
+                        <SelectItem value="retail" className="text-base">Atendente de Loja</SelectItem>
+                        <SelectItem value="construction" className="text-base">Construção Civil</SelectItem>
+                        <SelectItem value="other" className="text-base">Outra categoria</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
+
               <FormField
                 control={form.control}
                 name="title"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Título do Trabalho</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Título do Trabalho</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="ex: Análise de Dados em Excel" 
                         {...field}
-                        className="border-blue-100 focus:border-blue-200 bg-white" 
+                        className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base placeholder:text-gray-500" 
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
@@ -160,15 +161,15 @@ export default function PostJob() {
                 name="description"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Descrição do Trabalho</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Descrição do Trabalho</FormLabel>
                     <FormControl>
                       <Textarea
                         placeholder="Descreva os requisitos e entregas do trabalho"
-                        className="min-h-[120px] border-blue-100 focus:border-blue-200 bg-white"
+                        className="min-h-[120px] border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base placeholder:text-gray-500"
                         {...field}
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
@@ -179,16 +180,16 @@ export default function PostJob() {
                   name="amount"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700">Valor</FormLabel>
+                      <FormLabel className="text-lg font-medium text-gray-900">Valor</FormLabel>
                       <FormControl>
                         <Input 
                           type="number"
                           placeholder="ex: 1000" 
                           {...field}
-                          className="border-blue-100 focus:border-blue-200 bg-white" 
+                          className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base placeholder:text-gray-500" 
                         />
                       </FormControl>
-                      <FormMessage />
+                      <FormMessage className="text-sm font-medium text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -198,19 +199,19 @@ export default function PostJob() {
                   name="currency"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-gray-700">Moeda</FormLabel>
+                      <FormLabel className="text-lg font-medium text-gray-900">Moeda</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
-                          <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                          <SelectTrigger className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base">
                             <SelectValue placeholder="Selecione a moeda" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="EUR">EUR</SelectItem>
-                          <SelectItem value="AED">AED</SelectItem>
+                          <SelectItem value="EUR" className="text-base">EUR</SelectItem>
+                          <SelectItem value="AED" className="text-base">AED</SelectItem>
                         </SelectContent>
                       </Select>
-                      <FormMessage />
+                      <FormMessage className="text-sm font-medium text-red-600" />
                     </FormItem>
                   )}
                 />
@@ -221,15 +222,15 @@ export default function PostJob() {
                 name="location"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Localização</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Localização</FormLabel>
                     <FormControl>
                       <Input 
                         placeholder="ex: Dubai, UAE" 
                         {...field}
-                        className="border-blue-100 focus:border-blue-200 bg-white" 
+                        className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base placeholder:text-gray-500" 
                       />
                     </FormControl>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
@@ -239,20 +240,20 @@ export default function PostJob() {
                 name="workType"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Tipo de Trabalho</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Tipo de Trabalho</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
-                        <SelectTrigger className="border-blue-100 focus:border-blue-200 bg-white">
+                        <SelectTrigger className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base">
                           <SelectValue placeholder="Selecione o tipo de trabalho" />
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="remote">Remoto</SelectItem>
-                        <SelectItem value="onsite">Presencial</SelectItem>
-                        <SelectItem value="hybrid">Híbrido</SelectItem>
+                        <SelectItem value="remote" className="text-base">Remoto</SelectItem>
+                        <SelectItem value="onsite" className="text-base">Presencial</SelectItem>
+                        <SelectItem value="hybrid" className="text-base">Híbrido</SelectItem>
                       </SelectContent>
                     </Select>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
@@ -262,7 +263,7 @@ export default function PostJob() {
                 name="requiredSkills"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-gray-700">Habilidades Necessárias</FormLabel>
+                    <FormLabel className="text-lg font-medium text-gray-900">Habilidades Necessárias</FormLabel>
                     <div className="space-y-4">
                       <FormControl>
                         <Input 
@@ -280,7 +281,7 @@ export default function PostJob() {
                               }
                             }
                           }}
-                          className="border-blue-100 focus:border-blue-200 bg-white" 
+                          className="border-blue-200 focus:border-blue-300 bg-white text-gray-900 text-base placeholder:text-gray-500" 
                         />
                       </FormControl>
                       <div className="flex flex-wrap gap-2">
@@ -288,28 +289,28 @@ export default function PostJob() {
                           <Badge
                             key={index}
                             variant="secondary"
-                            className="bg-blue-50 text-blue-700 hover:bg-blue-100"
+                            className="bg-blue-50 text-blue-700 hover:bg-blue-100 text-base py-1.5 px-3"
                           >
                             {skill}
                             <button
                               type="button"
                               onClick={() => removeSkill(skill)}
-                              className="ml-1 hover:text-red-500"
+                              className="ml-2 hover:text-red-500"
                             >
-                              <X className="h-3 w-3" />
+                              <X className="h-4 w-4" />
                             </button>
                           </Badge>
                         ))}
                       </div>
                     </div>
-                    <FormMessage />
+                    <FormMessage className="text-sm font-medium text-red-600" />
                   </FormItem>
                 )}
               />
 
               <Button 
                 type="submit" 
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-colors"
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg transition-colors text-lg font-medium py-3"
                 disabled={mutation.isPending}
               >
                 Publicar Trabalho
