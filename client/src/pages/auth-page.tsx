@@ -28,15 +28,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogDescription,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
@@ -163,8 +154,8 @@ export default function AuthPage() {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -201,8 +192,8 @@ export default function AuthPage() {
                               )}
                             </Button>
                           </div>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -265,8 +256,8 @@ export default function AuthPage() {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -288,8 +279,8 @@ export default function AuthPage() {
                               {...field}
                             />
                           </FormControl>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -311,8 +302,8 @@ export default function AuthPage() {
                               onChange={(e) => field.onChange(parseInt(e.target.value))}
                             />
                           </FormControl>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -337,8 +328,8 @@ export default function AuthPage() {
                               <SelectItem value="female">{t('auth.genderTypes.female')}</SelectItem>
                             </SelectContent>
                           </Select>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -375,8 +366,8 @@ export default function AuthPage() {
                               )}
                             </Button>
                           </div>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -395,16 +386,16 @@ export default function AuthPage() {
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
-                              <SelectItem value="professional" className="text-gray-900">
+                              <SelectItem value="professional">
                                 {t('auth.professional')}
                               </SelectItem>
-                              <SelectItem value="company" className="text-gray-900">
+                              <SelectItem value="company">
                                 {t('auth.company')}
                               </SelectItem>
                             </SelectContent>
                           </Select>
-                          <FormMessage className="text-sm font-medium text-red-500">
-                            {(msg) => t(msg as string)}
+                          <FormMessage>
+                            {(msg) => msg && t(msg as string)}
                           </FormMessage>
                         </FormItem>
                       )}
@@ -425,8 +416,8 @@ export default function AuthPage() {
                                 {...field}
                               />
                             </FormControl>
-                            <FormMessage className="text-sm font-medium text-red-500">
-                              {(msg) => t(msg as string)}
+                            <FormMessage>
+                              {(msg) => msg && t(msg as string)}
                             </FormMessage>
                           </FormItem>
                         )}
@@ -481,12 +472,12 @@ export default function AuthPage() {
 
       <Dialog open={showConfirmDialog} onOpenChange={setShowConfirmDialog}>
         <DialogContent>
-          <DialogHeader>
-            <DialogTitle>{t('auth.confirmRegistration')}</DialogTitle>
-            <DialogDescription>
+          <CardHeader>
+            <CardTitle>{t('auth.confirmRegistration')}</CardTitle>
+            <CardDescription>
               {t('auth.confirmRegistrationDescription')}
-            </DialogDescription>
-          </DialogHeader>
+            </CardDescription>
+          </CardHeader>
 
           <div className="space-y-4">
             <div>
@@ -511,12 +502,14 @@ export default function AuthPage() {
             )}
           </div>
 
-          <DialogFooter>
-            <DialogClose asChild>
-              <Button variant="outline">{t('common.cancel')}</Button>
-            </DialogClose>
-            <Button onClick={confirmRegister}>{t('common.confirm')}</Button>
-          </DialogFooter>
+          <div className="flex justify-end gap-4 mt-6">
+            <Button variant="outline" onClick={() => setShowConfirmDialog(false)}>
+              {t('common.cancel')}
+            </Button>
+            <Button onClick={confirmRegister}>
+              {t('common.confirm')}
+            </Button>
+          </div>
         </DialogContent>
       </Dialog>
     </div>

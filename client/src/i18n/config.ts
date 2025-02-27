@@ -9,6 +9,7 @@ i18n
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    debug: true, // Ativando debug para ver os logs
     resources: {
       en: {
         translation: enTranslations
@@ -20,6 +21,10 @@ i18n
     fallbackLng: 'en',
     interpolation: {
       escapeValue: false
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      caches: ['localStorage']
     }
   });
 
