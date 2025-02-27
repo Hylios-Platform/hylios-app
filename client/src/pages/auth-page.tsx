@@ -91,7 +91,10 @@ export default function AuthPage() {
               <TabsContent value="login">
                 <Form {...loginForm}>
                   <form
-                    onSubmit={loginForm.handleSubmit((data) => loginMutation.mutate(data))}
+                    onSubmit={loginForm.handleSubmit((data) => {
+                      console.log('Login data:', data);
+                      loginMutation.mutate(data);
+                    })}
                     className="space-y-4"
                   >
                     <FormField
@@ -103,7 +106,11 @@ export default function AuthPage() {
                             {t('auth.username')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
-                            <Input className="bg-white/80 border-gray-200 text-gray-900" {...field} />
+                            <Input 
+                              className="bg-white/80 border-gray-200 text-gray-900" 
+                              placeholder="admin"
+                              {...field} 
+                            />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -122,6 +129,7 @@ export default function AuthPage() {
                               <Input 
                                 type={showLoginPassword ? "text" : "password"} 
                                 className="bg-white/80 border-gray-200 text-gray-900 pr-10" 
+                                placeholder="admin123"
                                 {...field} 
                               />
                             </FormControl>
@@ -149,6 +157,10 @@ export default function AuthPage() {
                       ) : null}
                       {t('auth.login')}
                     </Button>
+
+                    <div className="text-sm text-center text-gray-500 mt-2">
+                      Credenciais de teste: admin / admin123
+                    </div>
                   </form>
                 </Form>
               </TabsContent>

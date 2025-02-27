@@ -116,25 +116,6 @@ export function setupAuth(app: Express) {
     }
   });
 
-  app.post("/api/login", (req, res, next) => {
-    passport.authenticate("local", (err: any, user: any, info: any) => {
-      if (err) {
-        return res.status(500).json({ message: "Erro interno do servidor" });
-      }
-
-      if (!user) {
-        return res.status(401).json({ message: info?.message || "Falha na autenticação" });
-      }
-
-      req.login(user, (err) => {
-        if (err) {
-          return res.status(500).json({ message: "Erro ao criar sessão" });
-        }
-        res.json(user);
-      });
-    })(req, res, next);
-  });
-
   app.post("/api/register", async (req, res) => {
     try {
       const existingUser = await storage.getUserByUsername(req.body.username);
@@ -152,6 +133,25 @@ export function setupAuth(app: Express) {
     } catch (error) {
       res.status(500).json({ message: "Erro interno do servidor" });
     }
+  });
+
+  app.post("/api/login", (req, res, next) => {
+    passport.authenticate("local", (err: any, user: any, info: any) => {
+      if (err) {
+        return res.status(500).json({ message: "Erro interno do servidor" });
+      }
+
+      if (!user) {
+        return res.status(401).json({ message: info?.message || "Falha na autenticação" });
+      }
+
+      req.login(user, (err) => {
+        if (err) {
+          return res.status(500).json({ message: "Erro ao criar sessão" });
+        }
+        res.json(user);
+      });
+    })(req, res, next);
   });
 
   app.post("/api/logout", (req, res) => {
