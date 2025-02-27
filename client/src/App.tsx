@@ -8,6 +8,7 @@ import AuthPage from "@/pages/auth-page";
 import HomePage from "@/pages/home-page";
 import PostJob from "@/pages/post-job";
 import Jobs from "@/pages/jobs";
+import Settings from "@/pages/settings";
 import PasswordReset from "@/pages/password-reset";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
@@ -25,6 +26,7 @@ function Router() {
           <Route path="/password-reset" component={PasswordReset} />
           <ProtectedRoute path="/post-job" component={PostJob} />
           <ProtectedRoute path="/jobs" component={Jobs} />
+          <ProtectedRoute path="/settings" component={Settings} />
           <Route component={NotFound} />
         </Switch>
       </PageTransition>

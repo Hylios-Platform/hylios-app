@@ -1,4 +1,4 @@
-import { pgTable, text, serial, integer, boolean, jsonb, timestamp } from "drizzle-orm/pg-core";
+import { pgTable, text, serial, integer, boolean, jsonb, timestamp, decimal } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
 
@@ -11,6 +11,9 @@ export const users = pgTable("users", {
   kycData: jsonb("kyc_data"),
   companyName: text("company_name"),
   profileData: jsonb("profile_data"),
+  walletAddress: text("wallet_address"),
+  walletBalance: decimal("wallet_balance").default("0"),
+  companyCredits: decimal("company_credits").default("0"), // Only for companies
   // Gamification fields
   level: integer("level").notNull().default(1),
   points: integer("points").notNull().default(0),
