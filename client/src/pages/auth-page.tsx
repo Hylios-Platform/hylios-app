@@ -28,10 +28,9 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { useLocation } from "wouter";
+import { useLocation, Link } from "wouter";
 import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
-
 
 // Atualizando o schema de validação
 const authSchema = insertUserSchema.extend({
@@ -203,6 +202,12 @@ export default function AuthPage() {
                       )}
                       {t('auth.login')}
                     </Button>
+
+                    <div className="text-center mt-4">
+                      <Link href="/password-reset" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
+                        {t('auth.forgotPassword')}
+                      </Link>
+                    </div>
                   </form>
                 </Form>
               </TabsContent>
