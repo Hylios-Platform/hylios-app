@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useLocation } from "wouter";
-import { Bitcoin, Eye, EyeOff } from "lucide-react";
+import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
 import {
   Select,
   SelectContent,
@@ -91,9 +91,7 @@ export default function AuthPage() {
               <TabsContent value="login">
                 <Form {...loginForm}>
                   <form
-                    onSubmit={loginForm.handleSubmit((data) =>
-                      loginMutation.mutate(data)
-                    )}
+                    onSubmit={loginForm.handleSubmit((data) => loginMutation.mutate(data))}
                     className="space-y-4"
                   >
                     <FormField
@@ -146,6 +144,9 @@ export default function AuthPage() {
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
+                      {loginMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : null}
                       {t('auth.login')}
                     </Button>
                   </form>
@@ -255,6 +256,9 @@ export default function AuthPage() {
                       className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
                       disabled={registerMutation.isPending}
                     >
+                      {registerMutation.isPending ? (
+                        <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                      ) : null}
                       {t('auth.register')}
                     </Button>
                   </form>
