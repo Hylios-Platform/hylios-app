@@ -42,7 +42,40 @@
   },
   "common": {
     "confirm": "Confirmar",
-    "cancel": "Cancelar"
+    "cancel": "Cancelar",
+    "save": "Salvar",
+    "edit": "Editar"
+  },
+  "settings": {
+    "title": "Configurações",
+    "profile": {
+      "title": "Informações do Perfil",
+      "fullName": "Nome Completo",
+      "bio": "Biografia",
+      "location": "Localização",
+      "skills": "Habilidades",
+      "saveSuccess": "Perfil atualizado com sucesso"
+    },
+    "notifications": {
+      "title": "Configurações de Notificação",
+      "newJobs": "Novos Trabalhos",
+      "newJobsDescription": "Receber notificações sobre novas oportunidades de trabalho",
+      "applicationStatus": "Status de Candidatura",
+      "applicationStatusDescription": "Atualizações sobre suas candidaturas",
+      "payments": "Pagamentos",
+      "paymentsDescription": "Notificações sobre pagamentos recebidos",
+      "messages": "Mensagens",
+      "messagesDescription": "Notificações de novas mensagens",
+      "saveSuccess": "Configurações de notificação atualizadas"
+    },
+    "jobHistory": {
+      "title": "Histórico de Trabalhos",
+      "noJobs": "Nenhum trabalho encontrado no histórico",
+      "status": "Status",
+      "amount": "Valor",
+      "date": "Data",
+      "loading": "Carregando..."
+    }
   },
   "passwordReset": {
     "title": "Recuperação de Senha",

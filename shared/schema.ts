@@ -11,6 +11,7 @@ export const users = pgTable("users", {
   kycData: jsonb("kyc_data"),
   companyName: text("company_name"),
   profileData: jsonb("profile_data"),
+  notificationSettings: jsonb("notification_settings"),
   walletAddress: text("wallet_address"),
   walletBalance: decimal("wallet_balance").default("0"),
   companyCredits: decimal("company_credits").default("0"), // Only for companies

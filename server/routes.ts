@@ -3,8 +3,15 @@ import { createServer, type Server } from "http";
 import { setupAuth } from "./auth";
 import { storage } from "./storage";
 import { insertJobSchema, kycSchema } from "@shared/schema";
+import cors from "cors";
 
 export async function registerRoutes(app: Express): Promise<Server> {
+  // Configuração do CORS
+  app.use(cors({
+    origin: true, // Permite requisições da mesma origem
+    credentials: true // Permite o envio de cookies
+  }));
+
   setupAuth(app);
 
   // Middleware de logging para todas as requisições
@@ -256,6 +263,64 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       const updatedJob = await storage.processJobPayment(job.id);
       res.json(updatedJob);
+    } catch (error) {
+      res.status(400).json({ error: String(error) });
+    }
+  });
+
+  /**
+   * Atualizar perfil do usuário
+   * POST /api/profile
+   * Requer: Usuário autenticado
+   * Body: fullName, bio, location, skills
+   */
+  app.post("/api/profile", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
+
+    try {
+      const user = await storage.updateUser(req.user.id, {
+        profileData: req.body
+      });
+      res.json(user);
+    } catch (error) {
+      res.status(400).json({ error: String(error) });
+    }
+  });
+
+  /**
+   * Buscar histórico de trabalhos do usuário
+   * GET /api/jobs/history
+   * Requer: Usuário autenticado
+   */
+  app.get("/api/jobs/history", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
+
+    try {
+      const jobs = await storage.getJobs();
+      const userJobs = jobs.filter(job => 
+        job.assignedTo === req.user.id || 
+        (req.user.userType === "company" && job.companyId === req.user.id)
+      );
+      res.json(userJobs);
+    } catch (error) {
+      res.status(400).json({ error: String(error) });
+    }
+  });
+
+  /**
+   * Atualizar configurações de notificação
+   * POST /api/notifications/settings
+   * Requer: Usuário autenticado
+   * Body: Record<string, boolean> - configurações de notificação
+   */
+  app.post("/api/notifications/settings", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).json({ error: "Usuário não autenticado" });
+
+    try {
+      const user = await storage.updateUser(req.user.id, {
+        notificationSettings: req.body
+      });
+      res.json(user);
     } catch (error) {
       res.status(400).json({ error: String(error) });
     }
