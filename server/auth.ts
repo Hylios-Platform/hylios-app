@@ -18,10 +18,12 @@ export function setupAuth(app: Express) {
     saveUninitialized: false,
     store: storage.sessionStore,
     cookie: {
-      secure: false,
+      secure: false, // set to true in production with HTTPS
       httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000 // 24 horas
-    }
+      maxAge: 24 * 60 * 60 * 1000, // 24 horas
+      sameSite: 'lax'
+    },
+    name: 'hylios.sid' // nome personalizado para o cookie
   };
 
   app.use(session(sessionSettings));
