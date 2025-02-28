@@ -54,7 +54,11 @@
   },
   "navigation": {
     "jobs": "Jobs",
-    "postJob": "Post Job"
+    "postJob": "Post Job",
+    "payments": "Payments",
+    "pitch": "Pitch",
+    "settings": "Settings",
+    "wallet": "Wallet"
   },
   "home": {
     "welcome": "Welcome to Hylios",
