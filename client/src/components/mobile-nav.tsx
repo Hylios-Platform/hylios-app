@@ -12,10 +12,9 @@ export function MobileNav() {
   const { t } = useTranslation();
 
   const menuItems = [
-    { href: "/jobs", label: t('navigation.jobs') },
+    { href: "/wallet", label: t('navigation.wallet') },
     { href: "/post-job", label: t('navigation.postJob') },
     { href: "/payments", label: t('navigation.payments') },
-    { href: "/pitch", label: t('navigation.pitch') },
     { href: "/settings", label: t('navigation.settings') },
   ];
 
