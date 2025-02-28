@@ -1,12 +1,24 @@
 import { Express, Request, Response } from "express";
-import { storage } from "./storage";
-import jwt from "jsonwebtoken";
+import passport from "passport";
+import { Strategy as LocalStrategy } from "passport-local";
+import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
+import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
+import cors from "cors";
+import cookieParser from "cookie-parser";
+
+declare global {
+  namespace Express {
+    interface User extends SelectUser {}
+    interface Request {
+      user?: SelectUser;
+    }
+  }
+}
 
 const scryptAsync = promisify(scrypt);
-const JWT_SECRET = process.env.JWT_SECRET || 'temp-dev-secret';
 
 async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
@@ -21,46 +33,68 @@ async function comparePasswords(supplied: string, stored: string) {
   return timingSafeEqual(hashedBuf, suppliedBuf);
 }
 
-function generateToken(user: SelectUser) {
-  return jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
-}
-
-export async function authenticateToken(req: Request, res: Response, next: Function) {
-  try {
-    const authHeader = req.headers['authorization'];
-    const token = authHeader && authHeader.split(' ')[1];
-
-    console.log('[Auth] Token recebido:', token ? 'presente' : 'ausente');
-
-    if (!token) {
-      return res.sendStatus(401);
-    }
-
-    const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
-    console.log('[Auth] Token decodificado:', decoded);
-
-    const user = await storage.getUser(decoded.id);
-    console.log('[Auth] Usuário encontrado:', user ? 'sim' : 'não');
-
-    if (!user) {
-      return res.sendStatus(401);
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    console.error('[Auth] Erro na autenticação:', error);
-    return res.sendStatus(401);
-  }
-}
-
 export function setupAuth(app: Express) {
-  // Registro
-  app.post("/api/register", async (req, res) => {
+  app.use(cors({
+    origin: true,
+    credentials: true,
+  }));
+  app.use(cookieParser());
+  app.use(session({ secret: process.env.SESSION_SECRET || 'temp-dev-secret', resave: false, saveUninitialized: false }));
+  // Setup do Passport
+  app.use(passport.initialize());
+  app.use(passport.session());
+
+  passport.use(
+    new LocalStrategy(async (username, password, done) => {
+      try {
+        console.log('[Auth] Tentativa de login:', username);
+        const user = await storage.getUserByUsername(username);
+
+        if (!user) {
+          console.log('[Auth] Usuário não encontrado');
+          return done(null, false, { message: "Usuário não encontrado" });
+        }
+
+        const isValidPassword = await comparePasswords(password, user.password);
+        if (!isValidPassword) {
+          console.log('[Auth] Senha incorreta');
+          return done(null, false, { message: "Senha incorreta" });
+        }
+
+        console.log('[Auth] Login bem-sucedido:', user.username);
+        return done(null, user);
+      } catch (error) {
+        console.error('[Auth] Erro na autenticação:', error);
+        return done(error);
+      }
+    })
+  );
+
+  passport.serializeUser((user, done) => {
+    console.log('[Auth] Serializando usuário:', user.id);
+    done(null, user.id);
+  });
+
+  passport.deserializeUser(async (id: number, done) => {
+    try {
+      console.log('[Auth] Desserializando usuário:', id);
+      const user = await storage.getUser(id);
+      if (!user) {
+        console.log('[Auth] Usuário não encontrado na desserialização');
+        return done(null, false);
+      }
+      console.log('[Auth] Usuário desserializado com sucesso:', user.username);
+      done(null, user);
+    } catch (error) {
+      console.error('[Auth] Erro na desserialização:', error);
+      done(error);
+    }
+  });
+
+  app.post("/api/register", async (req, res, next) => {
     try {
       console.log('[Auth] Tentativa de registro:', req.body.username);
       const existingUser = await storage.getUserByUsername(req.body.username);
-
       if (existingUser) {
         console.log('[Auth] Usuário já existe');
         return res.status(400).json({ message: "Username already exists" });
@@ -72,52 +106,60 @@ export function setupAuth(app: Express) {
       });
 
       console.log('[Auth] Usuário registrado com sucesso:', user.username);
-      const token = generateToken(user);
-      res.status(201).json({ user, token });
+      req.login(user, (err) => {
+        if (err) {
+          console.error('[Auth] Erro ao iniciar sessão após registro:', err);
+          return next(err);
+        }
+        res.status(201).json(user);
+      });
     } catch (error) {
       console.error('[Auth] Erro no registro:', error);
-      res.status(500).json({ message: "Internal server error" });
+      next(error);
     }
   });
 
-  // Login
-  app.post("/api/login", async (req, res) => {
-    try {
-      console.log('[Auth] Tentativa de login:', req.body.username);
-      const user = await storage.getUserByUsername(req.body.username);
-
+  app.post("/api/login", (req, res, next) => {
+    console.log('[Auth] Tentativa de login recebida:', req.body);
+    passport.authenticate("local", (err, user, info) => {
+      if (err) {
+        console.error('[Auth] Erro no login:', err);
+        return next(err);
+      }
       if (!user) {
-        console.log('[Auth] Usuário não encontrado');
-        return res.status(401).json({ message: "Invalid credentials" });
+        console.log('[Auth] Login falhou:', info?.message);
+        return res.status(401).json({ message: info?.message });
       }
-
-      const isValidPassword = await comparePasswords(req.body.password, user.password);
-      if (!isValidPassword) {
-        console.log('[Auth] Senha incorreta');
-        return res.status(401).json({ message: "Invalid credentials" });
-      }
-
-      console.log('[Auth] Login bem-sucedido:', user.username);
-      const token = generateToken(user);
-      res.json({ user, token });
-    } catch (error) {
-      console.error('[Auth] Erro no login:', error);
-      res.status(500).json({ message: "Internal server error" });
-    }
+      req.login(user, (err) => {
+        if (err) {
+          console.error('[Auth] Erro ao iniciar sessão:', err);
+          return next(err);
+        }
+        console.log('[Auth] Login bem-sucedido:', user.username);
+        res.json(user);
+      });
+    })(req, res, next);
   });
 
-  // Obter usuário atual
-  app.get("/api/user", authenticateToken, (req, res) => {
-    console.log('[Auth] Retornando dados do usuário:', req.user?.username);
+  app.post("/api/logout", (req, res, next) => {
+    const username = req.user?.username;
+    console.log('[Auth] Tentativa de logout:', username);
+    req.logout((err) => {
+      if (err) {
+        console.error('[Auth] Erro no logout:', err);
+        return next(err);
+      }
+      console.log('[Auth] Logout bem-sucedido:', username);
+      res.sendStatus(200);
+    });
+  });
+
+  app.get("/api/user", (req, res) => {
+    console.log('[Auth] Verificando usuário atual:', req.user?.username || 'não autenticado');
+    if (!req.isAuthenticated()) {
+      console.log('[Auth] Usuário não autenticado');
+      return res.sendStatus(401);
+    }
     res.json(req.user);
   });
-}
-
-// Adicionar tipos para o Express
-declare global {
-  namespace Express {
-    interface Request {
-      user?: SelectUser;
-    }
-  }
 }

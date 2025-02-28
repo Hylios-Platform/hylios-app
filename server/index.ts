@@ -5,6 +5,7 @@ import cors from 'cors';
 import multer from 'multer';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
 import { storage } from "./storage";
 
 const app = express();
@@ -40,60 +41,45 @@ app.use(cors({
     : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: [
-    'Content-Type', 
-    'Authorization', 
-    'Cookie', 
-    'X-Requested-With',
-    'Accept'
-  ]
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
 // Parsers e middlewares essenciais
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de logging detalhado
+// Configuração da sessão
+const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
+app.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  store: storage.sessionStore,
+  name: 'hylios.sid',
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 horas
+    sameSite: 'lax',
+    path: '/'
+  }
+}));
+
+// Middleware de logging
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;
-  let capturedJsonResponse: Record<string, any> | undefined = undefined;
-
-  const originalResJson = res.json;
-  res.json = function (bodyJson, ...args) {
-    capturedJsonResponse = bodyJson;
-    return originalResJson.apply(res, [bodyJson, ...args]);
-  };
+  const method = req.method;
 
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (path.startsWith("/api")) {
-      let logLine = `${req.method} ${path} ${res.statusCode} in ${duration}ms`;
-      if (capturedJsonResponse) {
-        logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
-      }
-
-      // Log detalhado para debugging de autenticação
-      console.log('Authorization header:', req.headers.authorization);
-      console.log('Request headers:', req.headers);
-
-      if (logLine.length > 80) {
-        logLine = logLine.slice(0, 79) + "…";
-      }
-
-      log(logLine);
+      log(`${method} ${path} ${res.statusCode} ${duration}ms`);
     }
   });
 
   next();
 });
-
-// Middleware para processar uploads
-app.use(upload.fields([
-  { name: 'document', maxCount: 1 },
-  { name: 'selfie', maxCount: 1 },
-  { name: 'proofOfAddress', maxCount: 1 }
-]));
 
 // Pasta para arquivos enviados
 app.use('/uploads', express.static('uploads'));
