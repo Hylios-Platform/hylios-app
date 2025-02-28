@@ -10,29 +10,8 @@ import { storage } from "./storage";
 
 const app = express();
 
-// Configuração do multer para upload de arquivos
-const multerStorage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname))
-  }
-});
-
-const upload = multer({ 
-  storage: multerStorage,
-  limits: {
-    fileSize: 5 * 1024 * 1024 // limite de 5MB
-  }
-});
-
 // Configuração básica
 app.set('trust proxy', 1);
-
-// Configuração dos middlewares na ordem correta
-app.use(cookieParser());
 
 // Configuração CORS com configurações corretas para cookies
 app.use(cors({
@@ -45,6 +24,7 @@ app.use(cors({
 }));
 
 // Parsers e middlewares essenciais
+app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
