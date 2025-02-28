@@ -83,10 +83,10 @@ export function WalletButton() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="h-7 px-2 text-xs bg-white hover:bg-blue-50 text-blue-400 border-blue-100"
+        <Button
+          variant="outline"
+          size="sm"
+          className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
         >
           <Wallet className="h-3 w-3 mr-1" />
           {t('wallet.myWallet')}
