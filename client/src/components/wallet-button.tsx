@@ -86,15 +86,15 @@ export function WalletButton() {
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-7 px-2 text-xs bg-white hover:bg-blue-50 text-blue-500 border-blue-200"
+          className="h-7 px-2 text-xs bg-white hover:bg-blue-50 text-blue-400 border-blue-100"
         >
           <Wallet className="h-3 w-3 mr-1" />
           {t('wallet.myWallet')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
+      <DialogContent className="sm:max-w-md w-[95%] sm:w-full mx-auto">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-blue-600">
+          <DialogTitle className="text-lg font-semibold text-blue-400">
             {t('wallet.addWallet')}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
@@ -106,7 +106,7 @@ export function WalletButton() {
             <Input
               {...register("walletAddress")}
               placeholder="Endereço da carteira Bitcoin"
-              className="border-blue-100 focus:border-blue-300 focus:ring-blue-200"
+              className="border-blue-100 focus:border-blue-200 focus:ring-blue-100"
             />
             {errors.walletAddress && (
               <p className="text-xs text-red-500">{errors.walletAddress.message}</p>
@@ -117,7 +117,7 @@ export function WalletButton() {
               type="submit"
               size="sm"
               disabled={mutation.isPending}
-              className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-7"
+              className="bg-blue-400 hover:bg-blue-500 text-white text-xs h-7"
             >
               {mutation.isPending ? "Salvando..." : "Confirmar endereço"}
             </Button>
@@ -125,11 +125,11 @@ export function WalletButton() {
         </form>
 
         {showConfirm && (
-          <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <h4 className="text-sm font-medium text-blue-600 mb-2">
+          <div className="mt-4 p-4 bg-blue-50/50 rounded-lg border border-blue-100">
+            <h4 className="text-sm font-medium text-blue-400 mb-2">
               Confirme seu endereço Bitcoin
             </h4>
-            <p className="text-xs text-blue-500 break-all mb-4">
+            <p className="text-xs text-blue-400 break-all mb-4">
               {currentWalletAddress}
             </p>
             <div className="flex gap-2 justify-end">
@@ -137,14 +137,14 @@ export function WalletButton() {
                 size="sm"
                 variant="outline"
                 onClick={() => setShowConfirm(false)}
-                className="text-xs h-7 text-gray-600 hover:bg-gray-50"
+                className="text-xs h-7 text-gray-600 hover:bg-gray-50 border-gray-200"
               >
                 Cancelar
               </Button>
               <Button
                 size="sm"
                 onClick={confirmSave}
-                className="text-xs h-7 bg-blue-500 hover:bg-blue-600 text-white"
+                className="text-xs h-7 bg-blue-400 hover:bg-blue-500 text-white"
               >
                 Confirmar e Salvar
               </Button>
