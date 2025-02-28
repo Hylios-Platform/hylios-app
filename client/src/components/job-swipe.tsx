@@ -13,7 +13,6 @@ const mockJobs: Job[] = [
     description: "Desenvolvimento de aplicações web modernas usando React e Node.js",
     companyId: 1,
     amount: "6000 EUR (≈0.15 BTC)",
-    currency: "EUR",
     country: "Portugal",
     city: "Lisboa",
     workType: "remote",
@@ -28,7 +27,6 @@ const mockJobs: Job[] = [
     description: "Criação de interfaces intuitivas e experiências memoráveis",
     companyId: 2,
     amount: "5500 EUR (≈0.14 BTC)",
-    currency: "EUR",
     country: "Espanha",
     city: "Barcelona",
     workType: "hybrid",
@@ -43,7 +41,6 @@ const mockJobs: Job[] = [
     description: "Automatização e gerenciamento de infraestrutura cloud",
     companyId: 3,
     amount: "7000 EUR (≈0.18 BTC)",
-    currency: "EUR",
     country: "Alemanha",
     city: "Berlim",
     workType: "onsite",
@@ -57,7 +54,6 @@ const mockJobs: Job[] = [
 export function JobSwipe() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
-  const [dragPosition, setDragPosition] = useState(0);
 
   const currentJob = mockJobs[currentIndex];
 
@@ -120,47 +116,14 @@ export function JobSwipe() {
             transition={{
               type: "spring",
               stiffness: 300,
-              damping: 30,
-              opacity: { duration: 0.2 }
+              damping: 30
             }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={handleDragEnd}
-            onDrag={(e, { offset }) => {
-              setDragPosition(offset.x);
-            }}
-            whileDrag={{
-              scale: 1.02,
-              cursor: "grabbing"
-            }}
-            style={{
-              rotateZ: dragPosition * 0.05
-            }}
           >
-            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-gray-50 border-gray-100 shadow-lg hover:shadow-xl transition-shadow relative">
-              {/* Indicadores de Match/Skip */}
-              <motion.div
-                className="absolute top-4 right-4 bg-emerald-500 text-white px-3 py-1 rounded-full text-sm font-medium"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{
-                  opacity: dragPosition < -50 ? 1 : 0,
-                  scale: dragPosition < -50 ? 1 : 0.8
-                }}
-              >
-                Match!
-              </motion.div>
-              <motion.div
-                className="absolute top-4 left-4 bg-rose-500 text-white px-3 py-1 rounded-full text-sm font-medium"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{
-                  opacity: dragPosition > 50 ? 1 : 0,
-                  scale: dragPosition > 50 ? 1 : 0.8
-                }}
-              >
-                Skip
-              </motion.div>
-
+            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-gray-50 border-gray-100 shadow-lg hover:shadow-xl transition-shadow">
               <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-indigo-50">
                 <CardTitle className="text-xl font-bold text-gray-800">{currentJob.title}</CardTitle>
                 <div className="flex items-center gap-2 text-gray-600">
