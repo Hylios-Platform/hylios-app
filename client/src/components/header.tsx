@@ -15,12 +15,12 @@ export default function Header() {
   const isAuthPage = location === '/auth' || location === '/password-reset';
 
   return (
-    <header className="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm"> {/* Enhanced header gradient */}
+    <header className="bg-gradient-to-r from-blue-50 to-blue-100/30 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-xl font-bold">
             <Link href="/">
-              <span className="bg-gradient-to-r from-sky-400 via-blue-500 to-indigo-600 bg-clip-text text-transparent hover:from-sky-500 hover:via-blue-600 hover:to-indigo-700 transition-colors cursor-pointer"> {/* Enhanced logo gradient */}
+              <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-600 transition-colors cursor-pointer">
                 Hylios
               </span>
             </Link>
