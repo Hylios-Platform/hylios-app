@@ -25,19 +25,18 @@ const upload = multer({
   }
 });
 
-// Middleware para processar uploads
-app.use(upload.fields([
-  { name: 'document', maxCount: 1 },
-  { name: 'selfie', maxCount: 1 },
-  { name: 'proofOfAddress', maxCount: 1 }
-]));
-
 // Configuração básica
 app.set('trust proxy', 1);
+
+// Configuração CORS antes de tudo
 app.use(cors({
   origin: true,
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
+
+// Parsers e middlewares essenciais
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -63,6 +62,8 @@ app.use((req, res, next) => {
       console.log(`Session ID: ${req.sessionID}`);
       console.log(`Is Authenticated: ${req.isAuthenticated()}`);
       console.log(`Current user: ${JSON.stringify(req.user)}`);
+      console.log(`Headers:`, req.headers);
+      console.log(`Cookies:`, req.cookies);
 
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";
@@ -74,6 +75,13 @@ app.use((req, res, next) => {
 
   next();
 });
+
+// Middleware para processar uploads
+app.use(upload.fields([
+  { name: 'document', maxCount: 1 },
+  { name: 'selfie', maxCount: 1 },
+  { name: 'proofOfAddress', maxCount: 1 }
+]));
 
 // Pasta para arquivos enviados
 app.use('/uploads', express.static('uploads'));
