@@ -28,7 +28,8 @@ export default function Header() {
         </div>
 
         {!isAuthPage && (
-          <div className="flex items-center gap-2">
+          <div className="flex items-center justify-between flex-1 ml-6">
+            {/* Menu principal */}
             <nav className="hidden md:flex gap-2">
               <Link href="/jobs">
                 <Button 
@@ -77,6 +78,7 @@ export default function Header() {
               </Link>
             </nav>
 
+            {/* Botões do canto direito */}
             <div className="flex items-center gap-2 ml-3 pl-3 border-l border-white/20 dark:border-slate-700">
               <ThemeToggle />
               <WalletButton />
@@ -92,8 +94,8 @@ export default function Header() {
                 <span className="mr-1">Sair</span>
                 <LogOut className="h-3 w-3" />
               </Button>
+              <MobileNav />
             </div>
-            <MobileNav />
           </div>
         )}
       </div>
