@@ -52,8 +52,17 @@
       "invalidEmail": "Email inválido",
       "ageMin": "Você deve ter pelo menos 18 anos",
       "ageMax": "Idade inválida",
-      "genderRequired": "Sexo é obrigatório"
-    }
+      "genderRequired": "Sexo é obrigatório",
+      "passwordMatch": "As senhas não conferem",
+      "documentMin": "Documento inválido",
+      "documentMax": "Documento inválido",
+      "termsRequired": "Você precisa aceitar os termos para continuar"
+    },
+    "confirmPassword": "Confirmar Senha",
+    "cpf": "CPF",
+    "cnpj": "CNPJ",
+    "acceptTerms": "Aceitar Termos de Uso e Política de Privacidade",
+    "termsDescription": "Ao criar uma conta, você concorda com nossos Termos de Uso e Política de Privacidade."
   },
   "common": {
     "confirm": "Confirmar",

@@ -31,6 +31,7 @@ import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
 import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
+import {Checkbox} from "@/components/ui/checkbox";
 
 // Atualizando o schema de validação
 const authSchema = insertUserSchema.extend({
@@ -40,6 +41,7 @@ const authSchema = insertUserSchema.extend({
   password: z.string()
     .min(6, "auth.errors.passwordMin")
     .max(50, "auth.errors.passwordMax"),
+  confirmPassword: z.string(),
   email: z.string()
     .email("auth.errors.invalidEmail"),
   age: z.number()
@@ -48,8 +50,16 @@ const authSchema = insertUserSchema.extend({
   gender: z.enum(["male", "female"], {
     errorMap: () => ({ message: "auth.errors.genderRequired" })
   }),
+  document: z.string()
+    .min(11, "auth.errors.documentMin")
+    .max(14, "auth.errors.documentMax"),
   companyName: z.string().optional()
     .refine((val) => val !== undefined && val !== "" || true, "auth.errors.companyNameRequired"),
+  acceptTerms: z.boolean()
+    .refine((val) => val === true, "auth.errors.termsRequired"),
+}).refine((data) => data.password === data.confirmPassword, {
+  message: "auth.errors.passwordMatch",
+  path: ["confirmPassword"],
 });
 
 type RegisterData = z.infer<typeof authSchema>;
@@ -76,11 +86,14 @@ export default function AuthPage() {
     defaultValues: {
       username: "",
       password: "",
+      confirmPassword: "",
       email: "",
       age: undefined,
       gender: undefined,
+      document: "",
       userType: "professional",
       companyName: "",
+      acceptTerms: false,
     },
   });
 
@@ -274,7 +287,7 @@ export default function AuthPage() {
                               type="number"
                               className="bg-white/80 border-gray-200 text-gray-900"
                               {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value))}
+                              onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
                             />
                           </FormControl>
                           <FormMessage />
@@ -340,6 +353,60 @@ export default function AuthPage() {
                         </FormItem>
                       )}
                     />
+                    <FormField
+                      control={registerForm.control}
+                      name="confirmPassword"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.confirmPassword')} <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <div className="relative">
+                            <FormControl>
+                              <Input
+                                type={showRegisterPassword ? "text" : "password"}
+                                className="bg-white/80 border-gray-200 text-gray-900 pr-10"
+                                {...field}
+                              />
+                            </FormControl>
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="icon"
+                              className="absolute right-0 top-0 h-full px-3 text-gray-400 hover:text-gray-600"
+                              onClick={() => setShowRegisterPassword(!showRegisterPassword)}
+                            >
+                              {showRegisterPassword ? (
+                                <EyeOff className="h-4 w-4" />
+                              ) : (
+                                <Eye className="h-4 w-4" />
+                              )}
+                            </Button>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                    <FormField
+                      control={registerForm.control}
+                      name="document"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {registerForm.watch("userType") === "company" ? t('auth.cnpj') : t('auth.cpf')}
+                            <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              className="bg-white/80 border-gray-200 text-gray-900"
+                              {...field}
+                              placeholder={registerForm.watch("userType") === "company" ? "00.000.000/0000-00" : "000.000.000-00"}
+                            />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                     <FormField
                       control={registerForm.control}
@@ -387,6 +454,30 @@ export default function AuthPage() {
                         )}
                       />
                     )}
+
+                    <FormField
+                      control={registerForm.control}
+                      name="acceptTerms"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm text-gray-600">
+                              {t('auth.acceptTerms')} <span className="text-red-500">*</span>
+                            </FormLabel>
+                            <p className="text-xs text-gray-500">
+                              {t('auth.termsDescription')}
+                            </p>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
 
                     <div className="flex flex-col gap-4">
                       <Button
@@ -457,6 +548,9 @@ export default function AuthPage() {
                 <strong>{t('auth.companyName')}:</strong> {registerData?.companyName}
               </div>
             )}
+             <div>
+              <strong>{t('auth.document')}:</strong> {registerData?.document}
+            </div>
           </div>
 
           <div className="flex justify-end gap-4 mt-6">
