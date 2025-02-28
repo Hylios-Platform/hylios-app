@@ -16,8 +16,14 @@ export function useNotifications() {
   useEffect(() => {
     const connectWebSocket = () => {
       try {
+        const token = localStorage.getItem('auth_token');
+        if (!token) {
+          console.log('[WebSocket] Token não encontrado, usuário não autenticado');
+          return;
+        }
+
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-        const wsUrl = `${protocol}//${window.location.host}/ws`;
+        const wsUrl = `${protocol}//${window.location.host}/ws?token=${token}`;
         console.log('[WebSocket] Conectando ao servidor:', wsUrl);
 
         const ws = new WebSocket(wsUrl);

@@ -1,5 +1,8 @@
 import { Server as HttpServer } from "http";
 import { WebSocketServer, WebSocket } from "ws";
+import jwt from "jsonwebtoken";
+import { storage } from "./storage";
+import { URL } from "url";
 
 interface NotificationData {
   type: string;
@@ -7,21 +10,50 @@ interface NotificationData {
   data?: any;
 }
 
+const JWT_SECRET = process.env.JWT_SECRET || 'temp-dev-secret';
+
 export function setupWebSocket(httpServer: HttpServer) {
   const wss = new WebSocketServer({ 
     server: httpServer, 
     path: "/ws",
     clientTracking: true,
-    perMessageDeflate: false
+    perMessageDeflate: false,
+    verifyClient: async (info, callback) => {
+      try {
+        const url = new URL(info.req.url!, `ws://${info.req.headers.host}`);
+        const token = url.searchParams.get('token');
+
+        if (!token) {
+          console.log("[WebSocket] Token não fornecido na conexão");
+          callback(false, 401, "Unauthorized");
+          return;
+        }
+
+        const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
+        const user = await storage.getUser(decoded.id);
+
+        if (!user) {
+          console.log("[WebSocket] Usuário não encontrado");
+          callback(false, 401, "Unauthorized");
+          return;
+        }
+
+        // Adiciona o usuário ao request para uso posterior
+        (info.req as any).user = user;
+        callback(true);
+      } catch (error) {
+        console.error("[WebSocket] Erro na verificação do cliente:", error);
+        callback(false, 401, "Unauthorized");
+      }
+    }
   });
 
   console.log("[WebSocket] Servidor WebSocket iniciado na rota /ws");
 
   wss.on("connection", (ws, request) => {
     console.log("[WebSocket] Nova conexão estabelecida");
-    console.log("[WebSocket] Headers:", request.headers);
-    console.log("[WebSocket] URL:", request.url);
-    console.log("[WebSocket] Origin:", request.headers.origin);
+    const user = (request as any).user;
+    console.log("[WebSocket] Usuário conectado:", user.username);
 
     // Enviar mensagem de boas-vindas
     ws.send(JSON.stringify({
@@ -98,4 +130,11 @@ export function setupWebSocket(httpServer: HttpServer) {
   }
 
   return { wss, broadcast };
+}
+
+// Estender o tipo WebSocket para incluir isAlive
+declare module 'ws' {
+  interface WebSocket {
+    isAlive: boolean;
+  }
 }

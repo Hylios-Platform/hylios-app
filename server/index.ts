@@ -5,7 +5,6 @@ import cors from 'cors';
 import multer from 'multer';
 import path from 'path';
 import cookieParser from 'cookie-parser';
-import session from 'express-session';
 import { storage } from "./storage";
 
 const app = express();
@@ -54,23 +53,6 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração da sessão antes do passport
-const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
-app.use(session({
-  secret: sessionSecret,
-  resave: false,
-  saveUninitialized: false,
-  store: storage.sessionStore,
-  name: 'hylios.sid',
-  cookie: {
-    secure: process.env.NODE_ENV === 'production',
-    httpOnly: true,
-    maxAge: 24 * 60 * 60 * 1000, // 24 horas
-    sameSite: 'lax',
-    path: '/'
-  }
-}));
-
 // Middleware de logging detalhado
 app.use((req, res, next) => {
   const start = Date.now();
@@ -90,11 +72,10 @@ app.use((req, res, next) => {
       if (capturedJsonResponse) {
         logLine += ` :: ${JSON.stringify(capturedJsonResponse)}`;
       }
-      console.log(`Session ID: ${req.sessionID}`);
-      console.log(`Is Authenticated: ${req.isAuthenticated()}`);
-      console.log(`Current user: ${JSON.stringify(req.user)}`);
-      console.log(`Headers:`, req.headers);
-      console.log(`Cookies:`, req.cookies);
+
+      // Log detalhado para debugging de autenticação
+      console.log('Authorization header:', req.headers.authorization);
+      console.log('Request headers:', req.headers);
 
       if (logLine.length > 80) {
         logLine = logLine.slice(0, 79) + "…";

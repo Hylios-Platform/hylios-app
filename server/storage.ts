@@ -1,92 +1,40 @@
-import { users, type User, type InsertUser } from "@shared/schema";
-import { db } from "./db";
-import { eq } from "drizzle-orm";
-import session from "express-session";
-import connectPg from "connect-pg-simple";
-import { pool } from "./db";
-
-const PostgresSessionStore = connectPg(session);
+import { User as SelectUser, InsertUser } from "@shared/schema";
 
 export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUser(id: number, data: Partial<User>): Promise<User>;
-
-  // Session store
-  sessionStore: session.Store;
+  getUser(id: number): Promise<SelectUser | undefined>;
+  getUserByUsername(username: string): Promise<SelectUser | undefined>;
+  createUser(user: InsertUser): Promise<SelectUser>;
 }
 
-export class DatabaseStorage implements IStorage {
-  sessionStore: session.Store;
+// Armazenamento temporário em memória
+export class MemStorage implements IStorage {
+  private users: SelectUser[] = [];
+  private currentId = 1;
 
-  constructor() {
-    this.sessionStore = new PostgresSessionStore({
-      pool,
-      createTableIfMissing: true,
-      tableName: 'session',
-      // Adicionar configurações de erro e reconexão
-      errorLog: console.error,
-      pruneSessionInterval: 60 * 15 // Limpar sessões expiradas a cada 15 minutos
-    });
+  async getUser(id: number): Promise<SelectUser | undefined> {
+    return this.users.find(u => u.id === id);
   }
 
-  async getUser(id: number): Promise<User | undefined> {
-    try {
-      const [user] = await db.select().from(users).where(eq(users.id, id));
-      return user;
-    } catch (error) {
-      console.error('Erro ao buscar usuário por ID:', error);
-      return undefined;
-    }
+  async getUserByUsername(username: string): Promise<SelectUser | undefined> {
+    return this.users.find(u => u.username === username);
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    try {
-      const [user] = await db.select().from(users).where(eq(users.username, username));
-      return user;
-    } catch (error) {
-      console.error('Erro ao buscar usuário por username:', error);
-      return undefined;
-    }
-  }
-
-  async createUser(insertUser: InsertUser): Promise<User> {
-    try {
-      const [user] = await db
-        .insert(users)
-        .values({
-          ...insertUser,
-          kycStatus: "pending",
-          kycData: null,
-          profileData: null,
-          level: 1,
-          points: 0,
-          experience: 0
-        })
-        .returning();
-      return user;
-    } catch (error) {
-      console.error('Erro ao criar usuário:', error);
-      throw error;
-    }
-  }
-
-  async updateUser(id: number, data: Partial<User>): Promise<User> {
-    try {
-      const [user] = await db
-        .update(users)
-        .set(data)
-        .where(eq(users.id, id))
-        .returning();
-      if (!user) throw new Error("User not found");
-      return user;
-    } catch (error) {
-      console.error('Erro ao atualizar usuário:', error);
-      throw error;
-    }
+  async createUser(insertUser: InsertUser): Promise<SelectUser> {
+    const user: SelectUser = {
+      id: this.currentId++,
+      ...insertUser,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      kycStatus: "pending",
+      kycData: null,
+      profileData: null,
+      level: 1,
+      points: 0,
+      experience: 0
+    };
+    this.users.push(user);
+    return user;
   }
 }
 
-export const storage = new DatabaseStorage();
+export const storage = new MemStorage();

@@ -12,31 +12,39 @@ type RequestOptions = {
   onUploadProgress?: (progressEvent: { loaded: number; total: number; lengthComputable: boolean }) => void;
 };
 
+function getAuthToken() {
+  return localStorage.getItem('auth_token');
+}
+
 export async function apiRequest(
   method: string,
   url: string,
   data?: unknown | undefined,
   options: RequestOptions = {}
 ): Promise<Response> {
+  const headers: Record<string, string> = {
+    "Accept": "application/json"
+  };
+
+  if (!(data instanceof FormData)) {
+    headers["Content-Type"] = "application/json";
+  }
+
+  const token = getAuthToken();
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
   console.log(`[API] Fazendo requisição ${method} para ${url}`);
-  console.log('[API] Headers:', {
-    'Content-Type': data instanceof FormData ? undefined : 'application/json',
-    'Credentials': 'include'
-  });
+  console.log('[API] Headers:', headers);
 
   const res = await fetch(url, {
     method,
-    headers: data instanceof FormData ? {} : { 
-      "Content-Type": "application/json",
-      "Accept": "application/json"
-    },
-    body: data instanceof FormData ? data : data ? JSON.stringify(data) : undefined,
-    credentials: "include", // Importante: envia cookies de autenticação
+    headers,
+    body: data instanceof FormData ? data : data ? JSON.stringify(data) : undefined
   });
 
   console.log('[API] Resposta status:', res.status);
-  console.log('[API] Resposta headers:', Object.fromEntries(res.headers.entries()));
-
   await throwIfResNotOk(res);
   return res;
 }
@@ -47,13 +55,17 @@ export const getQueryFn: <T>(options: {
 }) => QueryFunction<T> =
   ({ on401: unauthorizedBehavior }) =>
   async ({ queryKey }) => {
+    const headers: Record<string, string> = {
+      "Accept": "application/json"
+    };
+
+    const token = getAuthToken();
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
+    }
+
     console.log(`[API] Fazendo consulta para ${queryKey[0]}`);
-    const res = await fetch(queryKey[0] as string, {
-      credentials: "include", // Importante: envia cookies de autenticação
-      headers: {
-        "Accept": "application/json"
-      }
-    });
+    const res = await fetch(queryKey[0] as string, { headers });
 
     console.log(`[API] Status da resposta: ${res.status}`);
     if (unauthorizedBehavior === "returnNull" && res.status === 401) {

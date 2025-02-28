@@ -35,7 +35,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
       const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const data = await res.json();
+      // Armazenar o token JWT
+      localStorage.setItem('auth_token', data.token);
+      return data.user;
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -52,7 +55,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
       const res = await apiRequest("POST", "/api/register", credentials);
-      return await res.json();
+      const data = await res.json();
+      // Armazenar o token JWT
+      localStorage.setItem('auth_token', data.token);
+      return data.user;
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -68,10 +74,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      await apiRequest("POST", "/api/logout");
+      // Remover token JWT
+      localStorage.removeItem('auth_token');
+      queryClient.setQueryData(["/api/user"], null);
     },
     onSuccess: () => {
-      queryClient.setQueryData(["/api/user"], null);
       window.location.href = "/auth";
     },
     onError: (error: Error) => {
