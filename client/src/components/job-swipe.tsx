@@ -95,7 +95,7 @@ export function JobSwipe() {
   return (
     <div className="w-full max-w-md mx-auto p-4">
       <div className="relative h-[500px] w-full">
-        <AnimatePresence initial={false}>
+        <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentIndex}
             className="absolute w-full h-full"
@@ -125,10 +125,14 @@ export function JobSwipe() {
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
             onDragEnd={handleDragEnd}
+            whileDrag={{ scale: 1.02 }}
+            whileHover={{ scale: 1.02 }}
           >
-            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-gray-50 border-blue-50 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-blue-100/50">
-                <CardTitle className="text-xl font-bold text-gray-800">{currentJob.title}</CardTitle>
+            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-blue-50/20 border-blue-50 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-blue-100/30">
+                <CardTitle className="text-xl font-bold text-gray-800">
+                  {currentJob.title}
+                </CardTitle>
                 <div className="flex items-center gap-2 text-gray-600">
                   <Building2 className="h-4 w-4 text-blue-400" />
                   <span>Empresa {currentJob.companyId}</span>
@@ -169,7 +173,7 @@ export function JobSwipe() {
                     {currentJob.requiredSkills?.map((skill) => (
                       <span
                         key={skill}
-                        className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium border border-blue-100"
+                        className="px-2 py-1 bg-blue-50 text-blue-500 rounded-full text-sm font-medium border border-blue-100 hover:bg-blue-100 transition-colors"
                       >
                         {skill}
                       </span>
@@ -181,8 +185,13 @@ export function JobSwipe() {
                   <p className="text-sm text-blue-400">
                     <span className="font-medium">Match Score:</span> 85%
                   </p>
-                  <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
-                    <div className="w-[85%] h-full bg-blue-400 rounded-full" />
+                  <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                    <motion.div 
+                      className="h-full bg-blue-400 rounded-full"
+                      initial={{ width: 0 }}
+                      animate={{ width: "85%" }}
+                      transition={{ duration: 0.8, ease: "easeOut" }}
+                    />
                   </div>
                 </div>
               </CardContent>
@@ -212,11 +221,14 @@ export function JobSwipe() {
 
       <div className="mt-4 flex justify-center gap-2">
         {mockJobs.map((_, index) => (
-          <div
+          <motion.div
             key={index}
             className={`w-2 h-2 rounded-full transition-colors duration-200 ${
               index === currentIndex ? "bg-blue-400" : "bg-gray-200"
             }`}
+            initial={{ scale: 0.8 }}
+            animate={{ scale: index === currentIndex ? 1.2 : 1 }}
+            transition={{ duration: 0.2 }}
           />
         ))}
       </div>

@@ -14,12 +14,12 @@ export default function Header() {
   const isAuthPage = location === '/auth' || location === '/password-reset';
 
   return (
-    <header className="bg-blue-50 border-b border-blue-100 dark:bg-slate-900 dark:border-slate-800">
+    <header className="bg-gradient-to-r from-blue-50 to-blue-100/30 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-xl font-bold">
             <Link href="/">
-              <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent hover:from-blue-500 hover:to-violet-500 transition-colors cursor-pointer">
+              <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-600 transition-colors cursor-pointer">
                 Hylios
               </span>
             </Link>
@@ -33,7 +33,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.jobs')}
                 </Button>
@@ -42,7 +42,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.postJob')}
                 </Button>
@@ -51,7 +51,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.payments')}
                 </Button>
@@ -68,7 +68,7 @@ export default function Header() {
                 variant="ghost"
                 size="sm"
                 onClick={() => logoutMutation.mutate()}
-                className="h-7 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20"
+                className="h-7 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
               >
                 <span className="mr-1">Sair</span>
                 <LogOut className="h-3 w-3" />

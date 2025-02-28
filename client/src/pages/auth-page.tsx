@@ -30,7 +30,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
-import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
+import { Bitcoin, Eye, EyeOff, Loader2, Shield, Users, Wallet } from "lucide-react";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
 import {Checkbox} from "@/components/ui/checkbox";
 
@@ -130,13 +130,14 @@ export default function AuthPage() {
   }
 
   return (
-    <div className="min-h-screen grid md:grid-cols-2 bg-white">
+    <div className="min-h-screen grid md:grid-cols-2 bg-gradient-to-br from-white via-blue-50/30 to-blue-100/20">
       <motion.div
         className="flex items-center justify-center p-8"
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut" }}
       >
-        <Card className="w-full max-w-md border-blue-50 bg-white shadow-lg">
+        <Card className="w-full max-w-md border-blue-50 bg-white/80 backdrop-blur-sm shadow-lg hover:shadow-xl transition-all duration-300">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
               <Bitcoin className="h-6 w-6 text-amber-400" />
@@ -149,12 +150,12 @@ export default function AuthPage() {
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <Tabs defaultValue="login">
+            <Tabs defaultValue="login" className="relative">
               <TabsList className="grid w-full grid-cols-2 mb-6">
-                <TabsTrigger value="login" className="px-4 py-2 text-sm">
+                <TabsTrigger value="login" className="data-[state=active]:bg-blue-400 data-[state=active]:text-white">
                   {t('auth.login')}
                 </TabsTrigger>
-                <TabsTrigger value="register" className="px-4 py-2 text-sm">
+                <TabsTrigger value="register" className="data-[state=active]:bg-blue-400 data-[state=active]:text-white">
                   {t('auth.register')}
                 </TabsTrigger>
               </TabsList>
@@ -615,17 +616,64 @@ export default function AuthPage() {
       </motion.div>
 
       <motion.div
-        className="hidden md:flex flex-col justify-center p-16"
+        className="hidden md:flex flex-col justify-center p-16 bg-gradient-to-br from-blue-400/5 via-blue-400/10 to-blue-500/5"
         initial={{ opacity: 0, x: 20 }}
         animate={{ opacity: 1, x: 0 }}
+        transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
       >
-        <div className="max-w-md">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
+        <div className="max-w-md space-y-8">
+          <motion.h1 
+            className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent"
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             {t('home.findWork')}
-          </h1>
-          <p className="text-xl text-blue-400">
+          </motion.h1>
+
+          <motion.p 
+            className="text-xl text-blue-400"
+            initial={{ y: 20 }}
+            animate={{ y: 0 }}
+            transition={{ duration: 0.5, delay: 0.6 }}
+          >
             {t('home.description')}
-          </p>
+          </motion.p>
+
+          <div className="grid grid-cols-2 gap-6 mt-12">
+            <motion.div
+              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.8 }}
+            >
+              <Shield className="h-8 w-8 text-blue-400 mb-2" />
+              <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.secure')}</h3>
+              <p className="text-sm text-gray-600">Blockchain e criptografia avançada para suas transações</p>
+            </motion.div>
+
+            <motion.div
+              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+            >
+              <Users className="h-8 w-8 text-blue-400 mb-2" />
+              <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.verified')}</h3>
+              <p className="text-sm text-gray-600">Profissionais e empresas verificados</p>
+            </motion.div>
+
+            <motion.div
+              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.2 }}
+            >
+              <Wallet className="h-8 w-8 text-blue-400 mb-2" />
+              <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.instant')}</h3>
+              <p className="text-sm text-gray-600">Receba seus pagamentos instantaneamente</p>
+            </motion.div>
+          </div>
         </div>
       </motion.div>
 
