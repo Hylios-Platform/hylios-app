@@ -35,16 +35,24 @@ export function setupAuth(app: Express) {
   // Configurar CORS para permitir credenciais
   app.use(cors({
     origin: true,
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization']
   }));
 
-  // Configurar parsers antes da sessão
+  // Cookie parser needs to come before the session
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
+  if (!sessionSecret) {
+    console.warn('Aviso: SESSION_SECRET não definido, usando valor padrão');
+  }
+
+  // Setup do Passport antes dos outros middlewares
   const sessionSettings: session.SessionOptions = {
-    secret: process.env.SESSION_SECRET || 'hylios-secret-key',
+    secret: sessionSecret,
     resave: false,
     saveUninitialized: false,
     store: storage.sessionStore,
