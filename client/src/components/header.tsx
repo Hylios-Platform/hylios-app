@@ -33,7 +33,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                 >
                   {t('navigation.jobs')}
                 </Button>
@@ -42,7 +42,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                 >
                   {t('navigation.postJob')}
                 </Button>
@@ -51,7 +51,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
+                  className="h-7 px-2 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
                 >
                   {t('navigation.payments')}
                 </Button>
