@@ -5,11 +5,13 @@ import cors from 'cors';
 import multer from 'multer';
 import path from 'path';
 import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import { storage } from "./storage";
 
 const app = express();
 
 // Configuração do multer para upload de arquivos
-const storage = multer.diskStorage({
+const multerStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'uploads/')
   },
@@ -20,7 +22,7 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ 
-  storage: storage,
+  storage: multerStorage,
   limits: {
     fileSize: 5 * 1024 * 1024 // limite de 5MB
   }
@@ -29,7 +31,7 @@ const upload = multer({
 // Configuração básica
 app.set('trust proxy', 1);
 
-// Cookie parser precisa vir antes do CORS e session
+// Configuração dos middlewares na ordem correta
 app.use(cookieParser());
 
 // Configuração CORS com configurações corretas para cookies
@@ -52,7 +54,24 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Middleware de logging
+// Configuração da sessão antes do passport
+const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
+app.use(session({
+  secret: sessionSecret,
+  resave: false,
+  saveUninitialized: false,
+  store: storage.sessionStore,
+  name: 'hylios.sid',
+  cookie: {
+    secure: process.env.NODE_ENV === 'production',
+    httpOnly: true,
+    maxAge: 24 * 60 * 60 * 1000, // 24 horas
+    sameSite: 'lax',
+    path: '/'
+  }
+}));
+
+// Middleware de logging detalhado
 app.use((req, res, next) => {
   const start = Date.now();
   const path = req.path;

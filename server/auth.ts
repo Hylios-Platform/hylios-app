@@ -1,14 +1,10 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
-import express from "express";
-import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
 import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
-import cors from "cors";
-import cookieParser from "cookie-parser";
 
 declare global {
   namespace Express {
@@ -32,44 +28,7 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
-  // Configurar CORS para permitir credenciais
-  app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-      ? 'https://hylios.com' 
-      : true,
-    credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With', 'Accept']
-  }));
-
-  // Cookie parser precisa vir antes da sessão
-  app.use(cookieParser());
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
-  const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
-  if (!sessionSecret) {
-    console.warn('Aviso: SESSION_SECRET não definido, usando valor padrão');
-  }
-
-  // Setup do Passport antes dos outros middlewares
-  const sessionSettings: session.SessionOptions = {
-    secret: sessionSecret,
-    resave: false,
-    saveUninitialized: false,
-    store: storage.sessionStore,
-    name: 'hylios.sid',
-    cookie: {
-      secure: process.env.NODE_ENV === 'production',
-      httpOnly: true,
-      maxAge: 24 * 60 * 60 * 1000, // 24 horas
-      sameSite: 'lax',
-      path: '/'
-    }
-  };
-
-  app.set('trust proxy', 1);
-  app.use(session(sessionSettings));
+  // Setup do Passport
   app.use(passport.initialize());
   app.use(passport.session());
 
