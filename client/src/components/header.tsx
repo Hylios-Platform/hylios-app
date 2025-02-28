@@ -5,6 +5,7 @@ import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { WalletButton } from "@/components/wallet-button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { MobileNav } from "@/components/mobile-nav";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -28,7 +29,7 @@ export default function Header() {
 
         {!isAuthPage && (
           <div className="flex items-center gap-2">
-            <nav className="flex gap-2">
+            <nav className="hidden md:flex gap-2">
               <Link href="/jobs">
                 <Button 
                   size="sm" 
@@ -74,6 +75,7 @@ export default function Header() {
                 <LogOut className="h-3 w-3" />
               </Button>
             </div>
+            <MobileNav />
           </div>
         )}
       </div>
