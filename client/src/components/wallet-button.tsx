@@ -86,7 +86,7 @@ export function WalletButton() {
         <Button 
           variant="outline" 
           size="sm" 
-          className="h-8 px-3 text-xs bg-white hover:bg-blue-50 text-blue-600 border-blue-200"
+          className="h-7 px-2 text-xs bg-white hover:bg-blue-50 text-blue-500 border-blue-200"
         >
           <Wallet className="h-3 w-3 mr-1" />
           {t('wallet.myWallet')}
@@ -94,7 +94,7 @@ export function WalletButton() {
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle className="text-lg font-semibold text-blue-700">
+          <DialogTitle className="text-lg font-semibold text-blue-600">
             {t('wallet.addWallet')}
           </DialogTitle>
           <DialogDescription className="text-sm text-gray-600">
@@ -117,7 +117,7 @@ export function WalletButton() {
               type="submit"
               size="sm"
               disabled={mutation.isPending}
-              className="bg-blue-600 hover:bg-blue-700 text-white"
+              className="bg-blue-500 hover:bg-blue-600 text-white text-xs h-7"
             >
               {mutation.isPending ? "Salvando..." : "Confirmar endereço"}
             </Button>
@@ -126,10 +126,10 @@ export function WalletButton() {
 
         {showConfirm && (
           <div className="mt-4 p-4 bg-blue-50 rounded-lg border border-blue-100">
-            <h4 className="text-sm font-medium text-blue-700 mb-2">
+            <h4 className="text-sm font-medium text-blue-600 mb-2">
               Confirme seu endereço Bitcoin
             </h4>
-            <p className="text-xs text-blue-600 break-all mb-4">
+            <p className="text-xs text-blue-500 break-all mb-4">
               {currentWalletAddress}
             </p>
             <div className="flex gap-2 justify-end">
@@ -137,14 +137,14 @@ export function WalletButton() {
                 size="sm"
                 variant="outline"
                 onClick={() => setShowConfirm(false)}
-                className="text-xs h-8"
+                className="text-xs h-7 text-gray-600 hover:bg-gray-50"
               >
                 Cancelar
               </Button>
               <Button
                 size="sm"
                 onClick={confirmSave}
-                className="text-xs h-8 bg-green-600 hover:bg-green-700 text-white"
+                className="text-xs h-7 bg-blue-500 hover:bg-blue-600 text-white"
               >
                 Confirmar e Salvar
               </Button>

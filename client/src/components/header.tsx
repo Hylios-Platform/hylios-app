@@ -28,7 +28,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
               >
                 {t('navigation.jobs')}
               </Button>
@@ -37,7 +37,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
               >
                 {t('navigation.postJob')}
               </Button>
@@ -46,7 +46,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+                className="h-7 px-2 text-xs bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
               >
                 {t('navigation.payments')}
               </Button>
@@ -62,7 +62,7 @@ export default function Header() {
               variant="ghost"
               size="sm"
               onClick={() => logoutMutation.mutate()}
-              className="h-8 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50"
+              className="h-7 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50"
             >
               <span className="mr-1">Sair</span>
               <LogOut className="h-3 w-3" />

@@ -129,5 +129,10 @@
     "findOpportunities": "Encontre oportunidades que correspondam às suas habilidades",
     "viewJobs": "Ver Trabalhos",
     "receivePayments": "Complete tarefas e receba pagamentos instantâneos"
+  },
+  "wallet": {
+    "myWallet": "Minha Carteira",
+    "addWallet": "Adicionar Carteira Bitcoin",
+    "description": "Insira seu endereço Bitcoin para receber os pagamentos dos trabalhos realizados na plataforma."
   }
 }
