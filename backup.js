@@ -7,17 +7,17 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Criar um arquivo de saída
-const output = fs.createWriteStream('project-backup.zip');
+const output = fs.createWriteStream('hylios-project-backup.zip');
 const archive = archiver('zip', {
   zlib: { level: 9 } // Nível máximo de compressão
 });
 
 // Ouvir eventos do archiver
 output.on('close', () => {
-  console.log(`\nBackup criado com sucesso!`);
+  console.log(`\nBackup do projeto Hylios criado com sucesso!`);
   console.log(`Tamanho do arquivo: ${(archive.pointer() / 1024 / 1024).toFixed(2)} MB`);
   console.log('\nPara restaurar o projeto:');
-  console.log('1. Descompacte o arquivo project-backup.zip');
+  console.log('1. Descompacte o arquivo hylios-project-backup.zip');
   console.log('2. Execute: npm install');
   console.log('3. Configure as variáveis de ambiente no arquivo .env');
   console.log('4. Execute: npm run dev');
@@ -60,8 +60,8 @@ const excludes = [
   '*.zip'
 ];
 
-console.log('\nIniciando backup do projeto...');
-console.log('Arquivos a serem incluídos:');
+console.log('\nIniciando backup do projeto Hylios...');
+console.log('Verificando e incluindo os seguintes arquivos:');
 includes.forEach(item => console.log(`- ${item}`));
 
 // Pipe arquivo de saída
