@@ -48,7 +48,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração da sessão
+// Configuração da sessão antes dos outros middlewares
 const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
 app.use(session({
   secret: sessionSecret,
@@ -65,16 +65,19 @@ app.use(session({
   }
 }));
 
-// Middleware de logging
+// Middleware de logging detalhado para debug de autenticação
 app.use((req, res, next) => {
   const start = Date.now();
-  const path = req.path;
-  const method = req.method;
 
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (path.startsWith("/api")) {
-      log(`${method} ${path} ${res.statusCode} ${duration}ms`);
+    if (req.path.startsWith("/api")) {
+      console.log(`[Request] ${req.method} ${req.path}`);
+      console.log('Session ID:', req.sessionID);
+      console.log('Is Authenticated:', req.isAuthenticated?.());
+      console.log('Session:', req.session);
+      console.log('Cookies:', req.cookies);
+      console.log(`Response Status: ${res.statusCode} (${duration}ms)`);
     }
   });
 

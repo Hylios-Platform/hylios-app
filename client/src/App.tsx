@@ -11,6 +11,7 @@ import Jobs from "@/pages/jobs";
 import Settings from "@/pages/settings";
 import Payments from "@/pages/payments";
 import PasswordReset from "@/pages/password-reset";
+import PitchPresentation from "@/pages/pitch-presentation";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
@@ -42,6 +43,7 @@ function Router() {
           <ProtectedRoute path="/jobs" component={Jobs} />
           <ProtectedRoute path="/settings" component={Settings} />
           <ProtectedRoute path="/payments" component={Payments} />
+          <ProtectedRoute path="/pitch" component={PitchPresentation} />
           <Route component={NotFound} />
         </Switch>
       </PageTransition>

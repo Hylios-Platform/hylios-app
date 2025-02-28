@@ -34,12 +34,26 @@ async function comparePasswords(supplied: string, stored: string) {
 }
 
 export function setupAuth(app: Express) {
+  // Setup CORS com credenciais
   app.use(cors({
     origin: true,
     credentials: true,
   }));
+
   app.use(cookieParser());
-  app.use(session({ secret: process.env.SESSION_SECRET || 'temp-dev-secret', resave: false, saveUninitialized: false }));
+
+  // Setup da sessão antes do passport
+  app.use(session({ 
+    secret: process.env.SESSION_SECRET || 'temp-dev-secret', 
+    resave: false, 
+    saveUninitialized: false,
+    cookie: {
+      secure: process.env.NODE_ENV === 'production',
+      httpOnly: true,
+      sameSite: 'lax'
+    }
+  }));
+
   // Setup do Passport
   app.use(passport.initialize());
   app.use(passport.session());
@@ -156,6 +170,10 @@ export function setupAuth(app: Express) {
 
   app.get("/api/user", (req, res) => {
     console.log('[Auth] Verificando usuário atual:', req.user?.username || 'não autenticado');
+    console.log('[Auth] Session:', req.session);
+    console.log('[Auth] Cookies:', req.cookies);
+    console.log('[Auth] SessionID:', req.sessionID);
+
     if (!req.isAuthenticated()) {
       console.log('[Auth] Usuário não autenticado');
       return res.sendStatus(401);
