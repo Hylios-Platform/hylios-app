@@ -43,7 +43,7 @@ export function MarqueeSponsors() {
                   ease: "easeInOut"
                 }}
               >
-                7% off na primeira contratação
+                7% na primeira compra
               </motion.span>
             </div>
           ))}
