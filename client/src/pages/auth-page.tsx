@@ -403,16 +403,6 @@ export default function AuthPage() {
                       <div className="text-center">
                         <span className="text-sm text-gray-500">ou</span>
                       </div>
-
-                      <Link href="/professional-signup">
-                        <Button
-                          type="button"
-                          variant="outline"
-                          className="w-full border-blue-200 hover:bg-blue-50 text-blue-600"
-                        >
-                          {t('auth.professional.title')}
-                        </Button>
-                      </Link>
                     </div>
                   </form>
                 </Form>
