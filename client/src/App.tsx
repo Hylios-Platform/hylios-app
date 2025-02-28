@@ -16,6 +16,19 @@ import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
 import { PageTransition } from "@/components/page-transition";
 import { NotificationBanner } from "@/components/notification-banner";
+import { useTheme } from "@/hooks/use-theme";
+import { useEffect } from "react";
+
+function ThemeProvider({ children }: { children: React.ReactNode }) {
+  const { theme } = useTheme();
+
+  useEffect(() => {
+    document.documentElement.classList.remove('light', 'dark');
+    document.documentElement.classList.add(theme);
+  }, [theme]);
+
+  return children;
+}
 
 function Router() {
   return (
@@ -43,8 +56,10 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
-        <Toaster />
+        <ThemeProvider>
+          <Router />
+          <Toaster />
+        </ThemeProvider>
       </AuthProvider>
     </QueryClientProvider>
   );
