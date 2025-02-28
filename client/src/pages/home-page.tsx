@@ -32,24 +32,23 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Tutorial />
-      <MarqueeSponsors />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
           <motion.div
-            className="welcome-section mb-12 text-center"
+            className="welcome-section text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
-            <p className="text-xl text-blue-400 mb-6">
+            <p className="text-xl text-blue-400 mb-8">
               {t('home.subtitle')}
             </p>
             <Button
               variant="secondary"
               size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-md mb-8"
               onClick={() => tutorial.startTutorial()}
             >
               {t('tutorial.start')}
@@ -57,9 +56,17 @@ export default function HomePage() {
           </motion.div>
 
           <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3 }}
+          >
+            <MarqueeSponsors />
+          </motion.div>
+
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
+            className="mt-12 mb-12"
           >
             <JobSwipe />
           </motion.div>

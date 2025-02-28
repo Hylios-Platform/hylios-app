@@ -8,17 +8,13 @@ interface Notification {
 }
 
 export function useNotifications() {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications] = useState<Notification[]>([]);
   const { toast } = useToast();
 
-  // Temporarily desabled for UI testing
-  const connect = () => {
-    console.log("WebSocket temporarily disabled for testing");
-  };
-
+  // Completely disabled for UI testing
   return {
     notifications,
-    clearNotifications: () => setNotifications([]),
+    clearNotifications: () => {},
     socket: null
   };
 }
