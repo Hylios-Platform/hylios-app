@@ -69,7 +69,10 @@
   "navigation": {
     "jobs": "Trabalhos",
     "postJob": "Publicar Trabalho",
-    "payments": "Pagamentos"
+    "payments": "Pagamentos",
+    "profile": "Perfil",
+    "settings": "Configurações",
+    "wallet": "Carteira"
   },
   "settings": {
     "title": "Configurações",
@@ -113,7 +116,13 @@
     "welcome": "Bem-vindo ao Hylios",
     "subtitle": "Conecte-se com empresas e receba em Bitcoin",
     "findWork": "Encontre Trabalho. Receba em Bitcoin.",
-    "description": "Conecte-se com empresas que procuram profissionais talentosos. Complete tarefas e receba pagamentos instantâneos em Bitcoin através de nossa plataforma segura."
+    "description": "Conecte-se com empresas que procuram profissionais talentosos. Complete tarefas e receba pagamentos instantâneos em Bitcoin através de nossa plataforma segura.",
+    "features": {
+      "instant": "Pagamentos Instantâneos",
+      "secure": "Transações Seguras",
+      "verified": "Profissionais Verificados",
+      "matching": "Matchmaking Inteligente"
+    }
   },
   "jobs": {
     "title": "Trabalhos Disponíveis",
@@ -148,11 +157,66 @@
     "startVerification": "Iniciar Verificação",
     "findOpportunities": "Encontre oportunidades que correspondam às suas habilidades",
     "viewJobs": "Ver Trabalhos",
-    "receivePayments": "Complete tarefas e receba pagamentos instantâneos"
+    "receivePayments": "Complete tarefas e receba pagamentos instantâneos",
+    "rating": {
+      "title": "Avaliações",
+      "rate": "Avaliar",
+      "comment": "Comentário",
+      "submit": "Enviar Avaliação"
+    },
+    "dispute": {
+      "title": "Resolver Disputa",
+      "reason": "Motivo",
+      "description": "Descrição",
+      "submit": "Abrir Disputa",
+      "status": {
+        "open": "Aberta",
+        "inProgress": "Em Análise",
+        "resolved": "Resolvida"
+      }
+    },
+    "verification": {
+      "title": "Verificação KYC",
+      "steps": {
+        "identity": "Identidade",
+        "address": "Endereço",
+        "professional": "Documentos Profissionais"
+      },
+      "status": {
+        "pending": "Pendente",
+        "verified": "Verificado",
+        "rejected": "Rejeitado"
+      }
+    }
   },
   "wallet": {
     "myWallet": "Minha Carteira",
     "addWallet": "Adicionar Carteira Bitcoin",
-    "description": "Insira seu endereço Bitcoin para receber os pagamentos dos trabalhos realizados na plataforma."
+    "balance": "Saldo",
+    "transactions": "Transações",
+    "send": "Enviar",
+    "receive": "Receber",
+    "description": "Insira seu endereço Bitcoin para receber os pagamentos dos trabalhos realizados na plataforma.",
+    "security": {
+      "title": "Segurança",
+      "twoFactor": "Autenticação em Dois Fatores",
+      "backupCodes": "Códigos de Backup",
+      "changePassword": "Alterar Senha"
+    }
+  },
+  "matching": {
+    "title": "Encontre o Trabalho Ideal",
+    "filters": {
+      "skills": "Habilidades",
+      "experience": "Experiência",
+      "availability": "Disponibilidade",
+      "rate": "Taxa Horária"
+    },
+    "suggestions": "Sugestões para Você",
+    "swipe": {
+      "right": "Interessado",
+      "left": "Passar",
+      "up": "Super Like"
+    }
   }
 }

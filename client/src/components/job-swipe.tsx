@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Clock, Coins, Heart, X } from "lucide-react";
+import { Building2, MapPin, Clock, Coins, Heart, X, Star } from "lucide-react";
 import { Job } from "@shared/schema";
 
 // Mock data usando os campos corretos do tipo Job
@@ -12,7 +12,8 @@ const mockJobs: Job[] = [
     title: "Desenvolvedor Full Stack React/Node",
     description: "Desenvolvimento de aplicações web modernas usando React e Node.js",
     companyId: 1,
-    amount: "6000 EUR (≈0.15 BTC)",
+    currency: "EUR",
+    amount: "6000",
     country: "Portugal",
     city: "Lisboa",
     workType: "remote",
@@ -26,7 +27,8 @@ const mockJobs: Job[] = [
     title: "UI/UX Designer Senior",
     description: "Criação de interfaces intuitivas e experiências memoráveis",
     companyId: 2,
-    amount: "5500 EUR (≈0.14 BTC)",
+    currency: "EUR",
+    amount: "5500",
     country: "Espanha",
     city: "Barcelona",
     workType: "hybrid",
@@ -40,7 +42,8 @@ const mockJobs: Job[] = [
     title: "DevOps Engineer",
     description: "Automatização e gerenciamento de infraestrutura cloud",
     companyId: 3,
-    amount: "7000 EUR (≈0.18 BTC)",
+    currency: "EUR",
+    amount: "7000",
     country: "Alemanha",
     city: "Berlim",
     workType: "onsite",
@@ -123,27 +126,35 @@ export function JobSwipe() {
             dragElastic={1}
             onDragEnd={handleDragEnd}
           >
-            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-gray-50 border-gray-100 shadow-lg hover:shadow-xl transition-shadow">
-              <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-indigo-50">
+            <Card className="w-full h-full overflow-hidden bg-gradient-to-b from-white to-gray-50 border-blue-50 shadow-lg hover:shadow-xl transition-shadow">
+              <CardHeader className="pb-2 bg-gradient-to-r from-blue-50 to-blue-100/50">
                 <CardTitle className="text-xl font-bold text-gray-800">{currentJob.title}</CardTitle>
                 <div className="flex items-center gap-2 text-gray-600">
-                  <Building2 className="h-4 w-4 text-blue-500" />
+                  <Building2 className="h-4 w-4 text-blue-400" />
                   <span>Empresa {currentJob.companyId}</span>
+                </div>
+                <div className="flex items-center gap-1 mt-1">
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                  <Star className="h-4 w-4 text-gray-300" />
+                  <span className="text-sm text-gray-500 ml-1">(4.0)</span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
                 <div className="space-y-4">
                   <div className="flex items-center gap-2 text-gray-600">
-                    <MapPin className="h-4 w-4 text-indigo-500" />
+                    <MapPin className="h-4 w-4 text-blue-400" />
                     <span>{currentJob.city}, {currentJob.country}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <Clock className="h-4 w-4 text-indigo-500" />
+                    <Clock className="h-4 w-4 text-blue-400" />
                     <span className="capitalize">{currentJob.workType}</span>
                   </div>
                   <div className="flex items-center gap-2 text-gray-600">
-                    <Coins className="h-4 w-4 text-indigo-500" />
-                    <span>{currentJob.amount}</span>
+                    <Coins className="h-4 w-4 text-blue-400" />
+                    <span>{currentJob.amount} {currentJob.currency} (≈0.15 BTC)</span>
                   </div>
                 </div>
 
@@ -163,6 +174,15 @@ export function JobSwipe() {
                         {skill}
                       </span>
                     ))}
+                  </div>
+                </div>
+
+                <div className="pt-4 mt-4 border-t border-gray-100">
+                  <p className="text-sm text-blue-400">
+                    <span className="font-medium">Match Score:</span> 85%
+                  </p>
+                  <div className="w-full h-2 bg-gray-100 rounded-full mt-2">
+                    <div className="w-[85%] h-full bg-blue-400 rounded-full" />
                   </div>
                 </div>
               </CardContent>
@@ -195,7 +215,7 @@ export function JobSwipe() {
           <div
             key={index}
             className={`w-2 h-2 rounded-full transition-colors duration-200 ${
-              index === currentIndex ? "bg-blue-500" : "bg-gray-200"
+              index === currentIndex ? "bg-blue-400" : "bg-gray-200"
             }`}
           />
         ))}

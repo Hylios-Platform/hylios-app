@@ -98,7 +98,6 @@ export default function AuthPage() {
       dateOfBirth: "",
       country: "",
       gender: undefined,
-      document: "",
       userType: "professional",
       companyName: "",
       dataProcessingConsent: false,
@@ -137,11 +136,11 @@ export default function AuthPage() {
         initial={{ opacity: 0, x: -20 }}
         animate={{ opacity: 1, x: 0 }}
       >
-        <Card className="w-full max-w-md border-blue-100 bg-white shadow-lg">
+        <Card className="w-full max-w-md border-blue-50 bg-white shadow-lg">
           <CardHeader>
             <CardTitle className="text-2xl font-bold flex items-center gap-2">
               <Bitcoin className="h-6 w-6 text-amber-400" />
-              <span className="bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
                 Hylios
               </span>
             </CardTitle>
@@ -222,7 +221,7 @@ export default function AuthPage() {
 
                     <Button
                       type="submit"
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                      className="w-full bg-blue-400 hover:bg-blue-500 text-white shadow-lg"
                       disabled={loginMutation.isPending}
                     >
                       {loginMutation.isPending && (
@@ -232,7 +231,7 @@ export default function AuthPage() {
                     </Button>
 
                     <div className="text-center mt-4">
-                      <Link href="/password-reset" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
+                      <Link href="/password-reset" className="text-sm text-blue-400 hover:text-blue-500 transition-colors">
                         {t('auth.forgotPassword')}
                       </Link>
                     </div>
@@ -594,7 +593,7 @@ export default function AuthPage() {
                     <div className="flex flex-col gap-4">
                       <Button
                         type="submit"
-                        className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                        className="w-full bg-blue-400 hover:bg-blue-500 text-white shadow-lg"
                         disabled={registerMutation.isPending}
                       >
                         {registerMutation.isPending && (
@@ -621,7 +620,7 @@ export default function AuthPage() {
         animate={{ opacity: 1, x: 0 }}
       >
         <div className="max-w-md">
-          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-violet-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent">
             {t('home.findWork')}
           </h1>
           <p className="text-xl text-blue-400">
