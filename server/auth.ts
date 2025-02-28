@@ -1,7 +1,7 @@
 import passport from "passport";
 import { Strategy as LocalStrategy } from "passport-local";
 import { Express } from "express";
-import express from "express"; // This line was added
+import express from "express";
 import session from "express-session";
 import { scrypt, randomBytes, timingSafeEqual } from "crypto";
 import { promisify } from "util";
@@ -61,7 +61,8 @@ export function setupAuth(app: Express) {
       secure: false, // Desabilitar em desenvolvimento
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
-      sameSite: 'lax'
+      sameSite: 'lax',
+      path: '/'
     }
   };
 
@@ -147,6 +148,9 @@ export function setupAuth(app: Express) {
 
   app.post("/api/login", (req, res, next) => {
     console.log('[Auth] Tentativa de login recebida:', req.body);
+    console.log('[Auth] Headers:', req.headers);
+    console.log('[Auth] Cookies:', req.cookies);
+
     passport.authenticate("local", (err, user, info) => {
       if (err) {
         console.error('[Auth] Erro no login:', err);
@@ -171,12 +175,16 @@ export function setupAuth(app: Express) {
   app.post("/api/logout", (req, res, next) => {
     const username = req.user?.username;
     console.log('[Auth] Tentativa de logout:', username);
+    console.log('[Auth] Session antes do logout:', req.session);
+    console.log('[Auth] Cookies antes do logout:', req.cookies);
+
     req.logout((err) => {
       if (err) {
         console.error('[Auth] Erro no logout:', err);
         return next(err);
       }
       console.log('[Auth] Logout bem-sucedido:', username);
+      console.log('[Auth] Session após logout:', req.session);
       res.sendStatus(200);
     });
   });
@@ -186,8 +194,10 @@ export function setupAuth(app: Express) {
     console.log('[Auth] Session ID:', req.sessionID);
     console.log('[Auth] Headers:', req.headers);
     console.log('[Auth] Cookies:', req.cookies);
+    console.log('[Auth] Session:', req.session);
 
     if (!req.isAuthenticated()) {
+      console.log('[Auth] Usuário não autenticado');
       return res.sendStatus(401);
     }
     res.json(req.user);

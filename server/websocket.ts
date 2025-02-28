@@ -8,19 +8,32 @@ interface NotificationData {
 }
 
 export function setupWebSocket(httpServer: HttpServer) {
-  const wss = new WebSocketServer({ server: httpServer, path: "/ws" });
-  console.log("Servidor WebSocket iniciado na rota /ws");
+  const wss = new WebSocketServer({ 
+    server: httpServer, 
+    path: "/ws",
+    clientTracking: true,
+    perMessageDeflate: false
+  });
+
+  console.log("[WebSocket] Servidor WebSocket iniciado na rota /ws");
 
   wss.on("connection", (ws, request) => {
     console.log("[WebSocket] Nova conexão estabelecida");
     console.log("[WebSocket] Headers:", request.headers);
     console.log("[WebSocket] URL:", request.url);
+    console.log("[WebSocket] Origin:", request.headers.origin);
 
     // Enviar mensagem de boas-vindas
     ws.send(JSON.stringify({
       type: "welcome",
       message: "Conectado às notificações do Hylios!"
     }));
+
+    // Setup heartbeat
+    ws.isAlive = true;
+    ws.on('pong', () => {
+      ws.isAlive = true;
+    });
 
     ws.on("message", (message) => {
       try {
@@ -34,11 +47,30 @@ export function setupWebSocket(httpServer: HttpServer) {
 
     ws.on("close", () => {
       console.log("[WebSocket] Conexão fechada");
+      ws.isAlive = false;
     });
 
     ws.on("error", (error) => {
       console.error("[WebSocket] Erro na conexão:", error);
+      ws.isAlive = false;
     });
+  });
+
+  // Implementar heartbeat para manter conexões ativas
+  const interval = setInterval(() => {
+    wss.clients.forEach((ws) => {
+      if (ws.isAlive === false) {
+        console.log("[WebSocket] Terminando conexão inativa");
+        return ws.terminate();
+      }
+
+      ws.isAlive = false;
+      ws.ping();
+    });
+  }, 30000);
+
+  wss.on("close", () => {
+    clearInterval(interval);
   });
 
   wss.on("error", (error) => {
