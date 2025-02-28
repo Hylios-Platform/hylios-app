@@ -10,6 +10,7 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
@@ -25,7 +26,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
@@ -33,21 +34,25 @@ import { Bitcoin, Eye, EyeOff, Loader2 } from "lucide-react";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
 import {Checkbox} from "@/components/ui/checkbox";
 
-// Atualizando o schema de validação
 const authSchema = insertUserSchema.extend({
   username: z.string()
     .min(3, "auth.errors.usernameMin")
     .max(50, "auth.errors.usernameMax"),
   password: z.string()
-    .min(6, "auth.errors.passwordMin")
-    .max(50, "auth.errors.passwordMax"),
+    .min(8, "auth.errors.passwordMin")
+    .max(50, "auth.errors.passwordMax")
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "auth.errors.passwordComplexity"),
   confirmPassword: z.string(),
   email: z.string()
     .email("auth.errors.invalidEmail"),
-  age: z.number()
-    .min(18, "auth.errors.ageMin")
-    .max(100, "auth.errors.ageMax"),
-  gender: z.enum(["male", "female"], {
+  dateOfBirth: z.string()
+    .refine((date) => {
+      const age = (new Date().getFullYear() - new Date(date).getFullYear());
+      return age >= 18;
+    }, "auth.errors.ageMin"),
+  country: z.string()
+    .min(1, "auth.errors.countryRequired"),
+  gender: z.enum(["male", "female", "other", "prefer_not_to_say"], {
     errorMap: () => ({ message: "auth.errors.genderRequired" })
   }),
   document: z.string()
@@ -55,7 +60,11 @@ const authSchema = insertUserSchema.extend({
     .max(14, "auth.errors.documentMax"),
   companyName: z.string().optional()
     .refine((val) => val !== undefined && val !== "" || true, "auth.errors.companyNameRequired"),
-  acceptTerms: z.boolean()
+  dataProcessingConsent: z.boolean()
+    .refine((val) => val === true, "auth.errors.dataProcessingRequired"),
+  marketingConsent: z.boolean(),
+  thirdPartyConsent: z.boolean(),
+  termsAndConditions: z.boolean()
     .refine((val) => val === true, "auth.errors.termsRequired"),
 }).refine((data) => data.password === data.confirmPassword, {
   message: "auth.errors.passwordMatch",
@@ -88,12 +97,16 @@ export default function AuthPage() {
       password: "",
       confirmPassword: "",
       email: "",
-      age: undefined,
+      dateOfBirth: "",
+      country: "",
       gender: undefined,
       document: "",
       userType: "professional",
       companyName: "",
-      acceptTerms: false,
+      dataProcessingConsent: false,
+      marketingConsent: false,
+      thirdPartyConsent: false,
+      termsAndConditions: false,
     },
   });
 
@@ -276,24 +289,53 @@ export default function AuthPage() {
 
                     <FormField
                       control={registerForm.control}
-                      name="age"
+                      name="dateOfBirth"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-600">
-                            {t('auth.age')} <span className="text-red-500">*</span>
+                            {t('auth.dateOfBirth')} <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input
-                              type="number"
+                              type="date"
                               className="bg-white/80 border-gray-200 text-gray-900"
                               {...field}
-                              onChange={(e) => field.onChange(parseInt(e.target.value, 10))}
                             />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
                       )}
                     />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="country"
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-gray-600">
+                            {t('auth.country')} <span className="text-red-500">*</span>
+                          </FormLabel>
+                          <Select onValueChange={field.onChange} value={field.value}>
+                            <FormControl>
+                              <SelectTrigger className="bg-white/80 border-gray-200 text-gray-900">
+                                <SelectValue placeholder={t('auth.selectCountry')} />
+                              </SelectTrigger>
+                            </FormControl>
+                            <SelectContent>
+                              <SelectItem value="PT">Portugal</SelectItem>
+                              <SelectItem value="ES">España</SelectItem>
+                              <SelectItem value="FR">France</SelectItem>
+                              <SelectItem value="DE">Deutschland</SelectItem>
+                              <SelectItem value="IT">Italia</SelectItem>
+                              <SelectItem value="GB">United Kingdom</SelectItem>
+                              {/* Adicionar mais países da UE */}
+                            </SelectContent>
+                          </Select>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
 
                     <FormField
                       control={registerForm.control}
@@ -312,6 +354,8 @@ export default function AuthPage() {
                             <SelectContent>
                               <SelectItem value="male">{t('auth.genderTypes.male')}</SelectItem>
                               <SelectItem value="female">{t('auth.genderTypes.female')}</SelectItem>
+                              <SelectItem value="other">{t('auth.genderTypes.other')}</SelectItem>
+                              <SelectItem value="prefer_not_to_say">{t('auth.genderTypes.prefer_not_to_say')}</SelectItem>
                             </SelectContent>
                           </Select>
                           <FormMessage />
@@ -457,7 +501,7 @@ export default function AuthPage() {
 
                     <FormField
                       control={registerForm.control}
-                      name="acceptTerms"
+                      name="dataProcessingConsent"
                       render={({ field }) => (
                         <FormItem className="flex flex-row items-start space-x-3 space-y-0">
                           <FormControl>
@@ -468,11 +512,81 @@ export default function AuthPage() {
                           </FormControl>
                           <div className="space-y-1 leading-none">
                             <FormLabel className="text-sm text-gray-600">
-                              {t('auth.acceptTerms')} <span className="text-red-500">*</span>
+                              {t('auth.dataProcessingConsent')} <span className="text-red-500">*</span>
                             </FormLabel>
-                            <p className="text-xs text-gray-500">
-                              {t('auth.termsDescription')}
-                            </p>
+                            <FormDescription className="text-xs text-gray-500">
+                              {t('auth.dataProcessingDescription')}
+                            </FormDescription>
+                          </div>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="marketingConsent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm text-gray-600">
+                              {t('auth.marketingConsent')}
+                            </FormLabel>
+                            <FormDescription className="text-xs text-gray-500">
+                              {t('auth.marketingDescription')}
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="thirdPartyConsent"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm text-gray-600">
+                              {t('auth.thirdPartyConsent')}
+                            </FormLabel>
+                            <FormDescription className="text-xs text-gray-500">
+                              {t('auth.thirdPartyDescription')}
+                            </FormDescription>
+                          </div>
+                        </FormItem>
+                      )}
+                    />
+
+                    <FormField
+                      control={registerForm.control}
+                      name="termsAndConditions"
+                      render={({ field }) => (
+                        <FormItem className="flex flex-row items-start space-x-3 space-y-0">
+                          <FormControl>
+                            <Checkbox
+                              checked={field.value}
+                              onCheckedChange={field.onChange}
+                            />
+                          </FormControl>
+                          <div className="space-y-1 leading-none">
+                            <FormLabel className="text-sm text-gray-600">
+                              {t('auth.termsAndConditions')} <span className="text-red-500">*</span>
+                            </FormLabel>
+                            <FormDescription className="text-xs text-gray-500">
+                              {t('auth.termsAndConditionsDescription')}
+                            </FormDescription>
                           </div>
                           <FormMessage />
                         </FormItem>
@@ -535,10 +649,13 @@ export default function AuthPage() {
               <strong>{t('auth.email')}:</strong> {registerData?.email}
             </div>
             <div>
-              <strong>{t('auth.age')}:</strong> {registerData?.age}
+              <strong>{t('auth.dateOfBirth')}:</strong> {registerData?.dateOfBirth}
             </div>
             <div>
               <strong>{t('auth.gender')}:</strong> {t(`auth.genderTypes.${registerData?.gender}`)}
+            </div>
+            <div>
+              <strong>{t('auth.country')}:</strong> {registerData?.country}
             </div>
             <div>
               <strong>{t('auth.userType')}:</strong> {t(`auth.${registerData?.userType}`)}
@@ -548,7 +665,7 @@ export default function AuthPage() {
                 <strong>{t('auth.companyName')}:</strong> {registerData?.companyName}
               </div>
             )}
-             <div>
+            <div>
               <strong>{t('auth.document')}:</strong> {registerData?.document}
             </div>
           </div>
