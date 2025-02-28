@@ -4,6 +4,7 @@ import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
 import multer from 'multer';
 import path from 'path';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -28,12 +29,23 @@ const upload = multer({
 // Configuração básica
 app.set('trust proxy', 1);
 
-// Configuração CORS antes de tudo
+// Cookie parser precisa vir antes do CORS e session
+app.use(cookieParser());
+
+// Configuração CORS com configurações corretas para cookies
 app.use(cors({
-  origin: true,
+  origin: process.env.NODE_ENV === 'production' 
+    ? 'https://hylios.com' 
+    : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+  allowedHeaders: [
+    'Content-Type', 
+    'Authorization', 
+    'Cookie', 
+    'X-Requested-With',
+    'Accept'
+  ]
 }));
 
 // Parsers e middlewares essenciais

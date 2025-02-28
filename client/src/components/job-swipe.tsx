@@ -187,7 +187,7 @@ export function JobSwipe() {
                   </p>
                   <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
                     <motion.div 
-                      className="h-full bg-blue-400 rounded-full"
+                      className="h-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300"
                       initial={{ width: 0 }}
                       animate={{ width: "85%" }}
                       transition={{ duration: 0.8, ease: "easeOut" }}

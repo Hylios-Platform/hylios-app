@@ -34,13 +34,15 @@ async function comparePasswords(supplied: string, stored: string) {
 export function setupAuth(app: Express) {
   // Configurar CORS para permitir credenciais
   app.use(cors({
-    origin: true, // Permite qualquer origem em desenvolvimento
+    origin: process.env.NODE_ENV === 'production' 
+      ? 'https://hylios.com' 
+      : true,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'X-Requested-With', 'Accept']
   }));
 
-  // Cookie parser needs to come before the session
+  // Cookie parser precisa vir antes da sessão
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
@@ -58,7 +60,7 @@ export function setupAuth(app: Express) {
     store: storage.sessionStore,
     name: 'hylios.sid',
     cookie: {
-      secure: false, // Desabilitar em desenvolvimento
+      secure: process.env.NODE_ENV === 'production',
       httpOnly: true,
       maxAge: 24 * 60 * 60 * 1000, // 24 horas
       sameSite: 'lax',

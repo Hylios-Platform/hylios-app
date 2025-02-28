@@ -218,5 +218,29 @@
       "left": "Passar",
       "up": "Super Like"
     }
+  },
+  "features": {
+    "aiMatchmaking": {
+      "title": "IA Matchmaking",
+      "description": "Nossa tecnologia de IA analisa seu perfil e histórico para sugerir as melhores oportunidades",
+      "accuracy": "Precisão de Correspondência",
+      "preferences": "Preferências de Trabalho",
+      "skills": "Habilidades Relevantes"
+    },
+    "blockchain": {
+      "title": "Reputação na Blockchain",
+      "description": "Sistema descentralizado de reputação garantindo transparência e confiabilidade",
+      "trustScore": "Score de Confiança",
+      "completion": "Taxa de Conclusão",
+      "ratings": "Avaliações Positivas",
+      "viewHistory": "Ver Histórico na Blockchain"
+    },
+    "cryptoAnalytics": {
+      "title": "Análise de Criptomoedas",
+      "description": "Previsões em tempo real do valor das criptomoedas para otimizar seus ganhos",
+      "currentRate": "Taxa Atual",
+      "prediction": "Previsão",
+      "trend": "Tendência"
+    }
   }
 }

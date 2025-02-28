@@ -1,6 +1,6 @@
-import { users, type User, type InsertUser, jobs, type Job, type InsertJob, type KycData, type Achievement, type UserAchievement, achievements, userAchievements } from "@shared/schema";
+import { users, type User, type InsertUser } from "@shared/schema";
 import { db } from "./db";
-import { eq, and } from "drizzle-orm";
+import { eq } from "drizzle-orm";
 import session from "express-session";
 import connectPg from "connect-pg-simple";
 import { pool } from "./db";
@@ -25,13 +25,21 @@ export class DatabaseStorage implements IStorage {
     this.sessionStore = new PostgresSessionStore({
       pool,
       createTableIfMissing: true,
-      tableName: 'session'
+      tableName: 'session',
+      // Adicionar configurações de erro e reconexão
+      errorLog: console.error,
+      pruneSessionInterval: 60 * 15 // Limpar sessões expiradas a cada 15 minutos
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    const [user] = await db.select().from(users).where(eq(users.id, id));
-    return user;
+    try {
+      const [user] = await db.select().from(users).where(eq(users.id, id));
+      return user;
+    } catch (error) {
+      console.error('Erro ao buscar usuário por ID:', error);
+      return undefined;
+    }
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
@@ -66,13 +74,18 @@ export class DatabaseStorage implements IStorage {
   }
 
   async updateUser(id: number, data: Partial<User>): Promise<User> {
-    const [user] = await db
-      .update(users)
-      .set(data)
-      .where(eq(users.id, id))
-      .returning();
-    if (!user) throw new Error("User not found");
-    return user;
+    try {
+      const [user] = await db
+        .update(users)
+        .set(data)
+        .where(eq(users.id, id))
+        .returning();
+      if (!user) throw new Error("User not found");
+      return user;
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error);
+      throw error;
+    }
   }
 }
 

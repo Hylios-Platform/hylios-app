@@ -30,7 +30,7 @@ import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
 import { useLocation, Link } from "wouter";
-import { Bitcoin, Eye, EyeOff, Loader2, Shield, Users, Wallet } from "lucide-react";
+import { Bitcoin, Eye, EyeOff, Loader2, Shield, Users, Wallet, Sparkles } from "lucide-react";
 import { insertUserSchema, type InsertUser } from "@shared/schema";
 import {Checkbox} from "@/components/ui/checkbox";
 
@@ -222,7 +222,7 @@ export default function AuthPage() {
 
                     <Button
                       type="submit"
-                      className="w-full bg-blue-400 hover:bg-blue-500 text-white shadow-lg"
+                      className="w-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 text-white shadow-lg transition-all duration-300 backdrop-blur-sm"
                       disabled={loginMutation.isPending}
                     >
                       {loginMutation.isPending && (
@@ -594,7 +594,7 @@ export default function AuthPage() {
                     <div className="flex flex-col gap-4">
                       <Button
                         type="submit"
-                        className="w-full bg-blue-400 hover:bg-blue-500 text-white shadow-lg"
+                        className="w-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300 hover:from-blue-400 hover:via-blue-500 hover:to-blue-400 text-white shadow-lg transition-all duration-300 backdrop-blur-sm"
                         disabled={registerMutation.isPending}
                       >
                         {registerMutation.isPending && (
@@ -622,7 +622,7 @@ export default function AuthPage() {
         transition={{ duration: 0.5, ease: "easeOut", delay: 0.2 }}
       >
         <div className="max-w-md space-y-8">
-          <motion.h1 
+          <motion.h1
             className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent"
             initial={{ y: 20 }}
             animate={{ y: 0 }}
@@ -631,7 +631,7 @@ export default function AuthPage() {
             {t('home.findWork')}
           </motion.h1>
 
-          <motion.p 
+          <motion.p
             className="text-xl text-blue-400"
             initial={{ y: 20 }}
             animate={{ y: 0 }}
@@ -642,10 +642,11 @@ export default function AuthPage() {
 
           <div className="grid grid-cols-2 gap-6 mt-12">
             <motion.div
-              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              className="p-4 rounded-lg bg-gradient-to-br from-white/80 via-blue-50/30 to-blue-100/20 backdrop-blur-sm border border-blue-100 hover:shadow-md transition-all duration-300"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 0.8 }}
+              whileHover={{ scale: 1.02 }}
             >
               <Shield className="h-8 w-8 text-blue-400 mb-2" />
               <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.secure')}</h3>
@@ -653,10 +654,11 @@ export default function AuthPage() {
             </motion.div>
 
             <motion.div
-              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              className="p-4 rounded-lg bg-gradient-to-br from-white/80 via-blue-50/30 to-blue-100/20 backdrop-blur-sm border border-blue-100 hover:shadow-md transition-all duration-300"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.0 }}
+              whileHover={{ scale: 1.02 }}
             >
               <Users className="h-8 w-8 text-blue-400 mb-2" />
               <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.verified')}</h3>
@@ -664,14 +666,27 @@ export default function AuthPage() {
             </motion.div>
 
             <motion.div
-              className="p-4 rounded-lg bg-white/50 backdrop-blur-sm border border-blue-100"
+              className="p-4 rounded-lg bg-gradient-to-br from-white/80 via-blue-50/30 to-blue-100/20 backdrop-blur-sm border border-blue-100 hover:shadow-md transition-all duration-300"
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 1.2 }}
+              whileHover={{ scale: 1.02 }}
             >
               <Wallet className="h-8 w-8 text-blue-400 mb-2" />
               <h3 className="font-semibold text-gray-800 mb-1">{t('home.features.instant')}</h3>
               <p className="text-sm text-gray-600">Receba seus pagamentos instantaneamente</p>
+            </motion.div>
+
+            <motion.div
+              className="p-4 rounded-lg bg-gradient-to-br from-white/80 via-blue-50/30 to-blue-100/20 backdrop-blur-sm border border-blue-100 hover:shadow-md transition-all duration-300"
+              initial={{ y: 20, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 1.4 }}
+              whileHover={{ scale: 1.02 }}
+            >
+              <Sparkles className="h-8 w-8 text-blue-400 mb-2" />
+              <h3 className="font-semibold text-gray-800 mb-1">IA Matchmaking</h3>
+              <p className="text-sm text-gray-600">Sugestões inteligentes de trabalhos baseadas no seu perfil</p>
             </motion.div>
           </div>
         </div>
