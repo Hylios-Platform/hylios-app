@@ -15,12 +15,12 @@ export default function Header() {
   const isAuthPage = location === '/auth' || location === '/password-reset';
 
   return (
-    <header className="bg-blue-50 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
+    <header className="bg-gradient-to-r from-blue-50 to-blue-100/30 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-xl font-bold">
             <Link href="/">
-              <span className="text-blue-500 hover:text-blue-600 transition-colors cursor-pointer">
+              <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-600 transition-colors cursor-pointer">
                 Hylios
               </span>
             </Link>
@@ -34,7 +34,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  className="h-7 px-2 text-xs bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.jobs')}
                 </Button>
@@ -43,7 +43,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  className="h-7 px-2 text-xs bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.postJob')}
                 </Button>
@@ -52,7 +52,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  className="h-7 px-2 text-xs bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white shadow-sm transition-all duration-200"
                 >
                   {t('navigation.payments')}
                 </Button>
