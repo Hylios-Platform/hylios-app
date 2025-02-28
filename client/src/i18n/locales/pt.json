@@ -5,6 +5,22 @@
     "username": "Nome de Usuário",
     "password": "Senha",
     "email": "Email",
+    "professional": {
+      "title": "Cadastro de Profissional",
+      "fullName": "Nome Completo",
+      "skills": "Habilidades",
+      "portfolio": "Portfólio",
+      "bio": "Biografia",
+      "next": "Próximo",
+      "finish": "Finalizar Cadastro",
+      "registering": "Cadastrando...",
+      "errors": {
+        "fullNameMin": "Nome completo deve ter pelo menos 3 caracteres",
+        "skillsRequired": "Informe pelo menos uma habilidade",
+        "invalidPortfolio": "URL do portfólio inválida",
+        "bioMax": "Biografia deve ter no máximo 500 caracteres"
+      }
+    },
     "age": "Idade",
     "gender": "Sexo",
     "selectGender": "Selecione seu sexo",
@@ -14,7 +30,6 @@
       "undefined": "Não selecionado"
     },
     "iAm": "Eu sou",
-    "professional": "Profissional",
     "company": "Empresa",
     "companyName": "Nome da Empresa",
     "forgotPassword": "Esqueceu sua senha?",

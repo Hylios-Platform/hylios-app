@@ -18,6 +18,7 @@ import { PageTransition } from "@/components/page-transition";
 import { NotificationBanner } from "@/components/notification-banner";
 import { useTheme } from "@/hooks/use-theme";
 import { useEffect } from "react";
+import ProfessionalSignup from "@/pages/professional-signup";
 
 function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { theme } = useTheme();
@@ -39,6 +40,7 @@ function Router() {
         <Switch>
           <ProtectedRoute path="/" component={HomePage} />
           <Route path="/auth" component={AuthPage} />
+          <Route path="/professional-signup" component={ProfessionalSignup} />
           <Route path="/password-reset" component={PasswordReset} />
           <ProtectedRoute path="/post-job" component={PostJob} />
           <ProtectedRoute path="/jobs" component={Jobs} />
