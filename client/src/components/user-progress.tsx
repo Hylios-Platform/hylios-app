@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Progress } from "@/components/ui/progress";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Trophy, Star, ArrowUp, Medal, Target, Award } from "lucide-react";
+import { Trophy, Star, ArrowUp, Medal, Target, Award, Gift } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { motion, AnimatePresence } from "framer-motion";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
@@ -9,13 +9,33 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/comp
 // Função para calcular XP necessário para próximo nível
 const getNextLevelXP = (level: number) => Math.floor(100 * Math.pow(1.5, level - 1));
 
-// Lista de ranks baseados em nível
+// Lista de ranks baseados em nível com benefícios
 const getRank = (level: number) => {
-  if (level < 5) return { title: "Iniciante", color: "text-zinc-500" };
-  if (level < 10) return { title: "Intermediário", color: "text-blue-500" };
-  if (level < 15) return { title: "Avançado", color: "text-purple-500" };
-  if (level < 20) return { title: "Expert", color: "text-amber-500" };
-  return { title: "Mestre", color: "text-red-500" };
+  if (level < 5) return { 
+    title: "Iniciante", 
+    color: "text-zinc-500",
+    benefits: ["Acesso básico à plataforma", "Até 3 propostas por dia"]
+  };
+  if (level < 10) return { 
+    title: "Intermediário", 
+    color: "text-blue-500",
+    benefits: ["Até 5 propostas por dia", "Destaque nas buscas", "Badge especial"]
+  };
+  if (level < 15) return { 
+    title: "Avançado", 
+    color: "text-purple-500",
+    benefits: ["Propostas ilimitadas", "Prioridade no suporte", "Descontos exclusivos"]
+  };
+  if (level < 20) return { 
+    title: "Expert", 
+    color: "text-amber-500",
+    benefits: ["Status verificado", "Acesso antecipado a vagas", "Comissão reduzida"]
+  };
+  return { 
+    title: "Mestre", 
+    color: "text-red-500",
+    benefits: ["Todas as vantagens anteriores", "Mentoria exclusiva", "Programa VIP"]
+  };
 };
 
 export function UserProgress() {
@@ -29,9 +49,10 @@ export function UserProgress() {
   const rank = getRank(user.level);
 
   const achievements = [
-    { icon: Medal, label: "KYC Verificado", achieved: user.kycStatus === "verified" },
-    { icon: Target, label: "5 Vagas Completadas", achieved: false },
-    { icon: Award, label: "Top Profissional", achieved: false },
+    { icon: Medal, label: "KYC Verificado", achieved: user.kycStatus === "verified", points: 100 },
+    { icon: Target, label: "5 Vagas Completadas", achieved: false, points: 200 },
+    { icon: Award, label: "Top Profissional", achieved: false, points: 300 },
+    { icon: Gift, label: "Primeiro Contrato", achieved: false, points: 150 }
   ];
 
   return (
@@ -47,12 +68,23 @@ export function UserProgress() {
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <span className={`text-sm font-medium ${rank.color}`}>
-                  {rank.title}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className={`text-sm font-medium ${rank.color}`}>
+                    {rank.title}
+                  </span>
+                  <div className={`w-2 h-2 rounded-full ${rank.color.replace('text', 'bg')}`} />
+                </div>
               </TooltipTrigger>
-              <TooltipContent>
-                <p>Seu ranking atual baseado no nível</p>
+              <TooltipContent className="w-64 p-3">
+                <h4 className="font-medium mb-2">Benefícios do Rank</h4>
+                <ul className="space-y-1">
+                  {rank.benefits.map((benefit, index) => (
+                    <li key={index} className="text-sm flex items-center gap-2">
+                      <div className="w-1 h-1 rounded-full bg-current" />
+                      {benefit}
+                    </li>
+                  ))}
+                </ul>
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
@@ -83,7 +115,7 @@ export function UserProgress() {
             )}
           </div>
 
-          <div className="mt-4 grid grid-cols-3 gap-2">
+          <div className="mt-4 grid grid-cols-2 md:grid-cols-4 gap-2">
             <AnimatePresence>
               {achievements.map((achievement, index) => (
                 <motion.div
@@ -108,6 +140,9 @@ export function UserProgress() {
                     }`}
                   >
                     {achievement.label}
+                  </span>
+                  <span className="text-[10px] mt-1 text-gray-400">
+                    +{achievement.points} XP
                   </span>
                   {achievement.achieved && (
                     <motion.div

@@ -28,9 +28,22 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Loader2, ArrowLeft, ArrowRight, Check, User, FileText, MapPin, Upload, Camera } from "lucide-react";
+import { 
+  Loader2, 
+  ArrowLeft, 
+  ArrowRight, 
+  Check, 
+  User, 
+  FileText, 
+  MapPin, 
+  Upload, 
+  Camera,
+  HelpCircle,
+  AlertCircle
+} from "lucide-react";
 import { useState } from "react";
 import { motion } from "framer-motion";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 
 export function KycForm() {
   const { toast } = useToast();
@@ -213,44 +226,87 @@ export function KycForm() {
     }
   };
 
+  const helpMessages = {
+    document: {
+      title: "Documento de Identificação",
+      description: "Envie uma foto clara do seu documento oficial (RG, CNH ou Passaporte). Certifique-se que todas as informações estão legíveis."
+    },
+    selfie: {
+      title: "Foto do Rosto (Selfie)",
+      description: "Tire uma selfie bem iluminada, olhando diretamente para a câmera. Evite usar óculos escuros ou chapéu."
+    },
+    proofOfAddress: {
+      title: "Comprovante de Residência",
+      description: "Aceitos: conta de luz, água, gás ou telefone fixo (até 3 meses). O documento deve estar em seu nome."
+    }
+  };
+
   return (
     <div className="p-6">
       <DialogHeader>
-        <DialogTitle className="text-2xl font-bold mb-6">
+        <DialogTitle className="text-2xl font-bold mb-6 flex items-center gap-2">
+          <User className="h-6 w-6 text-blue-500" />
           Verificação KYC
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger>
+                <HelpCircle className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+              </TooltipTrigger>
+              <TooltipContent className="max-w-xs p-4">
+                <p className="text-sm">
+                  A verificação KYC (Know Your Customer) é um processo necessário para garantir 
+                  a segurança e conformidade da plataforma. Seus dados serão tratados com sigilo 
+                  e segurança.
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </DialogTitle>
       </DialogHeader>
 
       <Tabs value={`step-${step}`} className="w-full space-y-6">
-        <TabsList className="grid w-full grid-cols-3 gap-4">
+        <TabsList className="grid w-full grid-cols-3 gap-4 bg-muted/50 p-1 rounded-lg">
           <TabsTrigger
             value="step-1"
             onClick={() => setStep(1)}
             disabled={step < 1}
-            className="flex items-center gap-2 data-[state=active]:bg-blue-100 transition-colors duration-200"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100/80 data-[state=active]:text-blue-700 transition-all duration-200"
           >
             <User className="h-4 w-4" />
             Dados Pessoais
+            {step > 1 && <Check className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
           <TabsTrigger
             value="step-2"
             onClick={() => setStep(2)}
             disabled={step < 2}
-            className="flex items-center gap-2 data-[state=active]:bg-blue-100 transition-colors duration-200"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100/80 data-[state=active]:text-blue-700 transition-all duration-200"
           >
             <FileText className="h-4 w-4" />
             Documentos
+            {step > 2 && <Check className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
           <TabsTrigger
             value="step-3"
             onClick={() => setStep(3)}
             disabled={step < 3}
-            className="flex items-center gap-2 data-[state=active]:bg-blue-100 transition-colors duration-200"
+            className="flex items-center gap-2 data-[state=active]:bg-blue-100/80 data-[state=active]:text-blue-700 transition-all duration-200"
           >
             <MapPin className="h-4 w-4" />
             Endereço
+            {step > 3 && <Check className="h-4 w-4 text-green-500" />}
           </TabsTrigger>
         </TabsList>
+
+        {/* Progress bar */}
+        <div className="w-full bg-gray-200 h-1 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-blue-500"
+            initial={{ width: "0%" }}
+            animate={{ width: `${(step / totalSteps) * 100}%` }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
 
         <Form {...form}>
           <form
@@ -362,30 +418,60 @@ export function KycForm() {
 
                 <div className="space-y-4">
                   {Object.entries(uploadedFiles).map(([type, file]) => (
-                    <div key={type} className="border-2 border-dashed border-gray-200 rounded-lg p-6 text-center">
+                    <motion.div
+                      key={type}
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="border-2 border-dashed border-gray-200 hover:border-blue-200 rounded-lg p-6 text-center transition-colors duration-200"
+                    >
                       <div className="flex flex-col items-center gap-2">
                         {type === 'document' && <FileText className="h-8 w-8 text-blue-400" />}
                         {type === 'selfie' && <Camera className="h-8 w-8 text-blue-400" />}
                         {type === 'proofOfAddress' && <Upload className="h-8 w-8 text-blue-400" />}
 
-                        <p className="text-sm text-gray-600">
-                          {type === 'document' && 'Upload do Documento'}
-                          {type === 'selfie' && 'Foto do Rosto (Selfie)'}
-                          {type === 'proofOfAddress' && 'Comprovante de Residência'}
-                        </p>
+                        <div className="flex items-center gap-2">
+                          <p className="text-sm font-medium text-gray-700">
+                            {helpMessages[type as keyof typeof helpMessages].title}
+                          </p>
+                          <TooltipProvider>
+                            <Tooltip>
+                              <TooltipTrigger>
+                                <HelpCircle className="h-4 w-4 text-gray-400" />
+                              </TooltipTrigger>
+                              <TooltipContent className="max-w-xs p-3">
+                                <p className="text-sm">
+                                  {helpMessages[type as keyof typeof helpMessages].description}
+                                </p>
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
 
-                        {file && (
-                          <div className="text-sm text-gray-600">
-                            {file.name}
+                        {file ? (
+                          <motion.div 
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            className="text-sm text-gray-600 space-y-2"
+                          >
+                            <div className="flex items-center gap-2">
+                              <Check className="h-4 w-4 text-green-500" />
+                              {file.name}
+                            </div>
                             {uploadProgress[type] > 0 && (
-                              <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-                                <div 
+                              <div className="w-full bg-gray-200 rounded-full h-2.5">
+                                <motion.div 
                                   className="bg-blue-600 h-2.5 rounded-full transition-all duration-300"
                                   style={{ width: `${uploadProgress[type]}%` }}
+                                  initial={{ width: "0%" }}
+                                  animate={{ width: `${uploadProgress[type]}%` }}
                                 />
                               </div>
                             )}
-                          </div>
+                          </motion.div>
+                        ) : (
+                          <p className="text-sm text-gray-500">
+                            Arraste um arquivo ou clique para selecionar
+                          </p>
                         )}
 
                         <Input 
@@ -399,13 +485,22 @@ export function KycForm() {
                           }}
                         />
                         <label htmlFor={`${type}Upload`}>
-                          <Button type="button" variant="outline" size="sm">
+                          <Button
+                            type="button"
+                            variant={file ? "outline" : "default"}
+                            size="sm"
+                            className={`transition-all duration-200 ${
+                              file
+                                ? "hover:bg-blue-50 text-blue-600 border-blue-200"
+                                : "bg-blue-500 hover:bg-blue-600 text-white"
+                            }`}
+                          >
                             <Upload className="h-4 w-4 mr-2" />
                             {file ? 'Trocar Arquivo' : 'Selecionar Arquivo'}
                           </Button>
                         </label>
                       </div>
-                    </div>
+                    </motion.div>
                   ))}
                 </div>
               </TabsContent>
@@ -492,7 +587,7 @@ export function KycForm() {
                 <Button
                   type="button"
                   onClick={nextStep}
-                  className="transition-transform hover:scale-105"
+                  className="transition-transform hover:scale-105 bg-blue-500 hover:bg-blue-600"
                 >
                   Próximo
                   <ArrowRight className="ml-2 h-4 w-4" />
@@ -504,11 +599,16 @@ export function KycForm() {
                   className="bg-green-600 hover:bg-green-700 transition-transform hover:scale-105"
                 >
                   {mutation.isPending ? (
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Enviando...
+                    </>
                   ) : (
-                    <Check className="mr-2 h-4 w-4" />
+                    <>
+                      <Check className="mr-2 h-4 w-4" />
+                      Finalizar
+                    </>
                   )}
-                  Finalizar
                 </Button>
               )}
             </motion.div>

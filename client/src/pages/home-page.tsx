@@ -12,6 +12,7 @@ import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Job } from "@shared/schema";
 import { calculateMatchScore } from "@/lib/matching-service";
+import { ProfessionalStats } from "@/components/professional-stats";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -289,6 +290,16 @@ export default function HomePage() {
           >
             <UserProgress />
           </motion.div>
+
+          {user?.userType === "professional" && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+            >
+              <ProfessionalStats />
+            </motion.div>
+          )}
 
           <motion.div
             variants={container}
