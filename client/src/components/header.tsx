@@ -16,9 +16,9 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800">
-      <div className="container mx-auto px-4 h-14 flex items-center">
-        <Link href="/" className="mr-6">
-          <span className="text-xl font-bold text-white hover:text-sky-100 transition-colors cursor-pointer">
+      <div className="container mx-auto px-4 h-20 flex items-center">
+        <Link href="/" className="mr-10">
+          <span className="text-2xl font-bold text-white hover:text-sky-100 transition-colors cursor-pointer">
             Hylios
           </span>
         </Link>
@@ -26,31 +26,31 @@ export default function Header() {
         {!isAuthPage && (
           <>
             <div className="flex-1 flex items-center justify-center">
-              <nav className="hidden md:flex items-center space-x-4">
+              <nav className="hidden md:flex items-center space-x-8">
                 <WalletButton />
                 <Link href="/post-job">
                   <Button 
-                    size="sm" 
+                    size="lg" 
                     variant="secondary" 
-                    className="h-8 px-4 text-sm bg-white/10 hover:bg-white/20 text-white"
+                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   >
                     {t('navigation.postJob')}
                   </Button>
                 </Link>
                 <Link href="/payments">
                   <Button 
-                    size="sm" 
+                    size="lg" 
                     variant="secondary" 
-                    className="h-8 px-4 text-sm bg-white/10 hover:bg-white/20 text-white"
+                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   >
                     {t('navigation.payments')}
                   </Button>
                 </Link>
                 <Link href="/settings">
                   <Button 
-                    size="sm" 
+                    size="lg" 
                     variant="secondary" 
-                    className="h-8 px-4 text-sm bg-white/10 hover:bg-white/20 text-white"
+                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
                   >
                     {t('navigation.settings')}
                   </Button>
@@ -58,19 +58,19 @@ export default function Header() {
               </nav>
             </div>
 
-            <div className="flex items-center gap-3 ml-4 pl-4 border-l border-white/20 dark:border-slate-700">
+            <div className="flex items-center gap-6 ml-10 pl-10 border-l border-white/20 dark:border-slate-700">
               <ThemeToggle />
-              <span className="text-sm text-white">
+              <span className="text-base font-medium text-white">
                 {user?.username || 'Dev User'}
               </span>
               <Button
                 variant="ghost"
-                size="sm"
+                size="default"
                 onClick={() => logoutMutation.mutate()}
-                className="h-8 px-3 text-sm text-white hover:text-red-200 hover:bg-red-500/20"
+                className="h-10 px-4 text-base font-medium text-white hover:text-red-200 hover:bg-red-500/20 transition-all"
               >
                 <span className="mr-2">Sair</span>
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-5 w-5" />
               </Button>
               <MobileNav />
             </div>
