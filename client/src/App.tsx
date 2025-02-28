@@ -15,11 +15,13 @@ import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
 import { PageTransition } from "@/components/page-transition";
+import { NotificationBanner } from "@/components/notification-banner";
 
 function Router() {
   return (
     <div className="min-h-screen bg-background">
       <Header />
+      <NotificationBanner />
       <PageTransition>
         <Switch>
           <ProtectedRoute path="/" component={HomePage} />

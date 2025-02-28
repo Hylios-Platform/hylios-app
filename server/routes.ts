@@ -7,6 +7,7 @@ import cors from "cors";
 import express from "express";
 import cookieParser from "cookie-parser";
 import { z } from "zod";
+import { setupWebSocket } from "./websocket";
 
 export async function registerRoutes(app: Express): Promise<Server> {
   // Middleware essencial primeiro
@@ -15,8 +16,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   // Configuração do CORS
   app.use(cors({
-    origin: true, // Aceita requisições da mesma origem em desenvolvimento
-    credentials: true, // Permite o envio de cookies
+    origin: true,
+    credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization']
   }));
@@ -32,51 +33,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Setup do Passport antes dos outros middlewares
   setupAuth(app);
 
-  // Middleware de logging depois da autenticação
-  app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path}`);
-    console.log('Session ID:', req.sessionID);
-    console.log('Is Authenticated:', req.isAuthenticated());
-    console.log('Headers:', req.headers);
-    console.log('Cookies:', req.cookies);
-    next();
-  });
+  // Criar servidor HTTP
+  const httpServer = createServer(app);
 
-  // ===== Endpoints de Autenticação =====
-  const insertUserSchema = z.object({
-    username: z.string(),
-    password: z.string(),
-    userType: z.enum(["company", "professional"]),
-    companyName: z.string().optional()
-  });
-
-  app.post("/api/register", async (req, res) => {
-    try {
-      const userData = insertUserSchema.parse(req.body);
-      const existingUser = await storage.getUserByUsername(userData.username);
-
-      if (existingUser) {
-        return res.status(400).json({ error: "Nome de usuário já existe" });
-      }
-
-      const newUser = await storage.createUser(userData);
-
-      // Automaticamente faz login após registro
-      req.login(newUser, (err) => {
-        if (err) {
-          console.error("Erro ao iniciar sessão após registro:", err);
-          return res.status(500).json({
-            message: "Conta criada, mas erro ao iniciar sessão. Tente fazer login."
-          });
-        }
-        console.log("Registro e login bem-sucedido:", newUser);
-        res.status(200).json(newUser);
-      });
-    } catch (error) {
-      console.error("Erro no registro:", error);
-      res.status(400).json({ error: String(error) });
-    }
-  });
+  // Configurar WebSocket
+  const wsServer = setupWebSocket(httpServer);
 
   // ===== Endpoints de Vagas =====
   app.post("/api/jobs", async (req, res) => {
@@ -94,6 +55,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const job = await storage.createJob({
         ...jobData,
         companyId: req.user.id
+      });
+
+      // Notificar todos os usuários sobre nova vaga
+      wsServer.broadcast({
+        type: "newJob",
+        message: "Nova vaga disponível!",
+        data: {
+          title: job.title,
+          company: req.user.companyName
+        }
       });
 
       console.log(`Job created successfully by company ${req.user.id}`);
@@ -191,6 +162,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
         proofOfAddressPath
       });
 
+      // Notificar usuário sobre mudança no status KYC
+      wsServer.broadcast({
+        type: "kycUpdate",
+        message: "Status KYC atualizado",
+        data: {
+          userId: req.user.id,
+          status: user.kycStatus // Use the actual status from the user object
+        }
+      });
+
       // Recompensas por completar KYC
       await storage.addUserPoints(req.user.id, 100);
       await storage.addUserExperience(req.user.id, 200);
@@ -204,7 +185,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== Endpoints de Gamificação =====
-
   /**
    * Listar conquistas do usuário
    * GET /api/user/achievements
@@ -243,7 +223,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== Endpoints de Carteira =====
-
   /**
    * Atualizar endereço da carteira
    * POST /api/wallet
@@ -267,7 +246,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   // ===== Endpoints de Créditos =====
-
   /**
    * Adicionar créditos à empresa
    * POST /api/credits/add
@@ -314,7 +292,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  /**
+    /**
    * Atualizar perfil do usuário
    * POST /api/profile
    * Requer: Usuário autenticado
@@ -372,6 +350,5 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
-  const httpServer = createServer(app);
   return httpServer;
 }
