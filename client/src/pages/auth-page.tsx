@@ -55,9 +55,7 @@ const authSchema = insertUserSchema.extend({
   gender: z.enum(["male", "female", "other", "prefer_not_to_say"], {
     errorMap: () => ({ message: "auth.errors.genderRequired" })
   }),
-  document: z.string()
-    .min(11, "auth.errors.documentMin")
-    .max(14, "auth.errors.documentMax"),
+  document: z.string(),
   companyName: z.string().optional()
     .refine((val) => val !== undefined && val !== "" || true, "auth.errors.companyNameRequired"),
   dataProcessingConsent: z.boolean()
@@ -437,14 +435,14 @@ export default function AuthPage() {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel className="text-gray-600">
-                            {registerForm.watch("userType") === "company" ? t('auth.cnpj') : t('auth.cpf')}
+                            {t('auth.idDocument')}
                             <span className="text-red-500">*</span>
                           </FormLabel>
                           <FormControl>
                             <Input
                               className="bg-white/80 border-gray-200 text-gray-900"
                               {...field}
-                              placeholder={registerForm.watch("userType") === "company" ? "00.000.000/0000-00" : "000.000.000-00"}
+                              placeholder={t('auth.idDocumentPlaceholder')}
                             />
                           </FormControl>
                           <FormMessage />

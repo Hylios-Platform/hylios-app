@@ -57,8 +57,8 @@
       "termsRequired": "Você precisa aceitar os termos para continuar"
     },
     "confirmPassword": "Confirmar Senha",
-    "cpf": "CPF",
-    "cnpj": "CNPJ"
+    "idDocument": "Passaporte ou BI",
+    "idDocumentPlaceholder": "Número do Passaporte/BI"
   },
   "common": {
     "confirm": "Confirmar",
