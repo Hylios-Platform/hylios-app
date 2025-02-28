@@ -18,6 +18,7 @@ type AuthContextType = {
 };
 
 type LoginData = Pick<InsertUser, "username" | "password">;
+type AuthResponse = { user: SelectUser; token: string };
 
 export const AuthContext = createContext<AuthContextType | null>(null);
 
@@ -35,7 +36,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const loginMutation = useMutation({
     mutationFn: async (credentials: LoginData) => {
       const res = await apiRequest("POST", "/api/login", credentials);
-      return await res.json();
+      const data: AuthResponse = await res.json();
+      // Armazenar o token JWT
+      localStorage.setItem('auth_token', data.token);
+      return data.user;
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -52,7 +56,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const registerMutation = useMutation({
     mutationFn: async (credentials: InsertUser) => {
       const res = await apiRequest("POST", "/api/register", credentials);
-      return await res.json();
+      const data: AuthResponse = await res.json();
+      // Armazenar o token JWT também após registro
+      localStorage.setItem('auth_token', data.token);
+      return data.user;
     },
     onSuccess: (user: SelectUser) => {
       queryClient.setQueryData(["/api/user"], user);
@@ -69,6 +76,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logoutMutation = useMutation({
     mutationFn: async () => {
       await apiRequest("POST", "/api/logout");
+      // Remover o token JWT no logout
+      localStorage.removeItem('auth_token');
       queryClient.setQueryData(["/api/user"], null);
     },
     onSuccess: () => {
