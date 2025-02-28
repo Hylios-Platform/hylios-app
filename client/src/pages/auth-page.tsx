@@ -388,16 +388,32 @@ export default function AuthPage() {
                       />
                     )}
 
-                    <Button
-                      type="submit"
-                      className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
-                      disabled={registerMutation.isPending}
-                    >
-                      {registerMutation.isPending && (
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      )}
-                      {t('auth.register')}
-                    </Button>
+                    <div className="flex flex-col gap-4">
+                      <Button
+                        type="submit"
+                        className="w-full bg-blue-600 hover:bg-blue-700 text-white shadow-lg"
+                        disabled={registerMutation.isPending}
+                      >
+                        {registerMutation.isPending && (
+                          <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        {t('auth.register')}
+                      </Button>
+
+                      <div className="text-center">
+                        <span className="text-sm text-gray-500">ou</span>
+                      </div>
+
+                      <Link href="/professional-signup">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          className="w-full border-blue-200 hover:bg-blue-50 text-blue-600"
+                        >
+                          {t('auth.professional.title')}
+                        </Button>
+                      </Link>
+                    </div>
                   </form>
                 </Form>
               </TabsContent>

@@ -73,10 +73,6 @@ export function setupWebSocket(httpServer: HttpServer) {
     clearInterval(interval);
   });
 
-  wss.on("error", (error) => {
-    console.error("[WebSocket Server] Erro no servidor:", error);
-  });
-
   function handleMessage(ws: WebSocket, data: any) {
     try {
       console.log("[WebSocket] Processando mensagem:", data);

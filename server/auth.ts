@@ -34,10 +34,10 @@ async function comparePasswords(supplied: string, stored: string) {
 export function setupAuth(app: Express) {
   // Configurar CORS para permitir credenciais
   app.use(cors({
-    origin: true,
+    origin: true, // Permite qualquer origem em desenvolvimento
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
   }));
 
   // Cookie parser needs to come before the session
