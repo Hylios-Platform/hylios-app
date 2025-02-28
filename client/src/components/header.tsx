@@ -28,7 +28,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-2 h-8 shadow-sm"
+                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
               >
                 {t('navigation.jobs')}
               </Button>
@@ -37,7 +37,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-2 h-8 shadow-sm"
+                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
               >
                 {t('navigation.postJob')}
               </Button>
@@ -46,7 +46,7 @@ export default function Header() {
               <Button 
                 size="sm" 
                 variant="default" 
-                className="bg-blue-600 hover:bg-blue-700 text-white text-sm py-1 px-2 h-8 shadow-sm"
+                className="h-8 px-3 text-xs bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
               >
                 {t('navigation.payments')}
               </Button>
@@ -55,17 +55,17 @@ export default function Header() {
 
           <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200">
             <WalletButton />
-            <span className="text-sm text-gray-700">
+            <span className="text-xs text-gray-600">
               {user?.username || 'Dev User'}
             </span>
             <Button
               variant="ghost"
               size="sm"
               onClick={() => logoutMutation.mutate()}
-              className="text-gray-600 hover:text-red-600 hover:bg-red-50 flex items-center gap-1 px-2 h-8 transition-colors"
+              className="h-8 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50"
             >
-              <span className="text-sm">Sair</span>
-              <LogOut className="h-4 w-4" />
+              <span className="mr-1">Sair</span>
+              <LogOut className="h-3 w-3" />
             </Button>
           </div>
         </div>
