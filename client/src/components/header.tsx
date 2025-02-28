@@ -15,12 +15,12 @@ export default function Header() {
   const isAuthPage = location === '/auth' || location === '/password-reset';
 
   return (
-    <header className="bg-blue-50 border-b border-blue-100 dark:bg-slate-900 dark:border-slate-800">
+    <header className="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
           <h1 className="text-xl font-bold">
             <Link href="/">
-              <span className="text-blue-500 hover:text-blue-600 transition-colors cursor-pointer">
+              <span className="text-white hover:text-sky-100 transition-colors cursor-pointer">
                 Hylios
               </span>
             </Link>
@@ -33,8 +33,8 @@ export default function Header() {
               <Link href="/jobs">
                 <Button 
                   size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  variant="secondary" 
+                  className="h-7 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
                 >
                   {t('navigation.jobs')}
                 </Button>
@@ -42,8 +42,8 @@ export default function Header() {
               <Link href="/post-job">
                 <Button 
                   size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  variant="secondary" 
+                  className="h-7 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
                 >
                   {t('navigation.postJob')}
                 </Button>
@@ -51,25 +51,25 @@ export default function Header() {
               <Link href="/payments">
                 <Button 
                   size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                  variant="secondary" 
+                  className="h-7 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
                 >
                   {t('navigation.payments')}
                 </Button>
               </Link>
             </nav>
 
-            <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200 dark:border-slate-700">
+            <div className="flex items-center gap-2 ml-3 pl-3 border-l border-white/20 dark:border-slate-700">
               <ThemeToggle />
               <WalletButton />
-              <span className="text-xs text-gray-600 dark:text-gray-300">
+              <span className="text-xs text-white">
                 {user?.username || 'Dev User'}
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => logoutMutation.mutate()}
-                className="h-7 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
+                className="h-7 px-2 text-xs text-white hover:text-red-200 hover:bg-red-500/20"
               >
                 <span className="mr-1">Sair</span>
                 <LogOut className="h-3 w-3" />
