@@ -3,6 +3,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
+import { WalletButton } from "@/components/wallet-button";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -53,6 +54,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200">
+            <WalletButton />
             <span className="text-sm text-gray-700">
               {user?.username || 'Dev User'}
             </span>
