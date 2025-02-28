@@ -57,6 +57,24 @@ export default function Header() {
                   {t('navigation.payments')}
                 </Button>
               </Link>
+              <Link href="/pitch">
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  className="h-7 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
+                >
+                  {t('navigation.pitch')}
+                </Button>
+              </Link>
+              <Link href="/settings">
+                <Button 
+                  size="sm" 
+                  variant="secondary" 
+                  className="h-7 px-2 text-xs bg-white/10 hover:bg-white/20 text-white"
+                >
+                  {t('navigation.settings')}
+                </Button>
+              </Link>
             </nav>
 
             <div className="flex items-center gap-2 ml-3 pl-3 border-l border-white/20 dark:border-slate-700">
