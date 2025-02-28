@@ -11,7 +11,8 @@ export function useNotifications() {
   const [notifications] = useState<Notification[]>([]);
   const { toast } = useToast();
 
-  // Completely disabled for UI testing
+  // WebSocket temporariamente desabilitado até resolvermos o erro 400
+  // Isso permitirá que a UI e animações funcionem sem interferência
   return {
     notifications,
     clearNotifications: () => {},

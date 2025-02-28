@@ -12,7 +12,7 @@ import { MarqueeSponsors } from "@/components/marquee-sponsors";
 const MatchAnimation = () => (
   <div className="relative h-32 overflow-hidden my-8">
     <motion.div
-      className="absolute top-1/2 left-1/4 right-1/4 h-0.5 bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600"
+      className="absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600"
       initial={{ scaleX: 0, opacity: 0 }}
       animate={{
         scaleX: [0, 1, 1, 0],
@@ -27,7 +27,7 @@ const MatchAnimation = () => (
 
     <motion.div
       animate={{
-        x: ["0%", "20%", "0%"],
+        x: ["0%", "15%", "0%"],
         scale: [1, 1.1, 1],
         rotate: [0, 3, -3, 0]
       }}
@@ -36,7 +36,7 @@ const MatchAnimation = () => (
         repeat: Infinity,
         ease: "linear"
       }}
-      className="absolute left-0 top-1/2 -translate-y-1/2"
+      className="absolute left-[10%] top-1/2 -translate-y-1/2"
     >
       <div className="flex items-center gap-4">
         <div className="bg-blue-100 p-3 rounded-full shadow-md">
@@ -61,25 +61,40 @@ const MatchAnimation = () => (
       className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
     >
       <div className="relative">
-        <Bitcoin className="h-8 w-8 text-amber-400" />
+        <Bitcoin className="h-8 w-8 text-green-400" />
         <motion.div
           animate={{
             scale: [1, 1.5, 1],
-            opacity: [0.2, 0, 0.2],
+            opacity: [0.3, 0, 0.3],
           }}
           transition={{
             duration: 2,
             repeat: Infinity,
             ease: "easeInOut",
           }}
-          className="absolute inset-0 bg-amber-200 rounded-full blur-xl"
+          className="absolute inset-0 bg-green-200/50 rounded-full blur-xl"
         />
+        <motion.span 
+          className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-medium text-green-500"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{
+            opacity: [0, 1, 1, 0],
+            y: [-10, -20]
+          }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeOut",
+          }}
+        >
+          +0.15 BTC
+        </motion.span>
       </div>
     </motion.div>
 
     <motion.div
       animate={{
-        x: ["100%", "80%", "100%"],
+        x: ["0%", "-15%", "0%"],
         scale: [1, 1.1, 1],
         rotate: [0, -3, 3, 0]
       }}
@@ -88,7 +103,7 @@ const MatchAnimation = () => (
         repeat: Infinity,
         ease: "linear"
       }}
-      className="absolute right-0 top-1/2 -translate-y-1/2"
+      className="absolute right-[10%] top-1/2 -translate-y-1/2"
     >
       <div className="flex items-center gap-4">
         <span className="text-violet-600 font-medium">Profissional</span>
