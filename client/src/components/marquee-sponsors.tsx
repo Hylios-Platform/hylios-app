@@ -1,89 +1,40 @@
 import { motion } from "framer-motion";
-import { Building2, Gift, Sparkles } from "lucide-react";
+import { Building2, Gift } from "lucide-react";
 
 export function MarqueeSponsors() {
-  const sponsors = [
-    {
-      name: "GoblueDigital",
-      url: "https://www.goblue.pt",
-      description: "Parceiro Oficial de Transformação Digital"
-    }
-  ];
-
-  const promotions = [
-    "🚀 Ganhe 50% de desconto na primeira contratação!",
-    "💎 Profissionais verificados recebem benefícios exclusivos",
-    "🌟 Novo: Pagamentos em Bitcoin disponíveis!"
+  const messages = [
+    <div key="sponsor" className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm">
+      <Building2 className="h-5 w-5 text-blue-500" />
+      <span className="font-medium text-blue-700">GoblueDigital</span>
+      <span className="text-blue-500">- Parceiro Oficial de Transformação Digital</span>
+    </div>,
+    <div key="promo1" className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded-full">
+      <Gift className="h-5 w-5 inline-block mr-2" />
+      50% de desconto na primeira contratação!
+    </div>,
+    <div key="promo2" className="bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded-full">
+      Pagamentos em Bitcoin disponíveis!
+    </div>
   ];
 
   return (
-    <div className="w-full bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 py-3 overflow-hidden relative">
+    <div className="w-full bg-gradient-to-r from-blue-50 via-indigo-50 to-blue-50 py-3 overflow-hidden">
       <motion.div
-        initial={{ x: "100%" }}
-        animate={{ 
-          x: "-100%",
+        className="flex items-center gap-8 whitespace-nowrap"
+        animate={{
+          x: [0, -1000],
         }}
         transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear"
+          x: {
+            duration: 20,
+            repeat: Infinity,
+            ease: "linear",
+          },
         }}
-        className="flex items-center gap-12 absolute whitespace-nowrap"
       >
-        {sponsors.map((sponsor, index) => (
-          <a 
-            key={`sponsor-${index}`}
-            href={sponsor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow group"
-          >
-            <Building2 className="h-5 w-5 text-blue-500" />
-            <span className="font-medium text-blue-700 group-hover:text-blue-800 transition-colors">
-              {sponsor.name}
-            </span>
-            <span className="text-sm text-blue-500">
-              - {sponsor.description}
-            </span>
-          </a>
-        ))}
-
-        {promotions.map((promo, index) => (
-          <div 
-            key={`promo-${index}`}
-            className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded-full"
-          >
-            {index === 0 ? <Gift className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
-            <span className="font-medium">{promo}</span>
-          </div>
-        ))}
-
-        {/* Repetir para criar um efeito contínuo */}
-        {sponsors.map((sponsor, index) => (
-          <a 
-            key={`sponsor-repeat-${index}`}
-            href={sponsor.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm hover:shadow-md transition-shadow group"
-          >
-            <Building2 className="h-5 w-5 text-blue-500" />
-            <span className="font-medium text-blue-700 group-hover:text-blue-800 transition-colors">
-              {sponsor.name}
-            </span>
-            <span className="text-sm text-blue-500">
-              - {sponsor.description}
-            </span>
-          </a>
-        ))}
-
-        {promotions.map((promo, index) => (
-          <div 
-            key={`promo-repeat-${index}`}
-            className="flex items-center gap-2 bg-gradient-to-r from-indigo-500 to-blue-500 text-white px-4 py-2 rounded-full"
-          >
-            {index === 0 ? <Gift className="h-5 w-5" /> : <Sparkles className="h-5 w-5" />}
-            <span className="font-medium">{promo}</span>
+        {[...messages, ...messages].map((message, i) => (
+          <div key={i} className="flex-shrink-0">
+            {message}
           </div>
         ))}
       </motion.div>

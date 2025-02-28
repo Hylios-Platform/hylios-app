@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Clock, Coins, Heart, X } from "lucide-react";
 import { Job } from "@shared/schema";
 
-// Usando apenas os campos que existem no tipo Job
+// Mock data usando os campos corretos do tipo Job
 const mockJobs: Job[] = [
   {
     id: 1,
@@ -13,6 +13,7 @@ const mockJobs: Job[] = [
     description: "Desenvolvimento de aplicações web modernas usando React e Node.js",
     companyId: 1,
     amount: "6000 EUR (≈0.15 BTC)",
+    currency: "EUR",
     country: "Portugal",
     city: "Lisboa",
     workType: "remote",
@@ -27,6 +28,7 @@ const mockJobs: Job[] = [
     description: "Criação de interfaces intuitivas e experiências memoráveis",
     companyId: 2,
     amount: "5500 EUR (≈0.14 BTC)",
+    currency: "EUR",
     country: "Espanha",
     city: "Barcelona",
     workType: "hybrid",
@@ -41,6 +43,7 @@ const mockJobs: Job[] = [
     description: "Automatização e gerenciamento de infraestrutura cloud",
     companyId: 3,
     amount: "7000 EUR (≈0.18 BTC)",
+    currency: "EUR",
     country: "Alemanha",
     city: "Berlim",
     workType: "onsite",
@@ -82,7 +85,6 @@ export function JobSwipe() {
   };
 
   const handleMatch = () => {
-    // Aqui iria a lógica para fazer match com a vaga
     console.log("Match com a vaga:", currentJob.id);
     paginate(1);
   };
