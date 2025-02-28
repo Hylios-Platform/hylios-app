@@ -13,6 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Job } from "@shared/schema";
 import { calculateMatchScore } from "@/lib/matching-service";
 import { ProfessionalStats } from "@/components/professional-stats";
+import { JobSwipe } from "@/components/job-swipe";
 
 export default function HomePage() {
   const { user } = useAuth();
@@ -41,12 +42,6 @@ export default function HomePage() {
   const userSkills = (user?.profileData as any)?.skills || [];
   const userLocation = (user?.profileData as any)?.location || "";
   const preferredWorkType = (user?.profileData as any)?.preferredWorkType || "remote";
-
-  // Calcular matches em tempo real
-  const realTimeMatches = jobs?.map(job => ({
-    job,
-    score: calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
-  })).sort((a, b) => b.score - a.score).slice(0, 5);
 
   const MatchAnimation = () => (
     <div className="relative h-32 overflow-hidden my-8">
@@ -179,85 +174,65 @@ export default function HomePage() {
     </div>
   );
 
-  // Seção de Matching Interativo
-  const MatchingSection = () => (
-    <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow p-6 mb-8">
-      <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-2">
-          Matches em Tempo Real
-        </h2>
-        <p className="text-blue-400">
-          Encontre as melhores oportunidades baseadas no seu perfil
-        </p>
-      </div>
+  const MatchingSection = () => {
+    const matches = jobs?.map(job => ({
+      job,
+      score: calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
+    })).sort((a, b) => b.score - a.score).slice(0, 5);
 
-      <div className="space-y-4">
-        {realTimeMatches?.map(({ job, score }, index) => (
-          <motion.div
-            key={job.id}
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: index * 0.1 }}
-            className="p-4 bg-white rounded-lg border border-blue-100 hover:border-blue-200 transition-colors cursor-pointer"
-          >
-            <div className="flex items-start justify-between">
-              <div className="space-y-1">
-                <h4 className="font-medium text-gray-900">{job.title}</h4>
-                <p className="text-sm text-gray-600">{job.city}, {job.country}</p>
-                <div className="flex items-center gap-2 text-sm">
-                  <span className="text-gray-500">Tipo:</span>
-                  <span className="text-blue-600 capitalize">{job.workType}</span>
+    if (!matches?.length) return null;
+
+    return (
+      <Card className="border-blue-100 bg-blue-50/10 shadow-sm hover:shadow-md transition-shadow p-6 mb-8">
+        <div className="text-center mb-6">
+          <h2 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent mb-2">
+            Matches em Tempo Real
+          </h2>
+          <p className="text-blue-400">
+            Encontre as melhores oportunidades baseadas no seu perfil
+          </p>
+        </div>
+
+        <div className="space-y-4">
+          {matches.map(({ job, score }, index) => (
+            <motion.div
+              key={job.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="p-4 bg-white rounded-lg border border-blue-100 hover:border-blue-200 transition-colors cursor-pointer"
+            >
+              <div className="flex items-start justify-between">
+                <div className="space-y-1">
+                  <h4 className="font-medium text-gray-900">{job.title}</h4>
+                  <p className="text-sm text-gray-600">{job.city}, {job.country}</p>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-500">Tipo:</span>
+                    <span className="text-blue-600 capitalize">{job.workType}</span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end">
+                  <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                    {score}%
+                  </span>
+                  {score >= 80 && (
+                    <span className="text-xs text-green-600 mt-1">Match Perfeito!</span>
+                  )}
                 </div>
               </div>
-              <div className="flex flex-col items-end">
-                <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
-                  {score}%
-                </span>
-                {score >= 80 && (
-                  <span className="text-xs text-green-600 mt-1">Match Perfeito!</span>
-                )}
-              </div>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </Card>
-  );
-
-  if (user?.userType === "company") {
-    return (
-      <div className="min-h-screen bg-white">
-        <div className="container mx-auto px-4 py-16">
-          <motion.div 
-            className="max-w-2xl mx-auto text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              {t('home.welcome')}
-            </h1>
-            <p className="text-xl text-blue-400 mb-10">
-              {t('home.subtitle')}
-            </p>
-            <MatchAnimation />
-            <Link href="/post-job">
-              <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white shadow-md">
-                {t('navigation.postJob')}
-              </Button>
-            </Link>
-          </motion.div>
-          <FloatingJobs />
+            </motion.div>
+          ))}
         </div>
-      </div>
+      </Card>
     );
-  }
+  };
 
   return (
     <div className="min-h-screen bg-white">
       <Tutorial />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
-          <motion.div 
+          <motion.div
             className="welcome-section mb-12 text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -269,8 +244,8 @@ export default function HomePage() {
               {t('home.subtitle')}
             </p>
             <MatchAnimation />
-            <Button 
-              variant="secondary" 
+            <Button
+              variant="secondary"
               size="sm"
               className="bg-blue-600 hover:bg-blue-700 text-white shadow-md"
               onClick={() => tutorial.startTutorial()}
@@ -279,26 +254,38 @@ export default function HomePage() {
             </Button>
           </motion.div>
 
-          <FloatingJobs />
-
-          {user?.userType === "professional" && <MatchingSection />}
-
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-12"
           >
-            <UserProgress />
+            <JobSwipe />
           </motion.div>
 
-          {user?.userType === "professional" && (
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8"
-            >
-              <ProfessionalStats />
-            </motion.div>
+          <FloatingJobs />
+
+          {user && (
+            <>
+              {user.userType === "professional" && <MatchingSection />}
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-8"
+              >
+                <UserProgress />
+              </motion.div>
+
+              {user.userType === "professional" && (
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-8"
+                >
+                  <ProfessionalStats />
+                </motion.div>
+              )}
+            </>
           )}
 
           <motion.div
@@ -321,8 +308,8 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4">
                       {t('jobs.completeKyc')}
                     </p>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
                     >
@@ -333,7 +320,7 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={item}
               className="jobs-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
             >
@@ -347,9 +334,9 @@ export default function HomePage() {
                     <p className="text-gray-600 mb-4">
                       {t('jobs.findOpportunities')}
                     </p>
-                    <Button 
+                    <Button
                       variant="outline"
-                      size="sm" 
+                      size="sm"
                       className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
                     >
                       {t('jobs.viewJobs')}
@@ -359,7 +346,7 @@ export default function HomePage() {
               </Link>
             </motion.div>
 
-            <motion.div 
+            <motion.div
               variants={item}
               className="payment-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
             >
