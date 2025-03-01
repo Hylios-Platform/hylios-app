@@ -65,7 +65,7 @@ export default function PitchPresentation() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex flex-col">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 flex flex-col">
       <div className="flex-1 flex items-center justify-center relative overflow-hidden">
         <div className="absolute z-10 left-4">
           <Button
@@ -73,7 +73,7 @@ export default function PitchPresentation() {
             size="icon"
             onClick={() => paginate(-1)}
             disabled={currentSlide === 0}
-            className="h-12 w-12 rounded-full bg-white/80 hover:bg-white shadow-lg"
+            className="h-12 w-12 rounded-full bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 shadow-lg backdrop-blur-sm"
           >
             <ChevronLeft className="h-6 w-6" />
           </Button>
@@ -85,7 +85,7 @@ export default function PitchPresentation() {
             size="icon"
             onClick={() => paginate(1)}
             disabled={currentSlide === slides.length - 1}
-            className="h-12 w-12 rounded-full bg-white/80 hover:bg-white shadow-lg"
+            className="h-12 w-12 rounded-full bg-white/80 dark:bg-slate-800/80 hover:bg-white dark:hover:bg-slate-700 shadow-lg backdrop-blur-sm"
           >
             <ChevronRight className="h-6 w-6" />
           </Button>
@@ -117,12 +117,12 @@ export default function PitchPresentation() {
             }}
             className="absolute w-full max-w-4xl px-4"
           >
-            <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mx-auto">
+            <div className="bg-white/80 dark:bg-slate-800/80 backdrop-blur-sm rounded-2xl shadow-xl p-8 mx-auto">
               <motion.h2
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.2 }}
-                className="text-4xl font-bold text-gray-800 mb-4 bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent"
+                className="text-4xl font-bold mb-4 bg-gradient-to-r from-blue-600 to-blue-400 dark:from-blue-400 dark:to-blue-300 bg-clip-text text-transparent"
               >
                 {slides[currentSlide].title}
               </motion.h2>
@@ -130,7 +130,7 @@ export default function PitchPresentation() {
                 initial={{ y: 20, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.3 }}
-                className="text-xl text-gray-600"
+                className="text-xl text-gray-600 dark:text-gray-300"
               >
                 {slides[currentSlide].content}
               </motion.p>
@@ -148,8 +148,8 @@ export default function PitchPresentation() {
               }}
               className={`h-2 rounded-full transition-all ${
                 index === currentSlide
-                  ? "w-8 bg-blue-500"
-                  : "w-2 bg-blue-300"
+                  ? "w-8 bg-blue-500 dark:bg-blue-400"
+                  : "w-2 bg-blue-300 dark:bg-blue-600"
               }`}
             />
           ))}
