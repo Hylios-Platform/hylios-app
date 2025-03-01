@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { LogOut } from "lucide-react";
+import { LogOut, Building2, Users, BarChart2, HelpCircle, Info } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { WalletButton } from "@/components/wallet-button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -33,23 +33,70 @@ export default function Header() {
 
         {!isAuthPage && (
           <div className="flex items-center gap-2">
-            <nav className="flex gap-2">
+            <nav className="flex items-center gap-3">
+              <Link href="/dashboard">
+                <Button 
+                  size="sm" 
+                  variant="ghost"
+                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                >
+                  <BarChart2 className="h-4 w-4" />
+                  Dashboard
+                </Button>
+              </Link>
+
               <Link href="/jobs">
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
+                  className="h-9 px-4 text-sm bg-blue-500 hover:bg-blue-600 text-white shadow-sm flex items-center gap-1"
                 >
+                  <Building2 className="h-4 w-4" />
                   Trabalhos
                 </Button>
               </Link>
+
+              <Link href="/professionals">
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-9 px-3 text-sm text-gray-600 hover:text-violet-600 hover:bg-violet-50 flex items-center gap-1"
+                >
+                  <Users className="h-4 w-4" />
+                  Profissionais
+                </Button>
+              </Link>
+
               <Link href="/post-job">
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-md"
+                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-md flex items-center gap-1"
                 >
+                  <Building2 className="h-4 w-4" />
                   Publicar Trabalho
+                </Button>
+              </Link>
+
+              <Link href="/about">
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                >
+                  <Info className="h-4 w-4" />
+                  Sobre
+                </Button>
+              </Link>
+
+              <Link href="/support">
+                <Button 
+                  size="sm" 
+                  variant="ghost" 
+                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                >
+                  <HelpCircle className="h-4 w-4" />
+                  Suporte
                 </Button>
               </Link>
             </nav>

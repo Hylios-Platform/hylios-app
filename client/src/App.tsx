@@ -13,6 +13,10 @@ import Payments from "@/pages/payments";
 import PasswordReset from "@/pages/password-reset";
 import PitchPresentation from "@/pages/pitch-presentation";
 import ApplicationStatus from "@/pages/application-status";
+import Dashboard from "@/pages/dashboard";
+import Professionals from "@/pages/professionals";
+import About from "@/pages/about";
+import Support from "@/pages/support";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
@@ -42,6 +46,12 @@ function Router() {
           <Route path="/auth" component={AuthPage} />
           <Route path="/password-reset" component={PasswordReset} />
           <Route path="/application-status/:id" component={ApplicationStatus} />
+          <Route path="/about" component={About} />
+          <Route path="/support" component={Support} />
+
+          {/* Rotas protegidas que requerem autenticação */}
+          <ProtectedRoute path="/dashboard" component={Dashboard} />
+          <ProtectedRoute path="/professionals" component={Professionals} />
           <ProtectedRoute path="/post-job" component={PostJob} />
           <ProtectedRoute path="/jobs" component={Jobs} />
           <ProtectedRoute path="/settings" component={Settings} />
