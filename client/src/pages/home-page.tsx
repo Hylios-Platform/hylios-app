@@ -19,7 +19,7 @@ const CompanyStats = () => {
   ];
 
   return (
-    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12">
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-6">
       {stats.map((stat, index) => {
         const Icon = stat.icon;
         return (
@@ -84,7 +84,7 @@ const CompanyFeatures = () => {
   ];
 
   return (
-    <div className="grid md:grid-cols-2 gap-6 my-12">
+    <div className="grid md:grid-cols-2 gap-6 my-6">
       {features.map((feature, index) => {
         const Icon = feature.icon;
         return (
