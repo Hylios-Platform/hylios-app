@@ -241,8 +241,8 @@ const CompanyFeatures = () => {
     },
     {
       icon: Bitcoin,
-      title: 'Pagamentos Crypto',
-      description: 'Suporte a pagamentos em diversas criptomoedas'
+      title: 'Pagamentos Bitcoin',
+      description: 'Pagamentos exclusivos e seguros em Bitcoin (BTC)'
     },
     {
       icon: Sparkles,
