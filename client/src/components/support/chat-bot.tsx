@@ -4,12 +4,13 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { motion, AnimatePresence } from "framer-motion";
-import { MessageCircle, X, Send, Bot, Loader2 } from "lucide-react";
+import { MessageCircle, X, Send, Bot, Loader2, AlertCircle } from "lucide-react";
 import { useMutation } from "@tanstack/react-query";
+import { useToast } from "@/hooks/use-toast";
 
 interface Message {
   id: string;
-  type: "user" | "assistant";
+  type: "user" | "assistant" | "error";
   content: string;
   timestamp: Date;
 }
@@ -18,23 +19,38 @@ export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const { toast } = useToast();
 
   const sendMessageMutation = useMutation({
     mutationFn: async (message: string) => {
-      // Não inclui credenciais na requisição do chat
-      const response = await fetch('/api/chat', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message }),
-      });
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ message }),
+        });
 
-      if (!response.ok) {
-        throw new Error('Erro ao enviar mensagem');
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Erro ao enviar mensagem');
+        }
+
+        return response.json();
+      } catch (error) {
+        console.error('Erro na requisição:', error);
+        throw error;
       }
-
-      return response.json();
+    },
+    onMutate: (message) => {
+      const optimisticMessage: Message = {
+        id: Date.now().toString(),
+        type: "user",
+        content: message,
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, optimisticMessage]);
     },
     onSuccess: (data) => {
       setMessages((prev) => [
@@ -47,19 +63,27 @@ export function ChatBot() {
         },
       ]);
     },
+    onError: (error) => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: Date.now().toString(),
+          type: "error",
+          content: "Desculpe, não consegui processar sua mensagem no momento. Por favor, tente novamente mais tarde.",
+          timestamp: new Date(),
+        },
+      ]);
+
+      toast({
+        variant: "destructive",
+        title: "Erro no chat",
+        description: "Não foi possível processar sua mensagem. Tente novamente mais tarde.",
+      });
+    },
   });
 
   const handleSendMessage = () => {
     if (!input.trim()) return;
-
-    const newMessage: Message = {
-      id: Date.now().toString(),
-      type: "user",
-      content: input,
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, newMessage]);
     sendMessageMutation.mutate(input);
     setInput("");
   };
@@ -118,9 +142,14 @@ export function ChatBot() {
                           className={`max-w-[80%] rounded-2xl px-4 py-2 ${
                             message.type === "user"
                               ? "bg-blue-500 text-white"
+                              : message.type === "error"
+                              ? "bg-red-50 text-red-600 dark:bg-red-900/20 dark:text-red-400"
                               : "bg-gray-100 dark:bg-slate-800"
                           }`}
                         >
+                          {message.type === "error" && (
+                            <AlertCircle className="h-4 w-4 mb-1 inline-block mr-1" />
+                          )}
                           <p className="text-sm">{message.content}</p>
                         </div>
                       </motion.div>
@@ -141,13 +170,18 @@ export function ChatBot() {
                     onChange={(e) => setInput(e.target.value)}
                     onKeyPress={(e) => e.key === "Enter" && handleSendMessage()}
                     className="flex-1"
+                    disabled={sendMessageMutation.isPending}
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={sendMessageMutation.isPending}
+                    disabled={sendMessageMutation.isPending || !input.trim()}
                     className="bg-blue-500 hover:bg-blue-600"
                   >
-                    <Send className="h-4 w-4" />
+                    {sendMessageMutation.isPending ? (
+                      <Loader2 className="h-4 w-4 animate-spin" />
+                    ) : (
+                      <Send className="h-4 w-4" />
+                    )}
                   </Button>
                 </div>
               </CardContent>

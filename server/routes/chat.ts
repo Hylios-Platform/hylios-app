@@ -25,7 +25,19 @@ export function setupChatRoutes(app: Express) {
     app.post("/api/chat", async (req, res) => {
       try {
         const { message } = req.body;
+        if (!message || typeof message !== 'string') {
+          return res.status(400).json({ error: "Mensagem inválida" });
+        }
+
         console.log('Recebida mensagem do chat:', message);
+
+        if (!process.env.OPENAI_API_KEY) {
+          console.error('Chave da API OpenAI não configurada');
+          return res.status(500).json({ 
+            error: "Serviço temporariamente indisponível",
+            details: "API key não configurada"
+          });
+        }
 
         const response = await openai.chat.completions.create({
           model: "gpt-4o",
@@ -39,9 +51,28 @@ export function setupChatRoutes(app: Express) {
 
         console.log('Resposta gerada com sucesso');
         res.json({ message: response.choices[0].message.content });
-      } catch (error) {
+      } catch (error: any) {
         console.error("Erro no processamento do chat:", error);
-        res.status(500).json({ error: "Erro ao processar mensagem" });
+
+        // Tratamento específico de erros da API OpenAI
+        if (error?.error?.type === 'insufficient_quota') {
+          return res.status(503).json({ 
+            error: "Serviço temporariamente indisponível",
+            details: "Limite de uso excedido"
+          });
+        }
+
+        if (error?.status === 429) {
+          return res.status(503).json({ 
+            error: "Serviço temporariamente indisponível",
+            details: "Muitas requisições"
+          });
+        }
+
+        res.status(500).json({ 
+          error: "Erro ao processar mensagem",
+          details: "Erro interno do servidor"
+        });
       }
     });
     console.log('Rotas do chat configuradas com sucesso');
