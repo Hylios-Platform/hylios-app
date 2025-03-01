@@ -17,13 +17,13 @@ export default function Header() {
     <header className="bg-gradient-to-r from-blue-50 to-blue-100/30 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
         <div className="flex items-center gap-6">
-          <h1 className="text-xl font-bold">
-            <Link href="/">
+          <Link href="/" className="transition-transform hover:scale-105">
+            <h1 className="text-xl font-bold">
               <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-600 transition-colors cursor-pointer">
                 Hylios
               </span>
-            </Link>
-          </h1>
+            </h1>
+          </Link>
         </div>
 
         {!isAuthPage && (
