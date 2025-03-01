@@ -124,7 +124,7 @@ const CompanyFeatures = () => {
 };
 
 const MatchAnimation = () => (
-  <div className="relative h-32 overflow-hidden my-8">
+  <div className="relative h-32 overflow-hidden my-4">
     <motion.div
       className="absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600"
       initial={{ scaleX: 0, opacity: 0 }}
@@ -317,7 +317,7 @@ export default function HomePage() {
     <div className="min-h-screen bg-white">
       <Tutorial />
       <ChatBot />
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-8">
         <div className="max-w-2xl mx-auto">
           <motion.div
             className="welcome-section text-center"
@@ -332,7 +332,7 @@ export default function HomePage() {
                 stiffness: 260,
                 damping: 20
               }}
-              className="mb-8"
+              className="mb-4"
             >
               <motion.div
                 animate={{ rotate: 360 }}
