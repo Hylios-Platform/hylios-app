@@ -1,14 +1,127 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Building2, UserCheck, Bitcoin, Sparkles } from "lucide-react";
+import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion } from "framer-motion";
 import { useTutorial } from "@/hooks/use-tutorial";
 import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
-import { ChatBot } from "@/components/support/chat-bot"; // Importando o ChatBot
+import { ChatBot } from "@/components/support/chat-bot";
+
+const CompanyStats = () => {
+  const stats = [
+    { label: 'Profissionais', value: '10k+', icon: Users },
+    { label: 'Países', value: '25+', icon: Globe },
+    { label: 'Match Rate', value: '95%', icon: Target },
+    { label: 'Projetos', value: '5k+', icon: Trophy },
+  ];
+
+  return (
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-6 my-12">
+      {stats.map((stat, index) => {
+        const Icon = stat.icon;
+        return (
+          <motion.div
+            key={stat.label}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+            className="flex flex-col items-center justify-center p-6 bg-white rounded-xl shadow-md hover:shadow-lg transition-all"
+          >
+            <motion.div
+              animate={{
+                scale: [1, 1.2, 1],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+              className="mb-3"
+            >
+              <Icon className="h-8 w-8 text-blue-500" />
+            </motion.div>
+            <motion.span
+              className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+            >
+              {stat.value}
+            </motion.span>
+            <span className="text-gray-600 mt-1">{stat.label}</span>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
+
+const CompanyFeatures = () => {
+  const features = [
+    {
+      icon: Shield,
+      title: 'Segurança Blockchain',
+      description: 'Transações seguras e transparentes com tecnologia blockchain'
+    },
+    {
+      icon: Rocket,
+      title: 'Matchmaking Inteligente',
+      description: 'Sistema avançado de correspondência baseado em IA'
+    },
+    {
+      icon: Bitcoin,
+      title: 'Pagamentos Crypto',
+      description: 'Suporte a pagamentos em diversas criptomoedas'
+    },
+    {
+      icon: Sparkles,
+      title: 'UX Inovadora',
+      description: 'Interface moderna e intuitiva para melhor experiência'
+    }
+  ];
+
+  return (
+    <div className="grid md:grid-cols-2 gap-6 my-12">
+      {features.map((feature, index) => {
+        const Icon = feature.icon;
+        return (
+          <motion.div
+            key={feature.title}
+            initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className="group p-6 bg-white rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <motion.div
+                animate={{
+                  rotate: [0, 10, -10, 0],
+                }}
+                transition={{
+                  duration: 4,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+                className="p-3 rounded-full bg-blue-50 group-hover:bg-blue-100 transition-colors"
+              >
+                <Icon className="h-6 w-6 text-blue-500" />
+              </motion.div>
+              <div>
+                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  {feature.title}
+                </h3>
+                <p className="text-gray-600">{feature.description}</p>
+              </div>
+            </div>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
+};
 
 const MatchAnimation = () => (
   <div className="relative h-32 overflow-hidden my-8">
@@ -203,7 +316,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Tutorial />
-      <ChatBot /> {/* Adicionando o componente ChatBot */}
+      <ChatBot />
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
           <motion.div
@@ -211,6 +324,28 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+              }}
+              className="mb-8"
+            >
+              <motion.div
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="relative w-24 h-24 mx-auto"
+              >
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 opacity-20 blur-xl" />
+                <div className="relative flex items-center justify-center h-full">
+                  <Building2 className="h-12 w-12 text-blue-600" />
+                </div>
+              </motion.div>
+            </motion.div>
+
             <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
               {t('home.welcome')}
             </h1>
@@ -226,6 +361,9 @@ export default function HomePage() {
               {t('tutorial.start')}
             </Button>
           </motion.div>
+
+          <CompanyStats />
+          <CompanyFeatures />
 
           <motion.div
             initial={{ opacity: 0 }}
