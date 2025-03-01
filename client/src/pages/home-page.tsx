@@ -39,7 +39,7 @@ const testimonials: Testimonial[] = [
     company: "DesignStudio",
     message: "A verificação KYC me deu muita confiança para trabalhar com clientes internacionais.",
     rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria"
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123" // Alterado o seed do avatar
   },
   {
     id: 3,
@@ -163,7 +163,7 @@ const NewsBanner = () => {
         <div className="flex items-center gap-4">
           <MessageSquare className="h-6 w-6" />
           <p className="text-sm font-medium">
-            Novo! Agora você pode receber pagamentos instantâneos em mais de 10 criptomoedas diferentes!
+            Novo! Receba seus pagamentos instantaneamente em Bitcoin! Transações rápidas e seguras na rede BTC.
           </p>
         </div>
         <Button
@@ -476,7 +476,7 @@ const Features = () => {
   );
 };
 
-export default function HomePage() {
+const HomePage = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
   const tutorial = useTutorial();
@@ -573,4 +573,6 @@ export default function HomePage() {
       </div>
     </div>
   );
-}
+};
+
+export default HomePage;
