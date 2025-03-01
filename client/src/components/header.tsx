@@ -38,18 +38,18 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600 text-white shadow-sm"
+                  className="h-9 px-4 text-sm bg-blue-500 hover:bg-blue-600 text-white shadow-sm"
                 >
-                  {t('navigation.jobs')}
+                  Trabalhos
                 </Button>
               </Link>
               <Link href="/post-job">
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-gradient-to-r from-violet-500 to-violet-600 hover:bg-violet-600 text-white shadow-sm"
+                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-sm"
                 >
-                  {t('navigation.postJob')}
+                  Publicar Trabalho
                 </Button>
               </Link>
             </nav>
