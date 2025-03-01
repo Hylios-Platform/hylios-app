@@ -1,14 +1,182 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield } from "lucide-react";
+import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield, Star, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useTutorial } from "@/hooks/use-tutorial";
 import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
 import { ChatBot } from "@/components/support/chat-bot";
+
+// Adiciona novos tipos para testimonials
+interface Testimonial {
+  id: number;
+  name: string;
+  role: string;
+  company: string;
+  message: string;
+  rating: number;
+  avatar: string;
+}
+
+// Mock data para testimonials
+const testimonials: Testimonial[] = [
+  {
+    id: 1,
+    name: "João Silva",
+    role: "Desenvolvedor Full Stack",
+    company: "TechCorp",
+    message: "Encontrei as melhores oportunidades através da Hylios. O processo de pagamento em crypto é muito seguro!",
+    rating: 5,
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=joao"
+  },
+  {
+    id: 2,
+    name: "Maria Santos",
+    role: "UX Designer",
+    company: "DesignStudio",
+    message: "A verificação KYC me deu muita confiança para trabalhar com clientes internacionais.",
+    rating: 5,
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria"
+  },
+  {
+    id: 3,
+    name: "Pedro Costa",
+    role: "DevOps Engineer",
+    company: "CloudTech",
+    message: "O sistema de matching é incrivelmente preciso! Todas as vagas são relevantes para meu perfil.",
+    rating: 4,
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro"
+  }
+];
+
+// Componente para Featured Jobs
+const FeaturedJobs = () => {
+  return (
+    <div className="mt-12 bg-gradient-to-b from-blue-50/50 to-transparent p-8 rounded-2xl">
+      <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+        Vagas em Destaque
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {[1, 2, 3].map((job) => (
+          <motion.div
+            key={job}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: job * 0.2 }}
+            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-blue-100"
+          >
+            <div className="flex items-center gap-3 mb-4">
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <Building2 className="h-6 w-6 text-blue-500" />
+              </div>
+              <div>
+                <h3 className="font-semibold text-gray-900">Desenvolvedor Senior</h3>
+                <p className="text-sm text-gray-600">TechCorp • Remoto</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2 text-amber-500 mb-4">
+              <Star className="h-4 w-4 fill-amber-500" />
+              <span className="text-sm font-medium">Vaga Premium</span>
+            </div>
+            <div className="space-y-2 mb-4">
+              <p className="text-sm text-gray-600">
+                Desenvolvimento de soluções inovadoras usando tecnologias modernas.
+              </p>
+              <div className="flex flex-wrap gap-2">
+                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
+                  React
+                </span>
+                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
+                  Node.js
+                </span>
+                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
+                  AWS
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between">
+              <span className="text-sm font-medium text-blue-600">€5,000-€7,000</span>
+              <Button size="sm" variant="outline" className="text-xs">
+                Ver Detalhes
+              </Button>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Componente para Testimonials
+const Testimonials = () => {
+  return (
+    <div className="mt-12">
+      <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+        O que dizem nossos profissionais
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {testimonials.map((testimonial) => (
+          <motion.div
+            key={testimonial.id}
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-blue-100"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <img
+                src={testimonial.avatar}
+                alt={testimonial.name}
+                className="w-12 h-12 rounded-full bg-blue-50"
+              />
+              <div>
+                <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
+                <p className="text-sm text-gray-600">{testimonial.role}</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-1 mb-4">
+              {Array.from({ length: testimonial.rating }).map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <p className="text-gray-600 text-sm italic">"{testimonial.message}"</p>
+            <p className="text-sm text-blue-500 mt-4">{testimonial.company}</p>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+// Componente para News Banner
+const NewsBanner = () => {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -20 }}
+      animate={{ opacity: 1, y: 0 }}
+      className="bg-gradient-to-r from-blue-500 to-violet-500 text-white p-4 rounded-xl shadow-lg mb-8"
+    >
+      <div className="container mx-auto flex items-center justify-between">
+        <div className="flex items-center gap-4">
+          <MessageSquare className="h-6 w-6" />
+          <p className="text-sm font-medium">
+            Novo! Agora você pode receber pagamentos instantâneos em mais de 10 criptomoedas diferentes!
+          </p>
+        </div>
+        <Button
+          variant="outline"
+          size="sm"
+          className="bg-white text-blue-500 hover:bg-blue-50 border-white"
+        >
+          Saiba Mais
+        </Button>
+      </div>
+    </motion.div>
+  );
+};
 
 const CompanyStats = () => {
   const stats = [
@@ -318,12 +486,16 @@ export default function HomePage() {
       <Tutorial />
       <ChatBot />
       <div className="container mx-auto px-4 py-8">
+        {/* News Banner */}
+        <NewsBanner />
+
         <div className="max-w-2xl mx-auto">
           <motion.div
             className="welcome-section text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
+            {/* Logo animation */}
             <motion.div
               initial={{ scale: 0.5, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -365,6 +537,8 @@ export default function HomePage() {
           <CompanyStats />
           <CompanyFeatures />
 
+          {/* Featured Jobs Section */}
+          <FeaturedJobs />
 
           <motion.div
             initial={{ opacity: 0 }}
@@ -382,6 +556,7 @@ export default function HomePage() {
             <MatchAnimation />
           </motion.div>
 
+          {/* Job Swipe Section */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -389,6 +564,9 @@ export default function HomePage() {
           >
             <JobSwipe />
           </motion.div>
+
+          {/* Testimonials Section */}
+          <Testimonials />
 
           {user && <Features />}
         </div>
