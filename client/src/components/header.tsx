@@ -33,15 +33,15 @@ export default function Header() {
 
         {!isAuthPage && (
           <div className="flex items-center gap-2">
-            <nav className="flex items-center gap-3">
+            <nav className="flex items-center gap-2 overflow-x-auto md:gap-3 scrollbar-hide">
               <Link href="/dashboard">
                 <Button 
                   size="sm" 
                   variant="ghost"
-                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
                 >
-                  <BarChart2 className="h-4 w-4" />
-                  Dashboard
+                  <BarChart2 className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Dashboard</span>
                 </Button>
               </Link>
 
@@ -49,10 +49,10 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-blue-500 hover:bg-blue-600 text-white shadow-sm flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm flex items-center gap-1"
                 >
-                  <Building2 className="h-4 w-4" />
-                  Trabalhos
+                  <Building2 className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Trabalhos</span>
                 </Button>
               </Link>
 
@@ -60,10 +60,10 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="ghost" 
-                  className="h-9 px-3 text-sm text-gray-600 hover:text-violet-600 hover:bg-violet-50 flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm text-gray-600 hover:text-violet-600 hover:bg-violet-50 flex items-center gap-1"
                 >
-                  <Users className="h-4 w-4" />
-                  Profissionais
+                  <Users className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Profissionais</span>
                 </Button>
               </Link>
 
@@ -71,10 +71,10 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-md flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-sm flex items-center gap-1"
                 >
-                  <Building2 className="h-4 w-4" />
-                  Publicar Trabalho
+                  <Building2 className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Publicar</span>
                 </Button>
               </Link>
 
@@ -82,10 +82,10 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="ghost" 
-                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
                 >
-                  <Info className="h-4 w-4" />
-                  Sobre
+                  <Info className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Sobre</span>
                 </Button>
               </Link>
 
@@ -93,15 +93,15 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="ghost" 
-                  className="h-9 px-3 text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
+                  className="h-8 px-2 text-xs md:text-sm text-gray-600 hover:text-blue-600 hover:bg-blue-50 flex items-center gap-1"
                 >
-                  <HelpCircle className="h-4 w-4" />
-                  Suporte
+                  <HelpCircle className="h-3.5 w-3.5" />
+                  <span className="hidden md:inline">Suporte</span>
                 </Button>
               </Link>
             </nav>
 
-            <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200 dark:border-slate-700">
+            <div className="flex items-center gap-2 ml-2 pl-2 md:ml-3 md:pl-3 border-l border-blue-200 dark:border-slate-700">
               <ThemeToggle />
               <WalletButton />
               {user && (
@@ -109,19 +109,19 @@ export default function Header() {
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.2 }}
-                  className="flex items-center gap-2"
+                  className="flex items-center gap-1 md:gap-2"
                 >
-                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  <span className="text-xs md:text-sm font-medium text-gray-700 dark:text-gray-300 hidden md:inline">
                     {user?.username || 'Dev User'}
                   </span>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => logoutMutation.mutate()}
-                    className="h-9 px-3 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
+                    className="h-8 px-2 text-xs md:text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
                   >
-                    <span className="mr-1">Sair</span>
-                    <LogOut className="h-4 w-4" />
+                    <LogOut className="h-3.5 w-3.5" />
+                    <span className="hidden md:inline ml-1">Sair</span>
                   </Button>
                 </motion.div>
               )}
