@@ -30,7 +30,7 @@ app.use(cookieParser());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Configuração da sessão antes dos outros middlewares
+// Configuração da sessão
 const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
 app.use(session({
   secret: sessionSecret,
@@ -47,25 +47,20 @@ app.use(session({
   }
 }));
 
-// Setup das rotas
-setupChatRoutes(app);
+// Setup das rotas do chat
+try {
+  setupChatRoutes(app);
+} catch (error) {
+  console.error('Erro ao configurar rotas do chat:', error);
+}
 
-// Middleware de logging detalhado para debug de autenticação
+// Middleware de logging detalhado
 app.use((req, res, next) => {
   const start = Date.now();
-
   res.on("finish", () => {
     const duration = Date.now() - start;
-    if (req.path.startsWith("/api")) {
-      console.log(`[Request] ${req.method} ${req.path}`);
-      console.log('Session ID:', req.sessionID);
-      console.log('Is Authenticated:', req.isAuthenticated?.());
-      console.log('Session:', req.session);
-      console.log('Cookies:', req.cookies);
-      console.log(`Response Status: ${res.statusCode} (${duration}ms)`);
-    }
+    console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${res.statusCode} (${duration}ms)`);
   });
-
   next();
 });
 
@@ -76,12 +71,22 @@ app.use('/uploads', express.static('uploads'));
   try {
     const server = await registerRoutes(app);
 
-    // Error handling middleware
+    // Error handling middleware melhorado
     app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
-      console.error('Error:', err);
+      console.error('[ERROR]', {
+        message: err.message,
+        stack: err.stack,
+        status: err.status || err.statusCode
+      });
+
       const status = err.status || err.statusCode || 500;
       const message = err.message || "Internal Server Error";
-      res.status(status).json({ message });
+
+      res.status(status).json({ 
+        error: message,
+        status,
+        timestamp: new Date().toISOString()
+      });
     });
 
     if (app.get("env") === "development") {
@@ -90,7 +95,6 @@ app.use('/uploads', express.static('uploads'));
       serveStatic(app);
     }
 
-    // ALWAYS serve the app on port 5000
     const port = 5000;
     server.listen({
       port,
@@ -99,7 +103,7 @@ app.use('/uploads', express.static('uploads'));
       log(`Servidor iniciado e rodando na porta ${port}`);
     });
   } catch (error) {
-    console.error('Falha ao iniciar o servidor:', error);
+    console.error('[FATAL ERROR] Falha ao iniciar o servidor:', error);
     process.exit(1);
   }
 })();

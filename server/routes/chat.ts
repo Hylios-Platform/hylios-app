@@ -20,6 +20,12 @@ Suas principais responsabilidades são:
 Responda sempre em português de forma clara e concisa.`;
 
 export function setupChatRoutes(app: Express) {
+  // Verificar se temos a chave da API antes de configurar as rotas
+  if (!process.env.OPENAI_API_KEY) {
+    console.error('ERRO: Chave da API OpenAI não configurada');
+    return;
+  }
+
   try {
     // Não requer autenticação para acessar o chat
     app.post("/api/chat", async (req, res) => {
@@ -30,14 +36,6 @@ export function setupChatRoutes(app: Express) {
         }
 
         console.log('Recebida mensagem do chat:', message);
-
-        if (!process.env.OPENAI_API_KEY) {
-          console.error('Chave da API OpenAI não configurada');
-          return res.status(500).json({ 
-            error: "Serviço temporariamente indisponível",
-            details: "API key não configurada"
-          });
-        }
 
         const response = await openai.chat.completions.create({
           model: "gpt-4o",
