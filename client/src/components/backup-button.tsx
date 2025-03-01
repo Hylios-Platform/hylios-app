@@ -1,58 +1,63 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Download, Loader2 } from "lucide-react";
+import { Loader2, Download } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function BackupButton() {
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
 
-  const handleDownload = async () => {
+  const handleBackup = async () => {
     try {
-      setIsDownloading(true);
+      setIsLoading(true);
+      const response = await fetch("/api/backup/download");
       
-      const response = await fetch("/api/backup/download", {
-        method: "GET",
-      });
-
       if (!response.ok) {
-        throw new Error("Falha ao gerar backup");
+        throw new Error("Erro ao gerar backup");
       }
 
-      // Criar um link temporário para download
+      // Criar um blob a partir da resposta
       const blob = await response.blob();
+      
+      // Criar URL para download
       const url = window.URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = response.headers.get("content-disposition")?.split("filename=")[1] || "hylios-backup.zip";
-      document.body.appendChild(a);
-      a.click();
+      
+      // Criar elemento de link temporário
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = response.headers.get("content-disposition")?.split("filename=")[1] || "hylios-backup.zip";
+      
+      // Simular clique para iniciar download
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      // Limpar URL
       window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
 
       toast({
-        title: "Backup criado com sucesso!",
-        description: "O download do arquivo começará automaticamente.",
+        title: "Backup concluído",
+        description: "O download do backup foi iniciado com sucesso.",
       });
     } catch (error) {
-      console.error("Erro ao fazer download:", error);
+      console.error("Erro:", error);
       toast({
         variant: "destructive",
-        title: "Erro ao gerar backup",
-        description: "Não foi possível criar o arquivo de backup. Tente novamente.",
+        title: "Erro no backup",
+        description: "Não foi possível gerar o backup. Tente novamente.",
       });
     } finally {
-      setIsDownloading(false);
+      setIsLoading(false);
     }
   };
 
   return (
     <Button
-      onClick={handleDownload}
-      disabled={isDownloading}
+      onClick={handleBackup}
+      disabled={isLoading}
       className="bg-blue-600 hover:bg-blue-700 text-white"
     >
-      {isDownloading ? (
+      {isLoading ? (
         <>
           <Loader2 className="mr-2 h-4 w-4 animate-spin" />
           Gerando backup...
@@ -60,7 +65,7 @@ export function BackupButton() {
       ) : (
         <>
           <Download className="mr-2 h-4 w-4" />
-          Download Backup
+          Fazer download do backup
         </>
       )}
     </Button>

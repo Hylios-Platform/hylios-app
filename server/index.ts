@@ -48,10 +48,8 @@ app.use(session({
   }
 }));
 
-// Setup das rotas do backup
+// Setup das rotas
 setupBackupRoutes(app);
-
-// Setup das rotas do chat
 setupChatRoutes(app);
 
 // Middleware de logging detalhado para debug de autenticação

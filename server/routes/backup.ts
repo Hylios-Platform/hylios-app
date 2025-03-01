@@ -6,21 +6,24 @@ import fs from "fs";
 export function setupBackupRoutes(app: Express) {
   app.get("/api/backup/download", async (req, res) => {
     try {
+      // Criar um arquivo zip
       const archive = archiver("zip", {
-        zlib: { level: 9 } // Nível máximo de compressão
+        zlib: { level: 9 }
       });
 
-      // Nome do arquivo com data/hora
+      // Nome do arquivo
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const filename = `hylios-backup-${timestamp}.zip`;
+      const fileName = `hylios-backup-${timestamp}.zip`;
 
-      // Configurar headers para download
-      res.attachment(filename);
+      // Configurar headers
+      res.attachment(fileName);
       archive.pipe(res);
 
-      // Adicionar diretórios principais ao zip
-      const directories = ["client", "server", "shared"];
-      directories.forEach(dir => {
+      // Lista de diretórios para incluir no backup
+      const dirsToBackup = ["client", "server", "shared"];
+
+      // Adicionar diretórios ao arquivo zip
+      dirsToBackup.forEach(dir => {
         archive.directory(dir, dir);
       });
 
@@ -39,12 +42,12 @@ export function setupBackupRoutes(app: Express) {
         }
       });
 
-      // Finalizar o arquivo
+      console.log("Iniciando geração do backup...");
       await archive.finalize();
+      console.log("Backup gerado com sucesso!");
 
-      console.log(`Backup criado com sucesso: ${filename}`);
     } catch (error) {
-      console.error("Erro ao criar backup:", error);
+      console.error("Erro ao gerar backup:", error);
       res.status(500).json({ error: "Erro ao gerar backup" });
     }
   });

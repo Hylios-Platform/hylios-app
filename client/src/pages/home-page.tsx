@@ -366,7 +366,8 @@ export default function HomePage() {
           <CompanyStats />
           <CompanyFeatures />
 
-          <div className="flex justify-center mt-8">
+          {/* Adicionar o botão de backup */}
+          <div className="flex justify-center my-8">
             <BackupButton />
           </div>
 
