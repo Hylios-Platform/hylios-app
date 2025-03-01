@@ -9,6 +9,7 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { storage } from "./storage";
 import { setupChatRoutes } from "./routes/chat";
+import { setupBackupRoutes } from "./routes/backup";
 
 const app = express();
 
@@ -46,6 +47,9 @@ app.use(session({
     path: '/'
   }
 }));
+
+// Setup das rotas do backup
+setupBackupRoutes(app);
 
 // Setup das rotas do chat
 setupChatRoutes(app);

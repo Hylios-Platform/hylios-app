@@ -9,6 +9,7 @@ import { useTutorial } from "@/hooks/use-tutorial";
 import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
 import { ChatBot } from "@/components/support/chat-bot";
+import { BackupButton } from "@/components/backup-button";
 
 const CompanyStats = () => {
   const stats = [
@@ -364,6 +365,10 @@ export default function HomePage() {
 
           <CompanyStats />
           <CompanyFeatures />
+
+          <div className="flex justify-center mt-8">
+            <BackupButton />
+          </div>
 
           <motion.div
             initial={{ opacity: 0 }}
