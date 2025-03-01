@@ -36,7 +36,8 @@ function Router() {
       <Header />
       <PageTransition>
         <Switch>
-          <ProtectedRoute path="/" component={HomePage} />
+          {/* Homepage não requer autenticação */}
+          <Route path="/" component={HomePage} />
           <Route path="/auth" component={AuthPage} />
           <Route path="/password-reset" component={PasswordReset} />
           <ProtectedRoute path="/post-job" component={PostJob} />

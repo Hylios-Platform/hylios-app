@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield, Star, MessageSquare } from "lucide-react";
+import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield, Star, MessageSquare, MapPin } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion, AnimatePresence } from "framer-motion";
@@ -51,105 +51,6 @@ const testimonials: Testimonial[] = [
     avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro456"
   }
 ];
-
-// Componente para Featured Jobs
-const FeaturedJobs = () => {
-  return (
-    <div className="mt-12 bg-gradient-to-b from-blue-50/50 to-transparent p-8 rounded-2xl">
-      <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-        Vagas em Destaque
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {[1, 2, 3].map((job) => (
-          <motion.div
-            key={job}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: job * 0.2 }}
-            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-blue-100"
-          >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="p-2 bg-blue-50 rounded-lg">
-                <Building2 className="h-6 w-6 text-blue-500" />
-              </div>
-              <div>
-                <h3 className="font-semibold text-gray-900">Desenvolvedor Senior</h3>
-                <p className="text-sm text-gray-600">TechCorp • Remoto</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-2 text-amber-500 mb-4">
-              <Star className="h-4 w-4 fill-amber-500" />
-              <span className="text-sm font-medium">Vaga Premium</span>
-            </div>
-            <div className="space-y-2 mb-4">
-              <p className="text-sm text-gray-600">
-                Desenvolvimento de soluções inovadoras usando tecnologias modernas.
-              </p>
-              <div className="flex flex-wrap gap-2">
-                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
-                  React
-                </span>
-                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
-                  Node.js
-                </span>
-                <span className="px-2 py-1 bg-blue-50 text-blue-600 rounded-full text-xs">
-                  AWS
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between">
-              <span className="text-sm font-medium text-blue-600">€5,000-€7,000</span>
-              <Button size="sm" variant="outline" className="text-xs">
-                Ver Detalhes
-              </Button>
-            </div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
-// Componente para Testimonials
-const Testimonials = () => {
-  return (
-    <div className="mt-12">
-      <h2 className="text-2xl font-bold text-center mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-        O que dizem nossos profissionais
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {testimonials.map((testimonial) => (
-          <motion.div
-            key={testimonial.id}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all border border-blue-100"
-          >
-            <div className="flex items-center gap-4 mb-4">
-              <img
-                src={testimonial.avatar}
-                alt={testimonial.name}
-                className="w-12 h-12 rounded-full bg-blue-50"
-              />
-              <div>
-                <h3 className="font-semibold text-gray-900">{testimonial.name}</h3>
-                <p className="text-sm text-gray-600">{testimonial.role}</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1 mb-4">
-              {Array.from({ length: testimonial.rating }).map((_, i) => (
-                <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
-              ))}
-            </div>
-            <p className="text-gray-600 text-sm italic">"{testimonial.message}"</p>
-            <p className="text-sm text-blue-500 mt-4">{testimonial.company}</p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
 
 // Componente para News Banner
 const NewsBanner = () => {
@@ -529,6 +430,127 @@ const Features = () => {
   );
 };
 
+
+// Mock data for the new job feed
+interface MockJob {
+  id: number;
+  title: string;
+  companyId: number;
+  description: string;
+  requiredSkills?: string[];
+  city: string;
+  amount: number;
+  currency: string;
+}
+
+const mockJobs: MockJob[] = [
+  {
+    id: 1,
+    title: "Desenvolvedor Full Stack",
+    companyId: 1,
+    description: "Procuramos um Desenvolvedor Full Stack experiente para se juntar à nossa equipe.",
+    requiredSkills: ["React", "Node.js", "MongoDB"],
+    city: "Lisboa",
+    amount: 6000,
+    currency: "EUR"
+  },
+  {
+    id: 2,
+    title: "UX/UI Designer",
+    companyId: 2,
+    description: "Estamos à procura de um UX/UI Designer criativo para melhorar a experiência do usuário.",
+    requiredSkills: ["Figma", "Adobe XD", "Sketch"],
+    city: "Porto",
+    amount: 5000,
+    currency: "EUR"
+  },
+  // Add more mock jobs as needed
+];
+
+// Componente para Testimonials
+const Testimonials = () => {
+  return (
+    <div className="mt-16 bg-gradient-to-b from-blue-50/50 to-transparent p-8 rounded-2xl">
+      <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+        O que dizem nossos profissionais
+      </h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {testimonials.map((testimonial, index) => (
+          <motion.div
+            key={testimonial.id}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.2 }}
+            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-blue-100 group hover:bg-gradient-to-b hover:from-white hover:to-blue-50/30"
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <motion.div
+                className="relative"
+                whileHover={{ scale: 1.1 }}
+                transition={{ type: "spring", stiffness: 300 }}
+              >
+                <div className="absolute inset-0 bg-blue-400 rounded-full blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
+                <img
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  className="w-12 h-12 rounded-full bg-blue-50 relative z-10"
+                />
+              </motion.div>
+              <div>
+                <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                  {testimonial.name}
+                </h3>
+                <p className="text-sm text-gray-600">{testimonial.role}</p>
+              </div>
+            </div>
+
+            <motion.div
+              className="flex items-center gap-1 mb-4"
+              initial="hidden"
+              animate="visible"
+              variants={{
+                hidden: { opacity: 0 },
+                visible: {
+                  opacity: 1,
+                  transition: {
+                    staggerChildren: 0.1
+                  }
+                }
+              }}
+            >
+              {Array.from({ length: testimonial.rating }).map((_, i) => (
+                <motion.div
+                  key={i}
+                  variants={{
+                    hidden: { scale: 0 },
+                    visible: { scale: 1 }
+                  }}
+                >
+                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
+                </motion.div>
+              ))}
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.3 }}
+            >
+              <p className="text-gray-600 text-sm italic leading-relaxed">
+                "{testimonial.message}"
+              </p>
+              <div className="mt-4 flex items-center gap-2">
+                <Building2 className="h-4 w-4 text-blue-400" />
+                <p className="text-sm font-medium text-blue-500">{testimonial.company}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
 const HomePage = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -539,44 +561,181 @@ const HomePage = () => {
       <Tutorial />
       <ChatBot />
       <div className="container mx-auto px-4 py-8">
-        {/* News Banner */}
         <NewsBanner />
 
         <div className="max-w-2xl mx-auto">
-          {/* Welcome section e outras seções permanecem iguais */}
+          <motion.div
+            className="welcome-section text-center mb-16"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+          >
+            <motion.div
+              initial={{ scale: 0.5, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{
+                type: "spring",
+                stiffness: 260,
+                damping: 20
+              }}
+              className="mb-8 relative"
+            >
+              <motion.div
+                animate={{
+                  rotate: 360,
+                  background: [
+                    "linear-gradient(to right, #3b82f6, #8b5cf6)",
+                    "linear-gradient(to right, #8b5cf6, #3b82f6)",
+                    "linear-gradient(to right, #3b82f6, #8b5cf6)"
+                  ]
+                }}
+                transition={{
+                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+                  background: { duration: 3, repeat: Infinity, ease: "linear" }
+                }}
+                className="relative w-32 h-32 mx-auto rounded-full overflow-hidden"
+              >
+                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-violet-500 opacity-20 blur-xl" />
+                <div className="relative flex items-center justify-center h-full bg-white/10 backdrop-blur-sm">
+                  <Building2 className="h-16 w-16 text-white" />
+                </div>
+
+                {[...Array(3)].map((_, i) => (
+                  <motion.div
+                    key={i}
+                    className="absolute w-3 h-3 bg-blue-400 rounded-full"
+                    animate={{
+                      rotate: 360,
+                      scale: [1, 1.2, 1],
+                      opacity: [0.8, 1, 0.8]
+                    }}
+                    transition={{
+                      rotate: { duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.3 },
+                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
+                      opacity: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }
+                    }}
+                    style={{
+                      top: "50%",
+                      left: "50%",
+                      transform: `rotate(${i * 120}deg) translateX(3rem)`
+                    }}
+                  />
+                ))}
+              </motion.div>
+            </motion.div>
+
+            <motion.h1
+              className="text-6xl font-bold mb-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 }}
+            >
+              <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600 bg-clip-text text-transparent">
+                {t('home.welcome')}
+              </span>
+            </motion.h1>
+
+            <motion.p
+              className="text-xl text-blue-400 mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.4 }}
+            >
+              {t('home.subtitle')}
+            </motion.p>
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.5 }}
+            >
+              <Button
+                variant="secondary"
+                size="lg"
+                className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => tutorial.startTutorial()}
+              >
+                {t('tutorial.start')}
+              </Button>
+            </motion.div>
+          </motion.div>
 
           <CompanyStats />
           <CompanyFeatures />
-          <FeaturedJobs />
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3 }}
-          >
-            <MarqueeSponsors />
-          </motion.div>
-
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.6 }}
-          >
-            <MatchAnimation />
-          </motion.div>
-
-          {/* Job Swipe Section - Removida a dependência de autenticação */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-12 mb-12"
+            className="mt-16 mb-12"
           >
-            <JobSwipe />
+            <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+              Feed de Oportunidades
+            </h2>
+
+            <div className="space-y-6">
+              {mockJobs.map((job, index) => (
+                <motion.div
+                  key={job.id}
+                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: index * 0.1 }}
+                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-blue-100"
+                >
+                  <div className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-violet-100 flex items-center justify-center">
+                          <Building2 className="h-6 w-6 text-blue-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-gray-900">{job.title}</h3>
+                          <p className="text-sm text-gray-600">Empresa {job.companyId}</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Button variant="ghost" size="sm" className="text-blue-500">
+                          <Star className="h-4 w-4" />
+                        </Button>
+                        <Button variant="ghost" size="sm" className="text-blue-500">
+                          <MessageSquare className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <p className="text-gray-600 mb-4">{job.description}</p>
+
+                    <div className="flex flex-wrap gap-2 mb-4">
+                      {job.requiredSkills?.map((skill) => (
+                        <span
+                          key={skill}
+                          className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors cursor-pointer"
+                        >
+                          {skill}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <MapPin className="h-4 w-4" />
+                          <span className="text-sm">{job.city}</span>
+                        </div>
+                        <div className="flex items-center gap-1 text-gray-600">
+                          <Bitcoin className="h-4 w-4" />
+                          <span className="text-sm">{job.amount} {job.currency}</span>
+                        </div>
+                      </div>
+                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
+                        Candidatar-se
+                      </Button>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
 
           <Testimonials />
-
-          {/* Features section só aparece para usuários autenticados */}
           {user && <Features />}
         </div>
       </div>
