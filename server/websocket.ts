@@ -20,42 +20,30 @@ export function setupWebSocket(httpServer: HttpServer) {
     perMessageDeflate: false,
     verifyClient: async (info, callback) => {
       try {
-        // Extrair o token da URL
         const url = new URL(info.req.url!, `ws://${info.req.headers.host}`);
         const token = url.searchParams.get('token');
 
-        console.log('[WebSocket] Tentativa de conexão com token:', token ? `${token.substring(0, 10)}...` : 'não fornecido');
-        console.log('[WebSocket] Headers:', info.req.headers);
-
         if (!token) {
           console.log("[WebSocket] Token não fornecido na conexão");
-          callback(false, 401, "Unauthorized - Token não fornecido");
+          callback(false, 401, "Unauthorized");
           return;
         }
 
-        try {
-          const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
-          console.log('[WebSocket] Token decodificado:', decoded);
+        const decoded = jwt.verify(token, JWT_SECRET) as { id: number };
+        const user = await storage.getUser(decoded.id);
 
-          const user = await storage.getUser(decoded.id);
-
-          if (!user) {
-            console.log("[WebSocket] Usuário não encontrado para o ID:", decoded.id);
-            callback(false, 401, "Unauthorized - Usuário não encontrado");
-            return;
-          }
-
-          console.log("[WebSocket] Usuário autenticado:", user.username);
-          // Adiciona o usuário ao request para uso posterior
-          (info.req as any).user = user;
-          callback(true);
-        } catch (jwtError) {
-          console.error("[WebSocket] Erro na validação do token:", jwtError);
-          callback(false, 401, "Unauthorized - Token inválido");
+        if (!user) {
+          console.log("[WebSocket] Usuário não encontrado");
+          callback(false, 401, "Unauthorized");
+          return;
         }
+
+        // Adiciona o usuário ao request para uso posterior
+        (info.req as any).user = user;
+        callback(true);
       } catch (error) {
         console.error("[WebSocket] Erro na verificação do cliente:", error);
-        callback(false, 500, "Internal Server Error");
+        callback(false, 401, "Unauthorized");
       }
     }
   });
@@ -63,13 +51,14 @@ export function setupWebSocket(httpServer: HttpServer) {
   console.log("[WebSocket] Servidor WebSocket iniciado na rota /ws");
 
   wss.on("connection", (ws, request) => {
+    console.log("[WebSocket] Nova conexão estabelecida");
     const user = (request as any).user;
-    console.log("[WebSocket] Nova conexão estabelecida para usuário:", user.username);
+    console.log("[WebSocket] Usuário conectado:", user.username);
 
     // Enviar mensagem de boas-vindas
     ws.send(JSON.stringify({
       type: "welcome",
-      message: `Conectado às notificações do Hylios, ${user.username}!`
+      message: "Conectado às notificações do Hylios!"
     }));
 
     // Setup heartbeat
@@ -80,21 +69,21 @@ export function setupWebSocket(httpServer: HttpServer) {
 
     ws.on("message", (message) => {
       try {
-        console.log("[WebSocket] Mensagem recebida de", user.username + ":", message.toString());
+        console.log("[WebSocket] Mensagem recebida:", message.toString());
         const data = JSON.parse(message.toString());
-        handleMessage(ws, data, user);
+        handleMessage(ws, data);
       } catch (error) {
         console.error("[WebSocket] Erro ao processar mensagem:", error);
       }
     });
 
     ws.on("close", () => {
-      console.log("[WebSocket] Conexão fechada para usuário:", user.username);
+      console.log("[WebSocket] Conexão fechada");
       ws.isAlive = false;
     });
 
     ws.on("error", (error) => {
-      console.error("[WebSocket] Erro na conexão para usuário", user.username + ":", error);
+      console.error("[WebSocket] Erro na conexão:", error);
       ws.isAlive = false;
     });
   });
@@ -116,9 +105,9 @@ export function setupWebSocket(httpServer: HttpServer) {
     clearInterval(interval);
   });
 
-  function handleMessage(ws: WebSocket, data: any, user: any) {
+  function handleMessage(ws: WebSocket, data: any) {
     try {
-      console.log("[WebSocket] Processando mensagem de", user.username + ":", data);
+      console.log("[WebSocket] Processando mensagem:", data);
       switch (data.type) {
         case "ping":
           ws.send(JSON.stringify({ type: "pong" }));

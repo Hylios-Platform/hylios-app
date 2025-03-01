@@ -8,7 +8,6 @@ import { storage } from "./storage";
 import { User as SelectUser } from "@shared/schema";
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import jwt from "jsonwebtoken";
 
 declare global {
   namespace Express {
@@ -20,7 +19,6 @@ declare global {
 }
 
 const scryptAsync = promisify(scrypt);
-const JWT_SECRET = process.env.JWT_SECRET || 'temp-dev-secret';
 
 async function hashPassword(password: string) {
   const salt = randomBytes(16).toString("hex");
@@ -33,10 +31,6 @@ async function comparePasswords(supplied: string, stored: string) {
   const hashedBuf = Buffer.from(hashed, "hex");
   const suppliedBuf = (await scryptAsync(supplied, salt, 64)) as Buffer;
   return timingSafeEqual(hashedBuf, suppliedBuf);
-}
-
-function generateToken(user: SelectUser) {
-  return jwt.sign({ id: user.id }, JWT_SECRET, { expiresIn: '24h' });
 }
 
 export function setupAuth(app: Express) {
@@ -126,14 +120,12 @@ export function setupAuth(app: Express) {
       });
 
       console.log('[Auth] Usuário registrado com sucesso:', user.username);
-      const token = generateToken(user);
-
       req.login(user, (err) => {
         if (err) {
           console.error('[Auth] Erro ao iniciar sessão após registro:', err);
           return next(err);
         }
-        res.status(201).json({ user, token });
+        res.status(201).json(user);
       });
     } catch (error) {
       console.error('[Auth] Erro no registro:', error);
@@ -157,9 +149,8 @@ export function setupAuth(app: Express) {
           console.error('[Auth] Erro ao iniciar sessão:', err);
           return next(err);
         }
-        const token = generateToken(user);
         console.log('[Auth] Login bem-sucedido:', user.username);
-        res.json({ user, token });
+        res.json(user);
       });
     })(req, res, next);
   });

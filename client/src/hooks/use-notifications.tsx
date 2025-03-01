@@ -12,7 +12,6 @@ export function useNotifications() {
   const [isConnected, setIsConnected] = useState(false);
   const { toast } = useToast();
   const socketRef = useRef<WebSocket | null>(null);
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout>();
 
   useEffect(() => {
     const connectWebSocket = () => {
@@ -20,35 +19,19 @@ export function useNotifications() {
         const token = localStorage.getItem('auth_token');
         if (!token) {
           console.log('[WebSocket] Token não encontrado, usuário não autenticado');
-          toast({
-            title: "Erro de Conexão",
-            description: "Faça login para receber notificações em tempo real.",
-            variant: "destructive",
-          });
           return;
         }
 
-        // Adicionar logs para debug do token
-        console.log('[WebSocket] Token recuperado:', token.substring(0, 10) + '...');
-
         const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
         const wsUrl = `${protocol}//${window.location.host}/ws?token=${token}`;
-        console.log('[WebSocket] Tentando conectar em:', wsUrl);
-
-        if (socketRef.current?.readyState === WebSocket.OPEN) {
-          console.log('[WebSocket] Fechando conexão existente');
-          socketRef.current.close();
-        }
+        console.log('[WebSocket] Conectando ao servidor:', wsUrl);
 
         const ws = new WebSocket(wsUrl);
         socketRef.current = ws;
 
         ws.onopen = () => {
-          console.log('[WebSocket] Conexão estabelecida com sucesso');
+          console.log('[WebSocket] Conexão estabelecida');
           setIsConnected(true);
-          if (reconnectTimeoutRef.current) {
-            clearTimeout(reconnectTimeoutRef.current);
-          }
           toast({
             title: "Conectado",
             description: "Você está conectado às notificações em tempo real.",
@@ -63,7 +46,8 @@ export function useNotifications() {
 
             setNotifications(prev => [notification, ...prev]);
 
-            if (notification.type !== 'welcome' && notification.type !== 'pong') {
+            // Mostrar toast para novas notificações
+            if (notification.type !== 'welcome') {
               toast({
                 title: notification.type,
                 description: notification.message,
@@ -75,15 +59,11 @@ export function useNotifications() {
           }
         };
 
-        ws.onclose = (event) => {
-          console.log('[WebSocket] Conexão fechada:', event.code, event.reason);
+        ws.onclose = () => {
+          console.log('[WebSocket] Conexão fechada');
           setIsConnected(false);
-
-          // Tentar reconectar apenas se não foi um fechamento proposital
-          if (event.code !== 1000) {
-            console.log('[WebSocket] Agendando reconexão em 5 segundos...');
-            reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
-          }
+          // Tentar reconectar após 5 segundos
+          setTimeout(connectWebSocket, 5000);
         };
 
         ws.onerror = (error) => {
@@ -98,28 +78,19 @@ export function useNotifications() {
         // Setup heartbeat
         const pingInterval = setInterval(() => {
           if (ws.readyState === WebSocket.OPEN) {
-            console.log('[WebSocket] Enviando ping');
             ws.send(JSON.stringify({ type: "ping" }));
           }
         }, 25000);
 
         return () => {
           clearInterval(pingInterval);
-          if (reconnectTimeoutRef.current) {
-            clearTimeout(reconnectTimeoutRef.current);
-          }
           if (ws.readyState === WebSocket.OPEN) {
-            ws.close(1000, "Fechamento normal");
+            ws.close();
           }
         };
       } catch (error) {
         console.error('[WebSocket] Erro ao criar conexão:', error);
-        toast({
-          title: "Erro de conexão",
-          description: "Não foi possível estabelecer conexão com o servidor.",
-          variant: "destructive",
-        });
-        reconnectTimeoutRef.current = setTimeout(connectWebSocket, 5000);
+        setTimeout(connectWebSocket, 5000);
       }
     };
 
@@ -127,7 +98,7 @@ export function useNotifications() {
 
     return () => {
       if (socketRef.current?.readyState === WebSocket.OPEN) {
-        socketRef.current.close(1000, "Componente desmontado");
+        socketRef.current.close();
       }
     };
   }, [toast]);

@@ -2,6 +2,8 @@ import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
 import cors from 'cors';
+import multer from 'multer';
+import path from 'path';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { storage } from "./storage";
@@ -11,11 +13,6 @@ const app = express();
 // Configuração básica
 app.set('trust proxy', 1);
 
-// Parsers e middlewares essenciais primeiro
-app.use(cookieParser());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
-
 // Configuração CORS com configurações corretas para cookies
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
@@ -23,10 +20,15 @@ app.use(cors({
     : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie', 'Accept']
+  allowedHeaders: ['Content-Type', 'Authorization', 'Cookie']
 }));
 
-// Configuração da sessão
+// Parsers e middlewares essenciais
+app.use(cookieParser());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+// Configuração da sessão antes dos outros middlewares
 const sessionSecret = process.env.SESSION_SECRET || 'hylios-secret-key';
 app.use(session({
   secret: sessionSecret,
@@ -47,40 +49,43 @@ app.use(session({
 app.use((req, res, next) => {
   const start = Date.now();
 
-  // Log no início da requisição
-  if (req.path.startsWith("/api")) {
-    console.log(`[Request Start] ${req.method} ${req.path}`);
-    console.log('Session ID:', req.sessionID);
-    console.log('Session:', req.session);
-    console.log('Cookies:', req.cookies);
-    console.log('Headers:', req.headers);
-  }
-
   res.on("finish", () => {
     const duration = Date.now() - start;
     if (req.path.startsWith("/api")) {
-      console.log(`[Request End] ${req.method} ${req.path}`);
-      console.log('Response Status:', res.statusCode);
-      console.log('Duration:', duration, 'ms');
+      console.log(`[Request] ${req.method} ${req.path}`);
+      console.log('Session ID:', req.sessionID);
+      console.log('Is Authenticated:', req.isAuthenticated?.());
+      console.log('Session:', req.session);
+      console.log('Cookies:', req.cookies);
+      console.log(`Response Status: ${res.statusCode} (${duration}ms)`);
     }
   });
 
   next();
 });
 
+// Pasta para arquivos enviados
+app.use('/uploads', express.static('uploads'));
+
 (async () => {
   try {
-    // Registrar rotas da API primeiro
     const server = await registerRoutes(app);
 
-    // Setup do Vite depois das rotas da API
+    // Error handling middleware
+    app.use((err: any, _req: Request, res: Response, _next: NextFunction) => {
+      console.error('Error:', err);
+      const status = err.status || err.statusCode || 500;
+      const message = err.message || "Internal Server Error";
+      res.status(status).json({ message });
+    });
+
     if (app.get("env") === "development") {
       await setupVite(app, server);
     } else {
       serveStatic(app);
     }
 
-    // Sempre servir na porta 5000
+    // ALWAYS serve the app on port 5000
     const port = 5000;
     server.listen({
       port,
