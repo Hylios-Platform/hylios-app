@@ -21,6 +21,7 @@ Responda sempre em português de forma clara e concisa.`;
 
 export function setupChatRoutes(app: Express) {
   try {
+    // Não requer autenticação para acessar o chat
     app.post("/api/chat", async (req, res) => {
       try {
         const { message } = req.body;

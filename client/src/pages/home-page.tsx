@@ -8,6 +8,7 @@ import { motion } from "framer-motion";
 import { useTutorial } from "@/hooks/use-tutorial";
 import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
+import { ChatBot } from "@/components/support/chat-bot"; // Importando o ChatBot
 
 const MatchAnimation = () => (
   <div className="relative h-32 overflow-hidden my-8">
@@ -74,7 +75,7 @@ const MatchAnimation = () => (
           }}
           className="absolute inset-0 bg-green-200/50 rounded-full blur-xl"
         />
-        <motion.span 
+        <motion.span
           className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-medium text-green-500"
           initial={{ opacity: 0, y: 10 }}
           animate={{
@@ -202,6 +203,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       <Tutorial />
+      <ChatBot /> {/* Adicionando o componente ChatBot */}
       <div className="container mx-auto px-4 py-16">
         <div className="max-w-2xl mx-auto">
           <motion.div
