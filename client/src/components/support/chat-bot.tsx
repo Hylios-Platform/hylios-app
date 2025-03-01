@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -19,7 +19,21 @@ export function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
+  const [isChatbotEnabled, setIsChatbotEnabled] = useState(true);
   const { toast } = useToast();
+
+  // Verificar se o chatbot está disponível
+  useEffect(() => {
+    fetch('/api/chat/status')
+      .then(response => {
+        if (!response.ok) {
+          setIsChatbotEnabled(false);
+        }
+      })
+      .catch(() => {
+        setIsChatbotEnabled(false);
+      });
+  }, []);
 
   const sendMessageMutation = useMutation({
     mutationFn: async (message: string) => {
@@ -69,7 +83,7 @@ export function ChatBot() {
         {
           id: Date.now().toString(),
           type: "error",
-          content: "O serviço de chat está temporariamente indisponível devido ao limite de uso da API. Por favor, tente novamente mais tarde.",
+          content: "O serviço de chat está temporariamente indisponível. Por favor, tente novamente mais tarde.",
           timestamp: new Date(),
         },
       ]);
@@ -77,8 +91,10 @@ export function ChatBot() {
       toast({
         variant: "destructive",
         title: "Serviço Indisponível",
-        description: "O chatbot está temporariamente indisponível devido ao limite de uso da API. Tente novamente mais tarde.",
+        description: "O chatbot está temporariamente indisponível. Tente novamente mais tarde.",
       });
+
+      setIsChatbotEnabled(false);
     },
   });
 
@@ -87,6 +103,10 @@ export function ChatBot() {
     sendMessageMutation.mutate(input);
     setInput("");
   };
+
+  if (!isChatbotEnabled) {
+    return null;
+  }
 
   return (
     <>
@@ -174,7 +194,7 @@ export function ChatBot() {
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={sendMessageMutation.isPending || !input.trim()}
+                    disabled={sendMessageMutation.isPending || !input.trim() || !isChatbotEnabled}
                     className="bg-blue-500 hover:bg-blue-600"
                   >
                     {sendMessageMutation.isPending ? (

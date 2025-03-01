@@ -27,6 +27,18 @@ export function setupChatRoutes(app: Express) {
   }
 
   try {
+    // Endpoint para verificar status do chatbot
+    app.get("/api/chat/status", (req, res) => {
+      if (!process.env.OPENAI_API_KEY) {
+        res.status(503).json({ 
+          error: "Chatbot indisponível",
+          details: "API key não configurada"
+        });
+        return;
+      }
+      res.status(200).json({ status: "disponível" });
+    });
+
     // Não requer autenticação para acessar o chat
     app.post("/api/chat", async (req, res) => {
       try {
@@ -69,7 +81,7 @@ export function setupChatRoutes(app: Express) {
 
         res.status(500).json({ 
           error: "Erro ao processar mensagem",
-          details: "Erro interno do servidor"
+          details: error.message || "Erro interno do servidor"
         });
       }
     });

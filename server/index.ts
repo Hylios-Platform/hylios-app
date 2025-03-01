@@ -9,16 +9,24 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { storage } from "./storage";
 import { setupChatRoutes } from "./routes/chat";
+import compression from 'compression';
+import helmet from 'helmet';
 
 const app = express();
 
 // Configuração básica
 app.set('trust proxy', 1);
 
+// Middlewares de segurança e otimização em produção
+if (process.env.NODE_ENV === 'production') {
+  app.use(helmet());
+  app.use(compression());
+}
+
 // Configuração CORS com configurações corretas para cookies
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? 'https://hylios.com' 
+    ? ['https://*.replit.app', 'https://*.repl.co'] 
     : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -60,6 +68,11 @@ app.use((req, res, next) => {
   res.on("finish", () => {
     const duration = Date.now() - start;
     console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${res.statusCode} (${duration}ms)`);
+    if (process.env.NODE_ENV === 'production') {
+      console.log('Headers:', req.headers);
+      console.log('Query:', req.query);
+      console.log('Body:', req.body);
+    }
   });
   next();
 });
@@ -76,7 +89,8 @@ app.use('/uploads', express.static('uploads'));
       console.error('[ERROR]', {
         message: err.message,
         stack: err.stack,
-        status: err.status || err.statusCode
+        status: err.status || err.statusCode,
+        timestamp: new Date().toISOString()
       });
 
       const status = err.status || err.statusCode || 500;
@@ -95,12 +109,14 @@ app.use('/uploads', express.static('uploads'));
       serveStatic(app);
     }
 
-    const port = 5000;
+    const port = process.env.PORT || 5000;
     server.listen({
       port,
       host: "0.0.0.0",
     }, () => {
       log(`Servidor iniciado e rodando na porta ${port}`);
+      console.log('Ambiente:', process.env.NODE_ENV);
+      console.log('CORS Origin:', process.env.NODE_ENV === 'production' ? ['https://*.replit.app', 'https://*.repl.co'] : 'all');
     });
   } catch (error) {
     console.error('[FATAL ERROR] Falha ao iniciar o servidor:', error);
