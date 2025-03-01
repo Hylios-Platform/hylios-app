@@ -12,6 +12,7 @@ import Settings from "@/pages/settings";
 import Payments from "@/pages/payments";
 import PasswordReset from "@/pages/password-reset";
 import PitchPresentation from "@/pages/pitch-presentation";
+import ApplicationStatus from "@/pages/application-status";
 import { ProtectedRoute } from "./lib/protected-route";
 import Header from "@/components/header";
 import { LanguageSelector } from "@/components/language-selector";
@@ -40,6 +41,7 @@ function Router() {
           <Route path="/" component={HomePage} />
           <Route path="/auth" component={AuthPage} />
           <Route path="/password-reset" component={PasswordReset} />
+          <Route path="/application-status/:id" component={ApplicationStatus} />
           <ProtectedRoute path="/post-job" component={PostJob} />
           <ProtectedRoute path="/jobs" component={Jobs} />
           <ProtectedRoute path="/settings" component={Settings} />

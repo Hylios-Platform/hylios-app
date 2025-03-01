@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Building2, MapPin, Clock, Coins, Heart, X, Star, ChevronLeft, ChevronRight, Sparkles, Shield, Trophy } from "lucide-react";
 import { Job } from "@shared/schema";
+import { useLocation } from "wouter";
 
 // Mock data usando os campos corretos do tipo Job
 const mockJobs: (Job & { companyRating: number; isVerified: boolean; isFeatured: boolean })[] = [
@@ -53,6 +54,7 @@ export function JobSwipe() {
   const [rotateValue, setRotateValue] = useState(0);
   const [matchScore, setMatchScore] = useState(85);
   const [showTutorial, setShowTutorial] = useState(true);
+  const [, navigate] = useLocation();
 
   const currentJob = mockJobs[currentIndex];
 
@@ -90,7 +92,8 @@ export function JobSwipe() {
   const handleMatch = () => {
     setLikedJobs([...likedJobs, currentJob.id]);
     setDirection("right");
-    paginate(1);
+    // Redirecionar para a página de status da candidatura
+    navigate(`/application-status/${currentJob.id}`);
   };
 
   const handleSkip = () => {
@@ -218,7 +221,7 @@ export function JobSwipe() {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: index * 0.1 }}
                     >
-                      <Star 
+                      <Star
                         className={`h-4 w-4 ${
                           index < Math.floor(currentJob.companyRating)
                             ? "fill-amber-400 text-amber-400"
@@ -273,7 +276,7 @@ export function JobSwipe() {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-gray-100">
-                  <motion.div 
+                  <motion.div
                     className="relative"
                     animate={{
                       scale: [1, 1.05, 1],
@@ -289,10 +292,10 @@ export function JobSwipe() {
                       <span className="font-medium">Match Score:</span> {matchScore}%
                     </p>
                     <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
-                      <motion.div 
+                      <motion.div
                         className="h-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300"
                         initial={{ width: 0 }}
-                        animate={{ 
+                        animate={{
                           width: `${matchScore}%`,
                           background: [
                             "linear-gradient(to right, #93c5fd, #60a5fa, #93c5fd)",
@@ -300,8 +303,8 @@ export function JobSwipe() {
                             "linear-gradient(to right, #93c5fd, #60a5fa, #93c5fd)"
                           ]
                         }}
-                        transition={{ 
-                          duration: 0.8, 
+                        transition={{
+                          duration: 0.8,
                           ease: "easeOut",
                           background: {
                             duration: 2,
@@ -384,7 +387,7 @@ export function JobSwipe() {
           <motion.div
             className="h-full bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400"
             initial={{ width: 0 }}
-            animate={{ 
+            animate={{
               width: `${swipeProgress}%`,
               background: [
                 "linear-gradient(to right, #60a5fa, #a78bfa, #60a5fa)",
@@ -392,7 +395,7 @@ export function JobSwipe() {
                 "linear-gradient(to right, #60a5fa, #a78bfa, #60a5fa)"
               ]
             }}
-            transition={{ 
+            transition={{
               duration: 0.3,
               background: {
                 duration: 3,
@@ -412,11 +415,11 @@ export function JobSwipe() {
               index === currentIndex ? "bg-blue-400" : "bg-gray-200"
             }`}
             initial={{ scale: 0.8 }}
-            animate={{ 
+            animate={{
               scale: index === currentIndex ? [1, 1.2, 1] : 1,
               opacity: index === currentIndex ? [0.7, 1, 0.7] : 0.5
             }}
-            transition={{ 
+            transition={{
               duration: 1.5,
               repeat: index === currentIndex ? Infinity : 0,
               ease: "easeInOut"
