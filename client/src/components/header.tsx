@@ -1,7 +1,7 @@
 import { Link, useLocation } from "wouter";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
-import { LogOut, Building2, Users, BarChart2, HelpCircle, Info } from "lucide-react";
+import { LogOut, Briefcase, Users, BarChart2, HelpCircle, Info, Building2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { WalletButton } from "@/components/wallet-button";
 import { ThemeToggle } from "@/components/theme-toggle";
@@ -51,7 +51,7 @@ export default function Header() {
                   variant="default" 
                   className="h-8 px-2 text-xs md:text-sm bg-gradient-to-r from-blue-500 via-blue-600 to-blue-500 hover:from-blue-600 hover:via-blue-700 hover:to-blue-600 text-white shadow-sm flex items-center gap-1"
                 >
-                  <Building2 className="h-3.5 w-3.5" />
+                  <Briefcase className="h-3.5 w-3.5" />
                   <span className="hidden md:inline">Trabalhos</span>
                 </Button>
               </Link>
