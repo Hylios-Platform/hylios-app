@@ -9,7 +9,6 @@ import { useTutorial } from "@/hooks/use-tutorial";
 import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
 import { ChatBot } from "@/components/support/chat-bot";
-import { BackupButton } from "@/components/backup-button";
 
 const CompanyStats = () => {
   const stats = [
@@ -366,18 +365,6 @@ export default function HomePage() {
           <CompanyStats />
           <CompanyFeatures />
 
-          {/* Adicionar o botão de backup em uma posição mais visível */}
-          <div className="flex justify-center my-8">
-            <div className="bg-white p-6 rounded-xl border border-blue-100 shadow-lg">
-              <h3 className="text-xl font-semibold text-gray-900 mb-4 text-center">
-                Download do Projeto
-              </h3>
-              <p className="text-gray-600 mb-4 text-center">
-                Faça o download completo do projeto Hylios incluindo todos os arquivos e configurações.
-              </p>
-              <BackupButton />
-            </div>
-          </div>
 
           <motion.div
             initial={{ opacity: 0 }}

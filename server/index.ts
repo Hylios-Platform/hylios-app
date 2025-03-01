@@ -9,7 +9,6 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { storage } from "./storage";
 import { setupChatRoutes } from "./routes/chat";
-import { setupBackupRoutes } from "./routes/backup";
 
 const app = express();
 
@@ -49,7 +48,6 @@ app.use(session({
 }));
 
 // Setup das rotas
-setupBackupRoutes(app);
 setupChatRoutes(app);
 
 // Middleware de logging detalhado para debug de autenticação
