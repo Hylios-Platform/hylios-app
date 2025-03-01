@@ -69,15 +69,15 @@ export function ChatBot() {
         {
           id: Date.now().toString(),
           type: "error",
-          content: "Desculpe, não consegui processar sua mensagem no momento. Por favor, tente novamente mais tarde.",
+          content: "O serviço de chat está temporariamente indisponível devido ao limite de uso da API. Por favor, tente novamente mais tarde.",
           timestamp: new Date(),
         },
       ]);
 
       toast({
         variant: "destructive",
-        title: "Erro no chat",
-        description: "Não foi possível processar sua mensagem. Tente novamente mais tarde.",
+        title: "Serviço Indisponível",
+        description: "O chatbot está temporariamente indisponível devido ao limite de uso da API. Tente novamente mais tarde.",
       });
     },
   });
