@@ -2,11 +2,11 @@ import { useState } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Clock, Coins, Heart, X, Star, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
+import { Building2, MapPin, Clock, Coins, Heart, X, Star, ChevronLeft, ChevronRight, Sparkles, Shield, Trophy } from "lucide-react";
 import { Job } from "@shared/schema";
 
 // Mock data usando os campos corretos do tipo Job
-const mockJobs: Job[] = [
+const mockJobs: (Job & { companyRating: number; isVerified: boolean; isFeatured: boolean })[] = [
   {
     id: 1,
     title: "Desenvolvedor Full Stack React/Node",
@@ -20,7 +20,10 @@ const mockJobs: Job[] = [
     requiredSkills: ["React", "Node.js", "TypeScript"],
     status: "open",
     assignedTo: null,
-    createdAt: new Date()
+    createdAt: new Date(),
+    companyRating: 4.8,
+    isVerified: true,
+    isFeatured: true
   },
   {
     id: 2,
@@ -35,22 +38,10 @@ const mockJobs: Job[] = [
     requiredSkills: ["Figma", "Adobe XD", "User Research"],
     status: "open",
     assignedTo: null,
-    createdAt: new Date()
-  },
-  {
-    id: 3,
-    title: "DevOps Engineer",
-    description: "Automatização e gerenciamento de infraestrutura cloud",
-    companyId: 3,
-    currency: "EUR",
-    amount: "7000",
-    country: "Alemanha",
-    city: "Berlim",
-    workType: "onsite",
-    requiredSkills: ["AWS", "Docker", "Kubernetes"],
-    status: "open",
-    assignedTo: null,
-    createdAt: new Date()
+    createdAt: new Date(),
+    companyRating: 4.5,
+    isVerified: true,
+    isFeatured: false
   }
 ];
 
@@ -136,7 +127,6 @@ export function JobSwipe() {
       )}
 
       <div className="relative h-[500px] w-full perspective-1000">
-        {/* Setas de navegação */}
         <div className="absolute inset-y-0 left-0 flex items-center -ml-12 z-10">
           <motion.div
             whileHover={{ scale: 1.2 }}
@@ -203,17 +193,45 @@ export function JobSwipe() {
                 <CardTitle className="text-xl font-bold text-gray-800">
                   {currentJob.title}
                 </CardTitle>
-                <div className="flex items-center gap-2 text-gray-600">
-                  <Building2 className="h-4 w-4 text-blue-400" />
-                  <span>Empresa {currentJob.companyId}</span>
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="relative">
+                      <Building2 className="h-5 w-5 text-blue-400" />
+                      {currentJob.isVerified && (
+                        <Shield className="h-3 w-3 text-green-500 absolute -top-1 -right-1" />
+                      )}
+                    </div>
+                    <span className="text-gray-600">Empresa {currentJob.companyId}</span>
+                    {currentJob.isFeatured && (
+                      <span className="px-2 py-0.5 bg-amber-50 text-amber-600 rounded-full text-xs font-medium flex items-center gap-1">
+                        <Trophy className="h-3 w-3" />
+                        Destaque
+                      </span>
+                    )}
+                  </div>
                 </div>
-                <div className="flex items-center gap-1 mt-1">
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                  <Star className="h-4 w-4 text-gray-300" />
-                  <span className="text-sm text-gray-500 ml-1">(4.0)</span>
+                <div className="flex items-center gap-1 mt-2">
+                  {Array.from({ length: 5 }).map((_, index) => (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, scale: 0 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      transition={{ delay: index * 0.1 }}
+                    >
+                      <Star 
+                        className={`h-4 w-4 ${
+                          index < Math.floor(currentJob.companyRating)
+                            ? "fill-amber-400 text-amber-400"
+                            : index < currentJob.companyRating
+                            ? "fill-amber-400/50 text-amber-400"
+                            : "text-gray-300"
+                        }`}
+                      />
+                    </motion.div>
+                  ))}
+                  <span className="text-sm text-gray-500 ml-2">
+                    ({currentJob.companyRating.toFixed(1)})
+                  </span>
                 </div>
               </CardHeader>
               <CardContent className="space-y-6">
@@ -353,7 +371,6 @@ export function JobSwipe() {
         </motion.div>
       </div>
 
-      {/* Indicador de progresso melhorado */}
       <div className="mt-6">
         <div className="flex justify-between items-center mb-2">
           <span className="text-sm text-gray-500">
