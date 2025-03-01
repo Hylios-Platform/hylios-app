@@ -39,7 +39,7 @@ const testimonials: Testimonial[] = [
     company: "DesignStudio",
     message: "A verificação KYC me deu muita confiança para trabalhar com clientes internacionais.",
     rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123" // Alterado o seed do avatar
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123" 
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const testimonials: Testimonial[] = [
     company: "CloudTech",
     message: "O sistema de matching é incrivelmente preciso! Todas as vagas são relevantes para meu perfil.",
     rating: 4,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro"
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro456" 
   }
 ];
 
@@ -163,7 +163,7 @@ const NewsBanner = () => {
         <div className="flex items-center gap-4">
           <MessageSquare className="h-6 w-6" />
           <p className="text-sm font-medium">
-            Novo! Receba seus pagamentos instantaneamente em Bitcoin! Transações rápidas e seguras na rede BTC.
+            Novo! Transações instantâneas na própria rede Hylios! Pagamentos seguros em Bitcoin com confirmação imediata.
           </p>
         </div>
         <Button
