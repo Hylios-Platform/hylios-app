@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
@@ -7,6 +8,7 @@ import path from 'path';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import { storage } from "./storage";
+import { setupChatRoutes } from "./routes/chat";
 
 const app = express();
 
@@ -44,6 +46,9 @@ app.use(session({
     path: '/'
   }
 }));
+
+// Setup das rotas do chat
+setupChatRoutes(app);
 
 // Middleware de logging detalhado para debug de autenticação
 app.use((req, res, next) => {
