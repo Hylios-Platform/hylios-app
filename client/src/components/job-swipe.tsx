@@ -2,7 +2,7 @@ import { useState } from "react";
 import { motion, AnimatePresence, PanInfo } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Building2, MapPin, Clock, Coins, Heart, X, Star } from "lucide-react";
+import { Building2, MapPin, Clock, Coins, Heart, X, Star, ChevronLeft, ChevronRight, Sparkles } from "lucide-react";
 import { Job } from "@shared/schema";
 
 // Mock data usando os campos corretos do tipo Job
@@ -60,7 +60,8 @@ export function JobSwipe() {
   const [likedJobs, setLikedJobs] = useState<number[]>([]);
   const [swipeProgress, setSwipeProgress] = useState(0);
   const [rotateValue, setRotateValue] = useState(0);
-  const [matchScore, setMatchScore] = useState(85); // Score inicial
+  const [matchScore, setMatchScore] = useState(85);
+  const [showTutorial, setShowTutorial] = useState(true);
 
   const currentJob = mockJobs[currentIndex];
 
@@ -73,14 +74,12 @@ export function JobSwipe() {
     if (currentIndex + newDirection >= 0 && currentIndex + newDirection < mockJobs.length) {
       setCurrentIndex(currentIndex + newDirection);
       setSwipeProgress(((currentIndex + newDirection + 1) / mockJobs.length) * 100);
-      // Gerar um novo score aleatório entre 75 e 98
       setMatchScore(Math.floor(Math.random() * (98 - 75 + 1)) + 75);
     }
   };
 
   const handleDrag = (event: any, info: PanInfo) => {
     const xOffset = info.offset.x;
-    // Calcular rotação baseada no movimento horizontal
     setRotateValue(xOffset * 0.1);
   };
 
@@ -110,11 +109,63 @@ export function JobSwipe() {
 
   return (
     <div className="w-full max-w-md mx-auto p-4">
-      <div className="relative h-[500px] w-full">
+      {showTutorial && (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          className="bg-gradient-to-r from-blue-50 to-violet-50 p-4 rounded-xl mb-6 border border-blue-100"
+        >
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-5 w-5 text-blue-500" />
+              <p className="text-sm text-blue-600">
+                Deslize para a direita (❤️) para curtir ou para a esquerda (✖️) para pular
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowTutorial(false)}
+              className="text-gray-400 hover:text-gray-600"
+            >
+              Entendi
+            </Button>
+          </div>
+        </motion.div>
+      )}
+
+      <div className="relative h-[500px] w-full perspective-1000">
+        {/* Setas de navegação */}
+        <div className="absolute inset-y-0 left-0 flex items-center -ml-12 z-10">
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            className="cursor-pointer"
+          >
+            <ChevronLeft
+              className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
+              onClick={() => paginate(-1)}
+            />
+          </motion.div>
+        </div>
+        <div className="absolute inset-y-0 right-0 flex items-center -mr-12 z-10">
+          <motion.div
+            whileHover={{ scale: 1.2 }}
+            whileTap={{ scale: 0.9 }}
+            className="cursor-pointer"
+          >
+            <ChevronRight
+              className="h-8 w-8 text-gray-400 hover:text-blue-500 transition-colors"
+              onClick={() => paginate(1)}
+            />
+          </motion.div>
+        </div>
+
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentIndex}
-            className="absolute w-full h-full perspective-1000"
+            className="absolute w-full h-full"
             initial={{
               x: direction === "right" ? -300 : 300,
               opacity: 0,
