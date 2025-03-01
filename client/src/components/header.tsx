@@ -47,7 +47,7 @@ export default function Header() {
                 <Button 
                   size="sm" 
                   variant="default" 
-                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-sm"
+                  className="h-9 px-4 text-sm bg-violet-500 hover:bg-violet-600 text-white shadow-md"
                 >
                   Publicar Trabalho
                 </Button>
