@@ -59,6 +59,8 @@ export function JobSwipe() {
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [likedJobs, setLikedJobs] = useState<number[]>([]);
   const [swipeProgress, setSwipeProgress] = useState(0);
+  const [rotateValue, setRotateValue] = useState(0);
+  const [matchScore, setMatchScore] = useState(85); // Score inicial
 
   const currentJob = mockJobs[currentIndex];
 
@@ -71,7 +73,15 @@ export function JobSwipe() {
     if (currentIndex + newDirection >= 0 && currentIndex + newDirection < mockJobs.length) {
       setCurrentIndex(currentIndex + newDirection);
       setSwipeProgress(((currentIndex + newDirection + 1) / mockJobs.length) * 100);
+      // Gerar um novo score aleatório entre 75 e 98
+      setMatchScore(Math.floor(Math.random() * (98 - 75 + 1)) + 75);
     }
+  };
+
+  const handleDrag = (event: any, info: PanInfo) => {
+    const xOffset = info.offset.x;
+    // Calcular rotação baseada no movimento horizontal
+    setRotateValue(xOffset * 0.1);
   };
 
   const handleDragEnd = (e: any, { offset, velocity }: PanInfo) => {
@@ -84,14 +94,17 @@ export function JobSwipe() {
       setDirection("right");
       paginate(-1);
     }
+    setRotateValue(0);
   };
 
   const handleMatch = () => {
     setLikedJobs([...likedJobs, currentJob.id]);
+    setDirection("right");
     paginate(1);
   };
 
   const handleSkip = () => {
+    setDirection("left");
     paginate(1);
   };
 
@@ -101,23 +114,25 @@ export function JobSwipe() {
         <AnimatePresence initial={false} mode="wait">
           <motion.div
             key={currentIndex}
-            className="absolute w-full h-full"
+            className="absolute w-full h-full perspective-1000"
             initial={{
               x: direction === "right" ? -300 : 300,
               opacity: 0,
-              scale: 0.95
+              scale: 0.95,
+              rotateY: direction === "right" ? -30 : 30
             }}
             animate={{
               x: 0,
               opacity: 1,
               scale: 1,
-              rotateZ: 0
+              rotateY: 0,
+              rotate: rotateValue
             }}
             exit={{
               x: direction === "right" ? 300 : -300,
               opacity: 0,
               scale: 0.95,
-              rotateZ: direction === "right" ? 5 : -5
+              rotateY: direction === "right" ? 30 : -30
             }}
             transition={{
               type: "spring",
@@ -127,6 +142,7 @@ export function JobSwipe() {
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
             dragElastic={1}
+            onDrag={handleDrag}
             onDragEnd={handleDragEnd}
             whileDrag={{ scale: 1.02 }}
             whileHover={{ scale: 1.02 }}
@@ -188,17 +204,45 @@ export function JobSwipe() {
                 </div>
 
                 <div className="pt-4 mt-4 border-t border-gray-100">
-                  <p className="text-sm text-blue-400">
-                    <span className="font-medium">Match Score:</span> 85%
-                  </p>
-                  <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
-                    <motion.div 
-                      className="h-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300"
-                      initial={{ width: 0 }}
-                      animate={{ width: "85%" }}
-                      transition={{ duration: 0.8, ease: "easeOut" }}
-                    />
-                  </div>
+                  <motion.div 
+                    className="relative"
+                    animate={{
+                      scale: [1, 1.05, 1],
+                      opacity: [0.8, 1, 0.8]
+                    }}
+                    transition={{
+                      duration: 2,
+                      repeat: Infinity,
+                      ease: "easeInOut"
+                    }}
+                  >
+                    <p className="text-sm text-blue-400">
+                      <span className="font-medium">Match Score:</span> {matchScore}%
+                    </p>
+                    <div className="w-full h-2 bg-gray-100 rounded-full mt-2 overflow-hidden">
+                      <motion.div 
+                        className="h-full bg-gradient-to-r from-blue-300 via-blue-400 to-blue-300"
+                        initial={{ width: 0 }}
+                        animate={{ 
+                          width: `${matchScore}%`,
+                          background: [
+                            "linear-gradient(to right, #93c5fd, #60a5fa, #93c5fd)",
+                            "linear-gradient(to right, #60a5fa, #93c5fd, #60a5fa)",
+                            "linear-gradient(to right, #93c5fd, #60a5fa, #93c5fd)"
+                          ]
+                        }}
+                        transition={{ 
+                          duration: 0.8, 
+                          ease: "easeOut",
+                          background: {
+                            duration: 2,
+                            repeat: Infinity,
+                            ease: "linear"
+                          }
+                        }}
+                      />
+                    </div>
+                  </motion.div>
                 </div>
               </CardContent>
             </Card>
@@ -207,22 +251,55 @@ export function JobSwipe() {
       </div>
 
       <div className="flex justify-center gap-4 mt-6">
-        <Button
-          variant="outline"
-          size="lg"
-          className="rounded-full w-16 h-16 bg-rose-50 hover:bg-rose-100 border-rose-200 hover:border-rose-300 transition-colors duration-200 group"
-          onClick={handleSkip}
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <X className="h-8 w-8 text-rose-500 group-hover:text-rose-600 transition-colors" />
-        </Button>
-        <Button
-          variant="outline"
-          size="lg"
-          className="rounded-full w-16 h-16 bg-emerald-50 hover:bg-emerald-100 border-emerald-200 hover:border-emerald-300 transition-colors duration-200 group"
-          onClick={handleMatch}
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full w-16 h-16 bg-rose-50 hover:bg-rose-100 border-rose-200 hover:border-rose-300 transition-colors duration-200 group relative"
+            onClick={handleSkip}
+          >
+            <X className="h-8 w-8 text-rose-500 group-hover:text-rose-600 transition-colors" />
+            <motion.div
+              className="absolute inset-0 rounded-full bg-rose-200/20"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0, 0.2]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity
+              }}
+            />
+          </Button>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.9 }}
         >
-          <Heart className="h-8 w-8 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
-        </Button>
+          <Button
+            variant="outline"
+            size="lg"
+            className="rounded-full w-16 h-16 bg-emerald-50 hover:bg-emerald-100 border-emerald-200 hover:border-emerald-300 transition-colors duration-200 group relative"
+            onClick={handleMatch}
+          >
+            <Heart className="h-8 w-8 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
+            <motion.div
+              className="absolute inset-0 rounded-full bg-emerald-200/20"
+              animate={{
+                scale: [1, 1.2, 1],
+                opacity: [0.2, 0, 0.2]
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity
+              }}
+            />
+          </Button>
+        </motion.div>
       </div>
 
       {/* Indicador de progresso melhorado */}
@@ -237,10 +314,24 @@ export function JobSwipe() {
         </div>
         <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
           <motion.div
-            className="h-full bg-gradient-to-r from-blue-400 to-violet-400"
+            className="h-full bg-gradient-to-r from-blue-400 via-violet-400 to-blue-400"
             initial={{ width: 0 }}
-            animate={{ width: `${swipeProgress}%` }}
-            transition={{ duration: 0.3 }}
+            animate={{ 
+              width: `${swipeProgress}%`,
+              background: [
+                "linear-gradient(to right, #60a5fa, #a78bfa, #60a5fa)",
+                "linear-gradient(to right, #a78bfa, #60a5fa, #a78bfa)",
+                "linear-gradient(to right, #60a5fa, #a78bfa, #60a5fa)"
+              ]
+            }}
+            transition={{ 
+              duration: 0.3,
+              background: {
+                duration: 3,
+                repeat: Infinity,
+                ease: "linear"
+              }
+            }}
           />
         </div>
       </div>
@@ -253,8 +344,15 @@ export function JobSwipe() {
               index === currentIndex ? "bg-blue-400" : "bg-gray-200"
             }`}
             initial={{ scale: 0.8 }}
-            animate={{ scale: index === currentIndex ? 1.2 : 1 }}
-            transition={{ duration: 0.2 }}
+            animate={{ 
+              scale: index === currentIndex ? [1, 1.2, 1] : 1,
+              opacity: index === currentIndex ? [0.7, 1, 0.7] : 0.5
+            }}
+            transition={{ 
+              duration: 1.5,
+              repeat: index === currentIndex ? Infinity : 0,
+              ease: "easeInOut"
+            }}
           />
         ))}
       </div>
