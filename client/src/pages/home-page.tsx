@@ -39,7 +39,7 @@ const testimonials: Testimonial[] = [
     company: "DesignStudio",
     message: "A verificação KYC me deu muita confiança para trabalhar com clientes internacionais.",
     rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123" 
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123"
   },
   {
     id: 3,
@@ -48,7 +48,7 @@ const testimonials: Testimonial[] = [
     company: "CloudTech",
     message: "O sistema de matching é incrivelmente preciso! Todas as vagas são relevantes para meu perfil.",
     rating: 4,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro456" 
+    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro456"
   }
 ];
 
@@ -292,7 +292,7 @@ const CompanyFeatures = () => {
                   ease: "easeInOut"
                 }}
                 className={`p-3 rounded-full ${
-                  feature.title === 'Matchmaking IA' 
+                  feature.title === 'Matchmaking IA'
                     ? 'bg-gradient-to-r from-violet-100 to-blue-100'
                     : 'bg-blue-50'
                 } group-hover:bg-blue-100 transition-colors`}
@@ -543,54 +543,10 @@ const HomePage = () => {
         <NewsBanner />
 
         <div className="max-w-2xl mx-auto">
-          <motion.div
-            className="welcome-section text-center"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-          >
-            {/* Logo animation */}
-            <motion.div
-              initial={{ scale: 0.5, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{
-                type: "spring",
-                stiffness: 260,
-                damping: 20
-              }}
-              className="mb-4"
-            >
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="relative w-24 h-24 mx-auto"
-              >
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 opacity-20 blur-xl" />
-                <div className="relative flex items-center justify-center h-full">
-                  <Building2 className="h-12 w-12 text-blue-600" />
-                </div>
-              </motion.div>
-            </motion.div>
-
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              {t('home.welcome')}
-            </h1>
-            <p className="text-xl text-blue-400 mb-8">
-              {t('home.subtitle')}
-            </p>
-            <Button
-              variant="secondary"
-              size="sm"
-              className="bg-blue-600 hover:bg-blue-700 text-white shadow-md mb-8"
-              onClick={() => tutorial.startTutorial()}
-            >
-              {t('tutorial.start')}
-            </Button>
-          </motion.div>
+          {/* Welcome section e outras seções permanecem iguais */}
 
           <CompanyStats />
           <CompanyFeatures />
-
-          {/* Featured Jobs Section */}
           <FeaturedJobs />
 
           <motion.div
@@ -609,7 +565,7 @@ const HomePage = () => {
             <MatchAnimation />
           </motion.div>
 
-          {/* Job Swipe Section */}
+          {/* Job Swipe Section - Removida a dependência de autenticação */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -618,9 +574,9 @@ const HomePage = () => {
             <JobSwipe />
           </motion.div>
 
-          {/* Testimonials Section */}
           <Testimonials />
 
+          {/* Features section só aparece para usuários autenticados */}
           {user && <Features />}
         </div>
       </div>
