@@ -236,8 +236,8 @@ const CompanyFeatures = () => {
     },
     {
       icon: Rocket,
-      title: 'Matchmaking Inteligente',
-      description: 'Sistema avançado de correspondência baseado em IA'
+      title: 'Matchmaking IA',
+      description: 'Sistema avançado de correspondência com Machine Learning e NLP'
     },
     {
       icon: Bitcoin,
@@ -261,9 +261,27 @@ const CompanyFeatures = () => {
             initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: index * 0.2 }}
-            className="group p-6 bg-white rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-all"
+            className="group p-6 bg-white rounded-xl border border-blue-100 shadow-sm hover:shadow-md transition-all relative overflow-hidden"
+            whileHover={{
+              scale: 1.02,
+              transition: { duration: 0.2 }
+            }}
           >
-            <div className="flex items-center gap-4">
+            {/* Background Gradient Animation */}
+            <motion.div
+              className="absolute inset-0 bg-gradient-to-r from-blue-50/50 to-violet-50/50"
+              animate={{
+                opacity: [0.5, 0.8, 0.5],
+                scale: [1, 1.05, 1],
+              }}
+              transition={{
+                duration: 3,
+                repeat: Infinity,
+                ease: "easeInOut"
+              }}
+            />
+
+            <div className="relative flex items-center gap-4">
               <motion.div
                 animate={{
                   rotate: [0, 10, -10, 0],
@@ -273,12 +291,47 @@ const CompanyFeatures = () => {
                   repeat: Infinity,
                   ease: "easeInOut"
                 }}
-                className="p-3 rounded-full bg-blue-50 group-hover:bg-blue-100 transition-colors"
+                className={`p-3 rounded-full ${
+                  feature.title === 'Matchmaking IA' 
+                    ? 'bg-gradient-to-r from-violet-100 to-blue-100'
+                    : 'bg-blue-50'
+                } group-hover:bg-blue-100 transition-colors`}
               >
-                <Icon className="h-6 w-6 text-blue-500" />
+                <Icon className={`h-6 w-6 ${
+                  feature.title === 'Matchmaking IA'
+                    ? 'text-violet-500'
+                    : 'text-blue-500'
+                }`} />
+
+                {/* Partículas animadas para o Matchmaking IA */}
+                {feature.title === 'Matchmaking IA' && (
+                  <>
+                    {[...Array(3)].map((_, i) => (
+                      <motion.div
+                        key={i}
+                        className="absolute w-1 h-1 bg-violet-400 rounded-full"
+                        animate={{
+                          scale: [1, 1.5, 1],
+                          opacity: [0.8, 0, 0.8],
+                          x: [0, (i + 1) * 10, 0],
+                          y: [0, (i + 1) * -10, 0],
+                        }}
+                        transition={{
+                          duration: 2,
+                          repeat: Infinity,
+                          delay: i * 0.3,
+                        }}
+                      />
+                    ))}
+                  </>
+                )}
               </motion.div>
               <div>
-                <h3 className="text-lg font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
+                <h3 className={`text-lg font-semibold ${
+                  feature.title === 'Matchmaking IA'
+                    ? 'bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent'
+                    : 'text-gray-900 group-hover:text-blue-600'
+                } transition-colors`}>
                   {feature.title}
                 </h3>
                 <p className="text-gray-600">{feature.description}</p>
