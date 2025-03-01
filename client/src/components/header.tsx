@@ -54,49 +54,59 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <nav className="flex gap-2">
               <Link href="/jobs">
-                <Button 
-                  size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {t('navigation.jobs')}
-                </Button>
+                  <Button 
+                    size="sm" 
+                    variant="default" 
+                    className="h-9 px-4 text-sm bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm transition-all duration-200"
+                  >
+                    {t('navigation.jobs')}
+                  </Button>
+                </motion.div>
               </Link>
               <Link href="/post-job">
-                <Button 
-                  size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
-                  {t('navigation.postJob')}
-                </Button>
+                  <Button 
+                    size="sm" 
+                    variant="default" 
+                    className="h-9 px-4 text-sm bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-sm transition-all duration-200"
+                  >
+                    {t('navigation.postJob')}
+                  </Button>
+                </motion.div>
               </Link>
-              <Link href="/payments">
-                <Button 
-                  size="sm" 
-                  variant="default" 
-                  className="h-7 px-2 text-xs bg-blue-400 hover:bg-blue-500 text-white shadow-sm transition-all duration-200"
-                >
-                  {t('navigation.payments')}
-                </Button>
-              </Link>
-            </nav>
+              </nav>
 
             <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200 dark:border-slate-700">
               <ThemeToggle />
               <WalletButton />
-              <span className="text-xs text-gray-600 dark:text-gray-300">
-                {user?.username || 'Dev User'}
-              </span>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => logoutMutation.mutate()}
-                className="h-7 px-2 text-xs text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
-              >
-                <span className="mr-1">Sair</span>
-                <LogOut className="h-3 w-3" />
-              </Button>
+              {user && (
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center gap-2"
+                >
+                  <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                    {user?.username || 'Dev User'}
+                  </span>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => logoutMutation.mutate()}
+                    className="h-9 px-3 text-sm text-gray-600 hover:text-red-600 hover:bg-red-50 dark:text-gray-300 dark:hover:bg-red-900/20 transition-all duration-200"
+                  >
+                    <span className="mr-1">Sair</span>
+                    <LogOut className="h-4 w-4" />
+                  </Button>
+                </motion.div>
+              )}
             </div>
           </div>
         )}
