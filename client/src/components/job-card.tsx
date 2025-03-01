@@ -2,11 +2,12 @@ import { Job } from "@shared/schema";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Bitcoin, Calendar, Loader2, MapPin, Coins, Briefcase, Tags } from "lucide-react";
+import { Bitcoin, Calendar, Loader2, MapPin, Coins, Briefcase, Tags, CheckCircle2, Trophy, Star, ThumbsUp, Scale } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 import { useTranslation } from "react-i18next";
 import { MatchMenu } from "./matching/match-menu";
 import { calculateMatchScore } from "@/lib/matching-service";
+import { motion } from 'framer-motion';
 
 interface JobCardProps {
   job: Job;
@@ -19,6 +20,29 @@ interface JobCardProps {
   userSkills?: string[];
   userLocation?: string;
   preferredWorkType?: string;
+}
+
+interface SkillBadgeProps {
+  skill: string;
+  isMatched: boolean;
+}
+
+function SkillBadge({ skill, isMatched }: SkillBadgeProps) {
+  return (
+    <motion.span
+      initial={{ scale: 0.8, opacity: 0 }}
+      animate={{ scale: 1, opacity: 1 }}
+      className={`px-2 py-1 rounded-full text-sm font-medium transition-colors
+        ${isMatched 
+          ? 'bg-green-100 text-green-700 border border-green-200' 
+          : 'bg-gray-100 text-gray-600 border border-gray-200'}`}
+    >
+      {skill}
+      {isMatched && (
+        <CheckCircle2 className="inline-block ml-1 h-3 w-3 text-green-500" />
+      )}
+    </motion.span>
+  );
 }
 
 export function JobCard({ 
@@ -34,10 +58,27 @@ export function JobCard({
   preferredWorkType = "remote"
 }: JobCardProps) {
   const { t } = useTranslation();
+  const matchScore = userType === "professional" 
+    ? calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
+    : 0;
 
-  const canApply = userType === "professional" && 
-                   kycStatus === "verified" && 
-                   job.status === "open";
+  const matchedSkills = job.requiredSkills?.filter(skill => 
+    userSkills.includes(skill)
+  ) || [];
+
+  const getMatchColor = (score: number) => {
+    if (score >= 90) return 'text-green-600 bg-green-50';
+    if (score >= 75) return 'text-blue-600 bg-blue-50';
+    if (score >= 60) return 'text-yellow-600 bg-yellow-50';
+    return 'text-gray-600 bg-gray-50';
+  };
+
+  const getMatchIcon = (score: number) => {
+    if (score >= 90) return <Trophy className="h-4 w-4" />;
+    if (score >= 75) return <Star className="h-4 w-4" />;
+    if (score >= 60) return <ThumbsUp className="h-4 w-4" />;
+    return <Scale className="h-4 w-4" />;
+  };
 
   const workTypeColors = {
     remote: "bg-green-100 text-green-800",
@@ -45,9 +86,9 @@ export function JobCard({
     hybrid: "bg-purple-100 text-purple-800"
   };
 
-  const matchScore = userType === "professional" 
-    ? calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
-    : 0;
+  const canApply = userType === "professional" && 
+                   kycStatus === "verified" && 
+                   job.status === "open";
 
   return (
     <Card className="border-blue-100 bg-white shadow-md hover:shadow-lg transition-shadow">
@@ -56,6 +97,16 @@ export function JobCard({
           <div className="flex-1">
             <div className="flex items-center gap-2 mb-2">
               <h3 className="text-xl font-semibold text-gray-900">{job.title}</h3>
+              {userType === "professional" && (
+                <motion.div
+                  initial={{ scale: 0.8, opacity: 0 }}
+                  animate={{ scale: 1, opacity: 1 }}
+                  className={`px-3 py-1 rounded-full flex items-center gap-1 ${getMatchColor(matchScore)}`}
+                >
+                  {getMatchIcon(matchScore)}
+                  <span className="font-medium">{matchScore}% Match</span>
+                </motion.div>
+              )}
               <Badge 
                 variant="secondary"
                 className={`${workTypeColors[job.workType as keyof typeof workTypeColors]}`}
@@ -69,16 +120,23 @@ export function JobCard({
             </p>
 
             {job.requiredSkills && (
-              <div className="flex flex-wrap gap-2 mb-4">
-                <span className="flex items-center text-sm text-gray-500">
-                  <Tags className="h-4 w-4 mr-1" />
-                  {t('jobs.requiredSkills')}:
-                </span>
-                {job.requiredSkills.map((skill, index) => (
-                  <Badge key={index} variant="outline" className="bg-gray-50">
-                    {skill}
-                  </Badge>
-                ))}
+              <div className="space-y-2 mb-4">
+                <div className="flex items-center gap-2 text-sm text-gray-500">
+                  <Tags className="h-4 w-4" />
+                  <span>{t('jobs.requiredSkills')}:</span>
+                  <span className="text-green-600">
+                    {matchedSkills.length}/{job.requiredSkills.length} {t('jobs.skillsMatch')}
+                  </span>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {job.requiredSkills.map((skill) => (
+                    <SkillBadge
+                      key={skill}
+                      skill={skill}
+                      isMatched={userSkills.includes(skill)}
+                    />
+                  ))}
+                </div>
               </div>
             )}
 
