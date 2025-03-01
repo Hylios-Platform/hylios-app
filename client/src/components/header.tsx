@@ -5,6 +5,7 @@ import { LogOut } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { WalletButton } from "@/components/wallet-button";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { motion } from "framer-motion";
 
 export default function Header() {
   const { user, logoutMutation } = useAuth();
@@ -16,15 +17,38 @@ export default function Header() {
   return (
     <header className="bg-gradient-to-r from-blue-50 to-blue-100/30 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800 backdrop-blur-sm">
       <div className="container mx-auto px-4 h-14 flex items-center justify-between">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="transition-transform hover:scale-105">
-            <h1 className="text-xl font-bold">
-              <span className="bg-gradient-to-r from-blue-400 to-blue-500 bg-clip-text text-transparent hover:from-blue-500 hover:to-blue-600 transition-colors cursor-pointer">
-                Hylios
-              </span>
-            </h1>
+        <motion.div 
+          className="flex items-center gap-6"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
+          <Link href="/">
+            <motion.div
+              className="relative cursor-pointer group"
+              initial={{ opacity: 1 }}
+              whileHover={{ scale: 1.05 }}
+              transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            >
+              <motion.div
+                className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-violet-500/20 rounded-lg blur-lg group-hover:blur-xl transition-all duration-300"
+                animate={{
+                  opacity: [0.5, 0.7, 0.5],
+                  scale: [1, 1.02, 1],
+                }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut"
+                }}
+              />
+              <h1 className="relative text-2xl font-bold px-4 py-1 rounded-lg">
+                <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-violet-500 transition-all duration-300">
+                  Hylios
+                </span>
+              </h1>
+            </motion.div>
           </Link>
-        </div>
+        </motion.div>
 
         {!isAuthPage && (
           <div className="flex items-center gap-2">
