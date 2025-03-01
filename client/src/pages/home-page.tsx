@@ -1,7 +1,7 @@
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 import { Link } from "wouter";
-import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield, Star, MessageSquare, MapPin } from "lucide-react";
+import { Building2, UserCheck, Bitcoin, Sparkles, Globe, Users, Trophy, Target, Rocket, Shield, Star, MessageSquare } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Tutorial } from "@/components/onboarding/tutorial";
 import { motion, AnimatePresence } from "framer-motion";
@@ -10,49 +10,7 @@ import { JobSwipe } from "@/components/job-swipe";
 import { MarqueeSponsors } from "@/components/marquee-sponsors";
 import { ChatBot } from "@/components/support/chat-bot";
 
-// Adiciona novos tipos para testimonials
-interface Testimonial {
-  id: number;
-  name: string;
-  role: string;
-  company: string;
-  message: string;
-  rating: number;
-  avatar: string;
-}
-
-// Mock data para testimonials
-const testimonials: Testimonial[] = [
-  {
-    id: 1,
-    name: "João Silva",
-    role: "Desenvolvedor Full Stack",
-    company: "TechCorp",
-    message: "Encontrei as melhores oportunidades através da Hylios. O processo de pagamento em crypto é muito seguro!",
-    rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=joao"
-  },
-  {
-    id: 2,
-    name: "Maria Santos",
-    role: "UX Designer",
-    company: "DesignStudio",
-    message: "A verificação KYC me deu muita confiança para trabalhar com clientes internacionais.",
-    rating: 5,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=maria123"
-  },
-  {
-    id: 3,
-    name: "Pedro Costa",
-    role: "DevOps Engineer",
-    company: "CloudTech",
-    message: "O sistema de matching é incrivelmente preciso! Todas as vagas são relevantes para meu perfil.",
-    rating: 4,
-    avatar: "https://api.dicebear.com/7.x/avataaars/svg?seed=pedro456"
-  }
-];
-
-// Componente para News Banner
+// Componente para News Banner (público)
 const NewsBanner = () => {
   return (
     <motion.div
@@ -79,7 +37,8 @@ const NewsBanner = () => {
   );
 };
 
-const CompanyStats = () => {
+// Componentes públicos mostrados mesmo sem autenticação
+const PublicStats = () => {
   const stats = [
     { label: 'Profissionais', value: '10k+', icon: Users },
     { label: 'Países', value: '25+', icon: Globe },
@@ -128,7 +87,7 @@ const CompanyStats = () => {
   );
 };
 
-const CompanyFeatures = () => {
+const PublicFeatures = () => {
   const features = [
     {
       icon: Shield,
@@ -245,312 +204,6 @@ const CompanyFeatures = () => {
   );
 };
 
-const MatchAnimation = () => (
-  <div className="relative h-32 overflow-hidden my-4">
-    <motion.div
-      className="absolute top-1/2 left-1/3 right-1/3 h-0.5 bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600"
-      initial={{ scaleX: 0, opacity: 0 }}
-      animate={{
-        scaleX: [0, 1, 1, 0],
-        opacity: [0, 1, 1, 0],
-      }}
-      transition={{
-        duration: 4,
-        repeat: Infinity,
-        ease: "easeInOut",
-      }}
-    />
-
-    <motion.div
-      animate={{
-        x: ["0%", "15%", "0%"],
-        scale: [1, 1.1, 1],
-        rotate: [0, 3, -3, 0]
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-      className="absolute left-[10%] top-1/2 -translate-y-1/2"
-    >
-      <div className="flex items-center gap-4">
-        <div className="bg-blue-100 p-3 rounded-full shadow-md">
-          <Building2 className="h-6 w-6 text-blue-600" />
-        </div>
-        <span className="text-blue-600 font-medium">Empresa</span>
-      </div>
-    </motion.div>
-
-    <motion.div
-      initial={{ scale: 0, opacity: 0 }}
-      animate={{
-        scale: [0, 1.2, 1],
-        opacity: [0, 1, 0]
-      }}
-      transition={{
-        duration: 2,
-        repeat: Infinity,
-        ease: "easeInOut",
-        repeatDelay: 2
-      }}
-      className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-    >
-      <div className="relative">
-        <Bitcoin className="h-8 w-8 text-green-400" />
-        <motion.div
-          animate={{
-            scale: [1, 1.5, 1],
-            opacity: [0.3, 0, 0.3],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
-          className="absolute inset-0 bg-green-200/50 rounded-full blur-xl"
-        />
-        <motion.span
-          className="absolute -top-6 left-1/2 -translate-x-1/2 text-sm font-medium text-green-500"
-          initial={{ opacity: 0, y: 10 }}
-          animate={{
-            opacity: [0, 1, 1, 0],
-            y: [-10, -20]
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeOut",
-          }}
-        >
-          +0.15 BTC
-        </motion.span>
-      </div>
-    </motion.div>
-
-    <motion.div
-      animate={{
-        x: ["0%", "-15%", "0%"],
-        scale: [1, 1.1, 1],
-        rotate: [0, -3, 3, 0]
-      }}
-      transition={{
-        duration: 8,
-        repeat: Infinity,
-        ease: "linear"
-      }}
-      className="absolute right-[10%] top-1/2 -translate-y-1/2"
-    >
-      <div className="flex items-center gap-4">
-        <span className="text-violet-600 font-medium">Profissional</span>
-        <div className="bg-violet-100 p-3 rounded-full shadow-md">
-          <UserCheck className="h-6 w-6 text-violet-600" />
-        </div>
-      </div>
-    </motion.div>
-  </div>
-);
-
-const Features = () => {
-  const { t } = useTranslation();
-
-  return (
-    <div className="grid gap-6 mt-12">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.3 }}
-        className="kyc-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
-      >
-        <Link href="/kyc-verification">
-          <div className="flex items-start gap-4">
-            <div className="rounded-full bg-emerald-50 p-3">
-              <UserCheck className="h-6 w-6 text-emerald-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('jobs.startVerification')}</h2>
-              <p className="text-gray-600 mb-4">{t('jobs.completeKyc')}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
-              >
-                {t('jobs.startVerification')}
-              </Button>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.6 }}
-        className="payment-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
-      >
-        <Link href="/payments">
-          <div className="flex items-center gap-4">
-            <div className="rounded-full bg-amber-50 p-3">
-              <Bitcoin className="h-6 w-6 text-amber-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('jobs.receivePayments')}</h2>
-              <p className="text-gray-600">{t('jobs.receivePayments')}</p>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.9 }}
-        className="opportunities-section group relative overflow-hidden rounded-xl border border-blue-100 bg-white p-6 shadow-md transition-all hover:shadow-lg"
-      >
-        <Link href="/jobs">
-          <div className="flex items-start gap-4">
-            <div className="rounded-full bg-blue-50 p-3">
-              <Sparkles className="h-6 w-6 text-blue-400" />
-            </div>
-            <div>
-              <h2 className="text-xl font-semibold mb-3 text-gray-900">{t('jobs.findOpportunities')}</h2>
-              <p className="text-gray-600 mb-4">{t('jobs.findOpportunities')}</p>
-              <Button
-                variant="outline"
-                size="sm"
-                className="bg-white hover:bg-blue-50 text-blue-600 border-blue-200 shadow-sm"
-              >
-                {t('jobs.viewJobs')}
-              </Button>
-            </div>
-          </div>
-        </Link>
-      </motion.div>
-    </div>
-  );
-};
-
-
-// Mock data for the new job feed
-interface MockJob {
-  id: number;
-  title: string;
-  companyId: number;
-  description: string;
-  requiredSkills?: string[];
-  city: string;
-  amount: number;
-  currency: string;
-}
-
-const mockJobs: MockJob[] = [
-  {
-    id: 1,
-    title: "Desenvolvedor Full Stack",
-    companyId: 1,
-    description: "Procuramos um Desenvolvedor Full Stack experiente para se juntar à nossa equipe.",
-    requiredSkills: ["React", "Node.js", "MongoDB"],
-    city: "Lisboa",
-    amount: 6000,
-    currency: "EUR"
-  },
-  {
-    id: 2,
-    title: "UX/UI Designer",
-    companyId: 2,
-    description: "Estamos à procura de um UX/UI Designer criativo para melhorar a experiência do usuário.",
-    requiredSkills: ["Figma", "Adobe XD", "Sketch"],
-    city: "Porto",
-    amount: 5000,
-    currency: "EUR"
-  },
-  // Add more mock jobs as needed
-];
-
-// Componente para Testimonials
-const Testimonials = () => {
-  return (
-    <div className="mt-16 bg-gradient-to-b from-blue-50/50 to-transparent p-8 rounded-2xl">
-      <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-        O que dizem nossos profissionais
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        {testimonials.map((testimonial, index) => (
-          <motion.div
-            key={testimonial.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: index * 0.2 }}
-            className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-blue-100 group hover:bg-gradient-to-b hover:from-white hover:to-blue-50/30"
-          >
-            <div className="flex items-center gap-4 mb-4">
-              <motion.div
-                className="relative"
-                whileHover={{ scale: 1.1 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                <div className="absolute inset-0 bg-blue-400 rounded-full blur-lg opacity-20 group-hover:opacity-30 transition-opacity" />
-                <img
-                  src={testimonial.avatar}
-                  alt={testimonial.name}
-                  className="w-12 h-12 rounded-full bg-blue-50 relative z-10"
-                />
-              </motion.div>
-              <div>
-                <h3 className="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors">
-                  {testimonial.name}
-                </h3>
-                <p className="text-sm text-gray-600">{testimonial.role}</p>
-              </div>
-            </div>
-
-            <motion.div
-              className="flex items-center gap-1 mb-4"
-              initial="hidden"
-              animate="visible"
-              variants={{
-                hidden: { opacity: 0 },
-                visible: {
-                  opacity: 1,
-                  transition: {
-                    staggerChildren: 0.1
-                  }
-                }
-              }}
-            >
-              {Array.from({ length: testimonial.rating }).map((_, i) => (
-                <motion.div
-                  key={i}
-                  variants={{
-                    hidden: { scale: 0 },
-                    visible: { scale: 1 }
-                  }}
-                >
-                  <Star className="h-4 w-4 fill-amber-400 text-amber-400" />
-                </motion.div>
-              ))}
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.3 }}
-            >
-              <p className="text-gray-600 text-sm italic leading-relaxed">
-                "{testimonial.message}"
-              </p>
-              <div className="mt-4 flex items-center gap-2">
-                <Building2 className="h-4 w-4 text-blue-400" />
-                <p className="text-sm font-medium text-blue-500">{testimonial.company}</p>
-              </div>
-            </motion.div>
-          </motion.div>
-        ))}
-      </div>
-    </div>
-  );
-};
-
 const HomePage = () => {
   const { user } = useAuth();
   const { t } = useTranslation();
@@ -565,7 +218,7 @@ const HomePage = () => {
 
         <div className="max-w-2xl mx-auto">
           <motion.div
-            className="welcome-section text-center mb-16"
+            className="welcome-section text-center"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
           >
@@ -577,166 +230,68 @@ const HomePage = () => {
                 stiffness: 260,
                 damping: 20
               }}
-              className="mb-8 relative"
+              className="mb-4"
             >
               <motion.div
-                animate={{
-                  rotate: 360,
-                  background: [
-                    "linear-gradient(to right, #3b82f6, #8b5cf6)",
-                    "linear-gradient(to right, #8b5cf6, #3b82f6)",
-                    "linear-gradient(to right, #3b82f6, #8b5cf6)"
-                  ]
-                }}
-                transition={{
-                  rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-                  background: { duration: 3, repeat: Infinity, ease: "linear" }
-                }}
-                className="relative w-32 h-32 mx-auto rounded-full overflow-hidden"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                className="relative w-24 h-24 mx-auto"
               >
-                <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-violet-500 opacity-20 blur-xl" />
-                <div className="relative flex items-center justify-center h-full bg-white/10 backdrop-blur-sm">
-                  <Building2 className="h-16 w-16 text-white" />
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500 to-violet-500 opacity-20 blur-xl" />
+                <div className="relative flex items-center justify-center h-full">
+                  <Building2 className="h-12 w-12 text-blue-600" />
                 </div>
-
-                {[...Array(3)].map((_, i) => (
-                  <motion.div
-                    key={i}
-                    className="absolute w-3 h-3 bg-blue-400 rounded-full"
-                    animate={{
-                      rotate: 360,
-                      scale: [1, 1.2, 1],
-                      opacity: [0.8, 1, 0.8]
-                    }}
-                    transition={{
-                      rotate: { duration: 3, repeat: Infinity, ease: "linear", delay: i * 0.3 },
-                      scale: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
-                      opacity: { duration: 2, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 }
-                    }}
-                    style={{
-                      top: "50%",
-                      left: "50%",
-                      transform: `rotate(${i * 120}deg) translateX(3rem)`
-                    }}
-                  />
-                ))}
               </motion.div>
             </motion.div>
 
-            <motion.h1
-              className="text-6xl font-bold mb-6"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.3 }}
+            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+              Bem-vindo ao Hylios
+            </h1>
+            <p className="text-xl text-blue-400 mb-8">
+              A plataforma que conecta talentos globais através de Bitcoin
+            </p>
+            <Button
+              variant="secondary"
+              size="sm"
+              className="bg-blue-600 hover:bg-blue-700 text-white shadow-md mb-8"
+              onClick={() => tutorial.startTutorial()}
             >
-              <span className="bg-gradient-to-r from-blue-600 via-violet-600 to-blue-600 bg-clip-text text-transparent">
-                {t('home.welcome')}
-              </span>
-            </motion.h1>
-
-            <motion.p
-              className="text-xl text-blue-400 mb-8"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-            >
-              {t('home.subtitle')}
-            </motion.p>
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: 0.5 }}
-            >
-              <Button
-                variant="secondary"
-                size="lg"
-                className="bg-gradient-to-r from-blue-500 to-violet-500 hover:from-blue-600 hover:to-violet-600 text-white shadow-lg hover:shadow-xl transition-all duration-300"
-                onClick={() => tutorial.startTutorial()}
-              >
-                {t('tutorial.start')}
-              </Button>
-            </motion.div>
+              Começar Tour
+            </Button>
           </motion.div>
 
-          <CompanyStats />
-          <CompanyFeatures />
+          <PublicStats />
+          <PublicFeatures />
 
+          {/* Job Swipe Section - disponível publicamente */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="mt-16 mb-12"
+            className="mt-12 mb-12"
           >
-            <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
-              Feed de Oportunidades
-            </h2>
-
-            <div className="space-y-6">
-              {mockJobs.map((job, index) => (
-                <motion.div
-                  key={job.id}
-                  initial={{ opacity: 0, x: index % 2 === 0 ? -20 : 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden border border-blue-100"
-                >
-                  <div className="p-6">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-gradient-to-br from-blue-100 to-violet-100 flex items-center justify-center">
-                          <Building2 className="h-6 w-6 text-blue-500" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-gray-900">{job.title}</h3>
-                          <p className="text-sm text-gray-600">Empresa {job.companyId}</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Button variant="ghost" size="sm" className="text-blue-500">
-                          <Star className="h-4 w-4" />
-                        </Button>
-                        <Button variant="ghost" size="sm" className="text-blue-500">
-                          <MessageSquare className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-
-                    <p className="text-gray-600 mb-4">{job.description}</p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {job.requiredSkills?.map((skill) => (
-                        <span
-                          key={skill}
-                          className="px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-sm font-medium hover:bg-blue-100 transition-colors cursor-pointer"
-                        >
-                          {skill}
-                        </span>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-1 text-gray-600">
-                          <MapPin className="h-4 w-4" />
-                          <span className="text-sm">{job.city}</span>
-                        </div>
-                        <div className="flex items-center gap-1 text-gray-600">
-                          <Bitcoin className="h-4 w-4" />
-                          <span className="text-sm">{job.amount} {job.currency}</span>
-                        </div>
-                      </div>
-                      <Button size="sm" className="bg-blue-500 hover:bg-blue-600 text-white">
-                        Candidatar-se
-                      </Button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
+            <JobSwipe />
           </motion.div>
 
-          <Testimonials />
-          {user && <Features />}
+          {/* Features protegidas - só aparecem para usuários autenticados */}
+          {user && (
+            <>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.3 }}
+              >
+                <MarqueeSponsors />
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.6 }}
+              >
+                <MatchAnimation />
+              </motion.div>
+              <Features />
+            </>
+          )}
         </div>
       </div>
     </div>
