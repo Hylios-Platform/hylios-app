@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { Job } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
-import { Sparkles, X } from "lucide-react";
+import { Sparkles, X, Zap } from "lucide-react";
 import { calculateMatchScore } from "@/lib/matching-service";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -34,9 +34,18 @@ export function FloatingMatchButton() {
       >
         <Button
           onClick={() => setIsOpen(!isOpen)}
-          className="bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white rounded-full p-6 shadow-lg"
+          className="relative bg-gradient-to-r from-blue-600 to-violet-600 hover:from-blue-700 hover:to-violet-700 text-white rounded-full p-6 shadow-lg group"
         >
-          <Sparkles className="h-8 w-8" />
+          <Sparkles className="h-8 w-8 transition-transform group-hover:scale-110" />
+          {realTimeMatches && realTimeMatches.length > 0 && (
+            <motion.span
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              className="absolute -top-1 -right-1 h-6 w-6 rounded-full bg-red-500 text-white text-sm flex items-center justify-center"
+            >
+              {realTimeMatches.length}
+            </motion.span>
+          )}
         </Button>
       </motion.div>
 
@@ -48,17 +57,18 @@ export function FloatingMatchButton() {
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
             className="fixed bottom-28 right-6 w-96 z-50"
           >
-            <Card className="border-blue-100 bg-white shadow-xl">
+            <Card className="border-blue-100 bg-white/90 backdrop-blur-sm shadow-xl dark:bg-slate-900/90">
               <div className="p-4">
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-medium bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+                  <h3 className="text-lg font-medium bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent flex items-center gap-2">
+                    <Zap className="h-5 w-5 text-blue-500" />
                     Matches em Tempo Real
                   </h3>
                   <Button
                     variant="ghost"
                     size="sm"
                     onClick={() => setIsOpen(false)}
-                    className="text-gray-500 hover:text-gray-700"
+                    className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -70,23 +80,36 @@ export function FloatingMatchButton() {
                       key={job.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      className="p-4 bg-blue-50/50 rounded-lg border border-blue-100 hover:border-blue-200 transition-colors cursor-pointer"
+                      className="p-4 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-200 cursor-pointer hover:shadow-md group"
                     >
                       <div className="flex items-start justify-between">
                         <div className="space-y-1">
-                          <h4 className="font-medium text-gray-900">{job.title}</h4>
-                          <p className="text-sm text-gray-600">{job.city}, {job.country}</p>
+                          <h4 className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                            {job.title}
+                          </h4>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {job.city}, {job.country}
+                          </p>
                           <div className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-500">Tipo:</span>
-                            <span className="text-blue-600 capitalize">{job.workType}</span>
+                            <span className="text-gray-500 dark:text-gray-500">Tipo:</span>
+                            <span className="text-blue-600 dark:text-blue-400 capitalize">
+                              {job.workType}
+                            </span>
                           </div>
                         </div>
                         <div className="flex flex-col items-end">
-                          <span className="px-3 py-1.5 bg-blue-100 text-blue-700 rounded-full text-sm font-medium">
+                          <span className="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
                             {score}%
                           </span>
                           {score >= 80 && (
-                            <span className="text-xs text-green-600 mt-1">Match Perfeito!</span>
+                            <motion.span
+                              initial={{ opacity: 0, y: 5 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1"
+                            >
+                              <Sparkles className="h-3 w-3" />
+                              Match Perfeito!
+                            </motion.span>
                           )}
                         </div>
                       </div>
