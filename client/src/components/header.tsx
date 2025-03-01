@@ -23,30 +23,11 @@ export default function Header() {
           whileTap={{ scale: 0.95 }}
         >
           <Link href="/">
-            <motion.div
-              className="relative cursor-pointer group"
-              initial={{ opacity: 1 }}
-              whileHover={{ scale: 1.05 }}
-              transition={{ type: "spring", stiffness: 400, damping: 10 }}
-            >
-              <motion.div
-                className="absolute -inset-2 bg-gradient-to-r from-blue-500/20 to-violet-500/20 rounded-lg blur-lg group-hover:blur-xl transition-all duration-300"
-                animate={{
-                  opacity: [0.5, 0.7, 0.5],
-                  scale: [1, 1.02, 1],
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-              />
-              <h1 className="relative text-2xl font-bold px-4 py-1 rounded-lg">
-                <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent group-hover:from-blue-500 group-hover:to-violet-500 transition-all duration-300">
-                  Hylios
-                </span>
-              </h1>
-            </motion.div>
+            <h1 className="text-2xl font-bold px-4 py-1 rounded-lg">
+              <span className="bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
+                Hylios
+              </span>
+            </h1>
           </Link>
         </motion.div>
 
@@ -54,34 +35,24 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <nav className="flex gap-2">
               <Link href="/jobs">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button 
+                  size="sm" 
+                  variant="default" 
+                  className="h-9 px-4 text-sm bg-gradient-to-r from-blue-500 to-blue-600 hover:bg-blue-600 text-white shadow-sm"
                 >
-                  <Button 
-                    size="sm" 
-                    variant="default" 
-                    className="h-9 px-4 text-sm bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white shadow-sm transition-all duration-200"
-                  >
-                    {t('navigation.jobs')}
-                  </Button>
-                </motion.div>
+                  {t('navigation.jobs')}
+                </Button>
               </Link>
               <Link href="/post-job">
-                <motion.div
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
+                <Button 
+                  size="sm" 
+                  variant="default" 
+                  className="h-9 px-4 text-sm bg-gradient-to-r from-violet-500 to-violet-600 hover:bg-violet-600 text-white shadow-sm"
                 >
-                  <Button 
-                    size="sm" 
-                    variant="default" 
-                    className="h-9 px-4 text-sm bg-gradient-to-r from-violet-500 to-violet-600 hover:from-violet-600 hover:to-violet-700 text-white shadow-sm transition-all duration-200"
-                  >
-                    {t('navigation.postJob')}
-                  </Button>
-                </motion.div>
+                  {t('navigation.postJob')}
+                </Button>
               </Link>
-              </nav>
+            </nav>
 
             <div className="flex items-center gap-2 ml-3 pl-3 border-l border-blue-200 dark:border-slate-700">
               <ThemeToggle />
