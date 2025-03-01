@@ -57,6 +57,8 @@ const mockJobs: Job[] = [
 export function JobSwipe() {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
+  const [likedJobs, setLikedJobs] = useState<number[]>([]);
+  const [swipeProgress, setSwipeProgress] = useState(0);
 
   const currentJob = mockJobs[currentIndex];
 
@@ -68,6 +70,7 @@ export function JobSwipe() {
   const paginate = (newDirection: number) => {
     if (currentIndex + newDirection >= 0 && currentIndex + newDirection < mockJobs.length) {
       setCurrentIndex(currentIndex + newDirection);
+      setSwipeProgress(((currentIndex + newDirection + 1) / mockJobs.length) * 100);
     }
   };
 
@@ -84,7 +87,7 @@ export function JobSwipe() {
   };
 
   const handleMatch = () => {
-    console.log("Match com a vaga:", currentJob.id);
+    setLikedJobs([...likedJobs, currentJob.id]);
     paginate(1);
   };
 
@@ -171,12 +174,15 @@ export function JobSwipe() {
                   <h3 className="font-medium text-gray-700">Habilidades Necessárias</h3>
                   <div className="flex flex-wrap gap-2">
                     {currentJob.requiredSkills?.map((skill) => (
-                      <span
+                      <motion.span
                         key={skill}
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        transition={{ duration: 0.3 }}
                         className="px-2 py-1 bg-blue-50 text-blue-500 rounded-full text-sm font-medium border border-blue-100 hover:bg-blue-100 transition-colors"
                       >
                         {skill}
-                      </span>
+                      </motion.span>
                     ))}
                   </div>
                 </div>
@@ -217,6 +223,26 @@ export function JobSwipe() {
         >
           <Heart className="h-8 w-8 text-emerald-500 group-hover:text-emerald-600 transition-colors" />
         </Button>
+      </div>
+
+      {/* Indicador de progresso melhorado */}
+      <div className="mt-6">
+        <div className="flex justify-between items-center mb-2">
+          <span className="text-sm text-gray-500">
+            Vaga {currentIndex + 1} de {mockJobs.length}
+          </span>
+          <span className="text-sm text-gray-500">
+            {Math.round(swipeProgress)}% concluído
+          </span>
+        </div>
+        <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
+          <motion.div
+            className="h-full bg-gradient-to-r from-blue-400 to-violet-400"
+            initial={{ width: 0 }}
+            animate={{ width: `${swipeProgress}%` }}
+            transition={{ duration: 0.3 }}
+          />
+        </div>
       </div>
 
       <div className="mt-4 flex justify-center gap-2">

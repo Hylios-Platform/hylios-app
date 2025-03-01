@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Job } from "@shared/schema";
 import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, X, Zap } from "lucide-react";
-import { calculateMatchScore } from "@/lib/matching-service";
+import { calculateMatchScore, getMatchRecommendations } from "@/lib/matching-service";
 import { useAuth } from "@/hooks/use-auth";
 
 export function FloatingMatchButton() {
@@ -14,15 +14,17 @@ export function FloatingMatchButton() {
   const userSkills = (user?.profileData as any)?.skills || [];
   const userLocation = (user?.profileData as any)?.location || "";
   const preferredWorkType = (user?.profileData as any)?.preferredWorkType || "remote";
+  const userExperience = (user?.profileData as any)?.yearsOfExperience || 0;
 
   const { data: jobs } = useQuery<Job[]>({
     queryKey: ["/api/jobs"],
   });
 
-  // Calcular matches em tempo real
+  // Calcular matches em tempo real com recomendações
   const realTimeMatches = jobs?.map(job => ({
     job,
-    score: calculateMatchScore(job, userSkills, userLocation, preferredWorkType)
+    score: calculateMatchScore(job, userSkills, userLocation, preferredWorkType, userExperience),
+    recommendations: getMatchRecommendations(job, userSkills, calculateMatchScore(job, userSkills, userLocation, preferredWorkType, userExperience), userExperience)
   })).sort((a, b) => b.score - a.score).slice(0, 5);
 
   return (
@@ -75,42 +77,65 @@ export function FloatingMatchButton() {
                 </div>
 
                 <div className="space-y-3">
-                  {realTimeMatches?.map(({ job, score }) => (
+                  {realTimeMatches?.map(({ job, score, recommendations }) => (
                     <motion.div
                       key={job.id}
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       className="p-4 bg-blue-50/50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 hover:border-blue-200 dark:hover:border-blue-700 transition-all duration-200 cursor-pointer hover:shadow-md group"
                     >
-                      <div className="flex items-start justify-between">
-                        <div className="space-y-1">
-                          <h4 className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                            {job.title}
-                          </h4>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">
-                            {job.city}, {job.country}
-                          </p>
-                          <div className="flex items-center gap-2 text-sm">
-                            <span className="text-gray-500 dark:text-gray-500">Tipo:</span>
-                            <span className="text-blue-600 dark:text-blue-400 capitalize">
-                              {job.workType}
+                      <div className="space-y-3">
+                        <div className="flex items-start justify-between">
+                          <div className="space-y-1">
+                            <h4 className="font-medium text-gray-900 dark:text-gray-100 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                              {job.title}
+                            </h4>
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
+                              {job.city}, {job.country}
+                            </p>
+                            <div className="flex items-center gap-2 text-sm">
+                              <span className="text-gray-500 dark:text-gray-500">Tipo:</span>
+                              <span className="text-blue-600 dark:text-blue-400 capitalize">
+                                {job.workType}
+                              </span>
+                            </div>
+                          </div>
+                          <div className="flex flex-col items-end">
+                            <span className="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                              {score}%
                             </span>
+                            {score >= 80 && (
+                              <motion.span
+                                initial={{ opacity: 0, y: 5 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1"
+                              >
+                                <Sparkles className="h-3 w-3" />
+                                Match Perfeito!
+                              </motion.span>
+                            )}
                           </div>
                         </div>
-                        <div className="flex flex-col items-end">
-                          <span className="px-3 py-1.5 bg-blue-100 dark:bg-blue-900/50 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
-                            {score}%
-                          </span>
-                          {score >= 80 && (
-                            <motion.span
-                              initial={{ opacity: 0, y: 5 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              className="text-xs text-green-600 dark:text-green-400 mt-1 flex items-center gap-1"
+
+                        {/* Recomendações personalizadas */}
+                        <div className="mt-2 space-y-1">
+                          {recommendations.map((rec, index) => (
+                            <motion.div
+                              key={index}
+                              initial={{ opacity: 0 }}
+                              animate={{ opacity: 1 }}
+                              transition={{ delay: index * 0.1 }}
+                              className={`text-xs ${
+                                rec.priority === 'high' 
+                                  ? 'text-red-600 dark:text-red-400' 
+                                  : rec.priority === 'medium'
+                                  ? 'text-yellow-600 dark:text-yellow-400'
+                                  : 'text-green-600 dark:text-green-400'
+                              }`}
                             >
-                              <Sparkles className="h-3 w-3" />
-                              Match Perfeito!
-                            </motion.span>
-                          )}
+                              • {rec.message}
+                            </motion.div>
+                          ))}
                         </div>
                       </div>
                     </motion.div>
