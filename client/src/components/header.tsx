@@ -16,9 +16,9 @@ export default function Header() {
 
   return (
     <header className="bg-gradient-to-r from-sky-500 via-blue-500 to-indigo-500 border-b border-blue-100 dark:from-slate-900 dark:to-slate-800 dark:border-slate-800">
-      <div className="container mx-auto px-4 h-20 flex items-center">
-        <Link href="/" className="mr-10">
-          <span className="text-2xl font-bold text-white hover:text-sky-100 transition-colors cursor-pointer">
+      <div className="container mx-auto px-4 h-24 flex items-center">
+        <Link href="/" className="mr-12">
+          <span className="text-3xl font-bold text-white hover:text-sky-100 transition-colors cursor-pointer">
             Hylios
           </span>
         </Link>
@@ -32,7 +32,7 @@ export default function Header() {
                   <Button 
                     size="lg" 
                     variant="secondary" 
-                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+                    className="h-14 px-10 text-base font-medium bg-white/40 hover:bg-white/50 text-white shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
                   >
                     {t('navigation.postJob')}
                   </Button>
@@ -41,7 +41,7 @@ export default function Header() {
                   <Button 
                     size="lg" 
                     variant="secondary" 
-                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+                    className="h-14 px-10 text-base font-medium bg-white/40 hover:bg-white/50 text-white shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
                   >
                     {t('navigation.payments')}
                   </Button>
@@ -50,7 +50,7 @@ export default function Header() {
                   <Button 
                     size="lg" 
                     variant="secondary" 
-                    className="h-12 px-8 text-base font-medium bg-white/30 hover:bg-white/40 text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"
+                    className="h-14 px-10 text-base font-medium bg-white/40 hover:bg-white/50 text-white shadow-xl transition-all hover:scale-105 hover:shadow-2xl"
                   >
                     {t('navigation.settings')}
                   </Button>
@@ -58,14 +58,14 @@ export default function Header() {
               </nav>
             </div>
 
-            <div className="flex items-center gap-6 ml-10 pl-10 border-l border-white/20 dark:border-slate-700">
+            <div className="flex items-center gap-6 ml-12 pl-12 border-l border-white/20 dark:border-slate-700">
               <ThemeToggle />
               <span className="text-base font-medium text-white">
                 {user?.username || 'Dev User'}
               </span>
               <Button
                 variant="ghost"
-                size="default"
+                size="lg"
                 onClick={() => logoutMutation.mutate()}
                 className="h-10 px-4 text-base font-medium text-white hover:text-red-200 hover:bg-red-500/20 transition-all"
               >
