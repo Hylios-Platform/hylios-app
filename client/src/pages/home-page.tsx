@@ -287,9 +287,12 @@ const HomePage = () => {
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.6 }}
               >
-                <MatchAnimation />
+                {/* Define or import MatchAnimation component */}
+                <div>Match Animation Placeholder</div>
               </motion.div>
-              <Features />
+              {/* Define or import the Features component */}
+              {/* Example placeholder: */}
+              <div>Features Placeholder</div>
             </>
           )}
         </div>

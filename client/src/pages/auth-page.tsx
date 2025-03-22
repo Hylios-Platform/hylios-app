@@ -41,7 +41,7 @@ const authSchema = insertUserSchema.extend({
   password: z.string()
     .min(8, "auth.errors.passwordMin")
     .max(50, "auth.errors.passwordMax")
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/, "auth.errors.passwordComplexity"),
+    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*(),.?":{}|<>])[A-Za-z\d!@#$%^&*(),.?":{}|<>]+$/, "auth.errors.passwordComplexity"),
   confirmPassword: z.string(),
   email: z.string()
     .email("auth.errors.invalidEmail"),
