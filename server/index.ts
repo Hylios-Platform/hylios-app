@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 // Configuração CORS com configurações corretas para cookies
 app.use(cors({
   origin: process.env.NODE_ENV === 'production' 
-    ? ['https://*.replit.app', 'https://*.repl.co'] 
+    ? '*'
     : true,
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -116,7 +116,7 @@ app.use('/uploads', express.static('uploads'));
     }, () => {
       log(`Servidor iniciado e rodando na porta ${port}`);
       console.log('Ambiente:', process.env.NODE_ENV);
-      console.log('CORS Origin:', process.env.NODE_ENV === 'production' ? ['https://*.replit.app', 'https://*.repl.co'] : 'all');
+      console.log('CORS Origin:', process.env.NODE_ENV === 'production' ? '*' : 'all');
     });
   } catch (error) {
     console.error('[FATAL ERROR] Falha ao iniciar o servidor:', error);
