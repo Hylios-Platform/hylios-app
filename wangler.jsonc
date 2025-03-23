@@ -1,4 +1,5 @@
 {
     "name": "hylios-api",
-    "compatibility_date":"2025-03-23"
+    "main": "dist/index.js",
+    "compatibility_date":"2022-07-12"
 }
